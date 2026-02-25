@@ -2048,7 +2048,17 @@ body {
 </div>
 
 <script>
-const API_BASE = window.location.pathname.replace(/\/+$/, '');
+function getApiBasePath() {
+  var pathname = window.location.pathname;
+  if (!pathname || pathname === '/') return '';
+  var cleaned = pathname.replace(/\/+$/, '');
+  if (cleaned.endsWith('/index.html')) {
+    return cleaned.slice(0, -'/index.html'.length);
+  }
+  return cleaned;
+}
+
+const API_BASE = getApiBasePath();
 const TOKEN_KEY = 'dashboardToken';
 const TOKEN_EXPIRY_KEY = 'dashboardTokenExpiry';
 const TOKEN_LIFETIME = 24 * 60 * 60 * 1000;

@@ -20,6 +20,19 @@ if [ "$NODE_VERSION" -lt 18 ]; then
 fi
 
 echo "✅ Node.js $(node --version) detected"
+
+# Check for jq (needed for Docker page)
+if ! command -v jq &> /dev/null; then
+  echo "⚠️  jq not found. Docker management page won't work without it."
+  echo "   Install: sudo apt-get install -y jq"
+fi
+
+# Check for tmux (needed for Claude CLI usage scraper)
+if ! command -v tmux &> /dev/null; then
+  echo "⚠️  tmux not found. Claude CLI usage scraper won't work without it."
+  echo "   Install: sudo apt-get install -y tmux"
+fi
+
 echo ""
 
 # Detect workspace
@@ -65,20 +78,17 @@ DASHBOARD_PORT="${DASHBOARD_PORT:-7000}"
 read -p "Dashboard port (default: $DASHBOARD_PORT): " input
 DASHBOARD_PORT="${input:-$DASHBOARD_PORT}"
 
-# Token setup
-if [ -z "$DASHBOARD_TOKEN" ]; then
-  echo ""
-  echo "🔐 Authentication Setup"
-  echo "  A token is required to access the dashboard."
-  echo "  Leave blank to auto-generate a random 32-char token."
-  read -p "Dashboard token (leave blank for auto): " input
-  if [ -n "$input" ]; then
-    DASHBOARD_TOKEN="$input"
-    echo "✅ Using provided token"
+# Copy scraper scripts to workspace if not present
+SCRIPTS_DIR="$WORKSPACE_DIR/scripts"
+mkdir -p "$SCRIPTS_DIR"
+if [ -f "$(pwd)/scripts/scrape-claude-usage.sh" ]; then
+  if [ ! -f "$SCRIPTS_DIR/scrape-claude-usage.sh" ]; then
+    cp "$(pwd)/scripts/scrape-claude-usage.sh" "$SCRIPTS_DIR/"
+    cp "$(pwd)/scripts/parse-claude-usage.py" "$SCRIPTS_DIR/"
+    chmod +x "$SCRIPTS_DIR/scrape-claude-usage.sh"
+    echo "✅ Scraper scripts copied to $SCRIPTS_DIR"
   else
-    DASHBOARD_TOKEN=$(openssl rand -hex 16 2>/dev/null || node -e "console.log(require('crypto').randomBytes(16).toString('hex'))")
-    echo "✅ Auto-generated token: $DASHBOARD_TOKEN"
-    echo "   ⚠️  Save this token! You'll need it to log in."
+    echo "✅ Scraper scripts already exist in $SCRIPTS_DIR"
   fi
 fi
 
@@ -88,8 +98,12 @@ echo "----------------------"
 echo "Workspace:     $WORKSPACE_DIR"
 echo "OpenClaw Dir:  $OPENCLAW_DIR"
 echo "Port:          $DASHBOARD_PORT"
-echo "Token:         ${DASHBOARD_TOKEN:0:8}..."
 echo "Install Dir:   $(pwd)"
+echo ""
+echo "🔐 Authentication"
+echo "  On first visit, you'll create a username and password."
+echo "  A recovery token will be printed in the service logs."
+echo "  Optional: enable TOTP (2FA) from the Security page."
 echo ""
 
 read -p "Proceed with installation? (y/n): " -n 1 -r
@@ -113,7 +127,6 @@ User=$USER
 WorkingDirectory=$(pwd)
 ExecStart=$(which node) $(pwd)/server.js
 Environment=DASHBOARD_PORT=$DASHBOARD_PORT
-Environment=DASHBOARD_TOKEN=$DASHBOARD_TOKEN
 Environment=WORKSPACE_DIR=$WORKSPACE_DIR
 Environment=OPENCLAW_DIR=$OPENCLAW_DIR
 Restart=always
@@ -142,7 +155,7 @@ echo "✅ Service enabled (auto-start on boot)"
 sudo systemctl start agent-dashboard
 echo "✅ Service started"
 
-# Wait a moment for the service to start
+# Wait for startup
 sleep 2
 
 # Check status
@@ -154,8 +167,13 @@ if sudo systemctl is-active --quiet agent-dashboard; then
   echo "  → http://localhost:$DASHBOARD_PORT"
   echo "  → http://$(hostname -I | awk '{print $1}'):$DASHBOARD_PORT"
   echo ""
-  echo "🔐 Login token: $DASHBOARD_TOKEN"
-  echo "   To enable MFA: Log in → Security page → Enable MFA"
+  echo "🔐 First-time setup:"
+  echo "  1. Open the dashboard URL above"
+  echo "  2. Register a username and password"
+  echo "  3. (Optional) Enable TOTP 2FA from the Security page"
+  echo ""
+  echo "🔑 Recovery token (for password reset):"
+  echo "  Check service logs: journalctl -u agent-dashboard | grep 'Recovery Token'"
   echo ""
   echo "Useful commands:"
   echo "  sudo systemctl status agent-dashboard   # Check status"

@@ -8,19 +8,11 @@
 [![Node.js](https://img.shields.io/badge/Node.js-v18+-green.svg)](https://nodejs.org/)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Compatible-purple.svg)](https://openclaw.dev)
 
-A beautiful, secure, real-time monitoring dashboard for OpenClaw agents. Track sessions, monitor API usage, view costs, manage memory files, and keep tabs on system health — all in one place.
+A beautiful, secure, real-time monitoring dashboard for OpenClaw agents. Track sessions, monitor API usage, view costs, manage memory files, and keep tabs on system health - all in one place.
 
-![Dashboard Preview](docs/screenshot.png)
+## Preview
 
-## 📸 Screenshots
-
-| Overview | Sessions | Costs |
-|----------|----------|-------|
-| ![Overview](docs/overview.png) | ![Sessions](docs/sessions.png) | ![Costs](docs/costs.png) |
-
-| Rate Limits | Live Feed | Logs |
-|-------------|-----------|------|
-| ![Limits](docs/limits.png) | ![Feed](docs/feed.png) | ![Logs](docs/logs.png) |
+The current repository no longer ships inherited screenshots from the original project. Replace this section with fresh screenshots from your own deployed version when ready.
 
 ## ✨ Features
 

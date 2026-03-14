@@ -3144,73 +3144,319 @@
     .grid-2 { grid-template-columns: repeat(2, 1fr); }
     .grid-3 { grid-template-columns: repeat(3, 1fr); }
     .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .login-shell {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      z-index: 9999;
+      overflow: auto;
+      background:
+        linear-gradient(135deg, rgba(241, 246, 255, 0.92), rgba(224, 235, 249, 0.82)),
+        radial-gradient(circle at 18% 18%, rgba(58, 124, 236, 0.16), transparent 28%),
+        radial-gradient(circle at 86% 78%, rgba(75, 190, 238, 0.16), transparent 26%),
+        linear-gradient(135deg, #f2f7fd 0%, #e7eef9 45%, #dbe7f7 100%);
+    }
+    .login-shell::before,
+    .login-shell::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .login-shell::before {
+      background:
+        linear-gradient(140deg, rgba(255, 255, 255, 0.72) 12%, transparent 12.5%, transparent 21%, rgba(255, 255, 255, 0.48) 21.5%, rgba(255, 255, 255, 0.48) 30%, transparent 30.5%),
+        linear-gradient(320deg, rgba(255, 255, 255, 0.7) 10%, transparent 10.5%, transparent 22%, rgba(255, 255, 255, 0.46) 22.5%, rgba(255, 255, 255, 0.46) 34%, transparent 34.5%);
+      opacity: 0.55;
+      background-size: 180px 180px, 220px 220px;
+      filter: blur(1px);
+    }
+    .login-shell::after {
+      background: linear-gradient(180deg, rgba(255,255,255,0.45), rgba(255,255,255,0.08));
+    }
+    .login-card {
+      position: relative;
+      z-index: 1;
+      width: min(460px, 100%);
+      min-height: 640px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(135, 166, 214, 0.18);
+      border-radius: 28px;
+      box-shadow: 0 28px 70px rgba(35, 77, 146, 0.16);
+      backdrop-filter: blur(16px);
+      padding: 34px 42px 36px;
+    }
+    .login-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .login-brand img {
+      width: 112px;
+      height: auto;
+      display: block;
+    }
+    .login-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #101828;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 18px;
+    }
+    .login-kicker-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #2f77ea, #32b8f4);
+      box-shadow: 0 0 0 5px rgba(47, 119, 234, 0.14);
+    }
+    .login-copy {
+      margin-bottom: 24px;
+    }
+    .login-copy h1 {
+      font-size: 40px;
+      line-height: 1.08;
+      color: #111827;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      margin: 0;
+    }
+    .login-copy p {
+      margin: 12px 0 0;
+      color: #5b6472;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .login-tabs {
+      display: flex;
+      gap: 28px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+      margin-bottom: 22px;
+    }
+    .login-tab {
+      appearance: none;
+      border: none;
+      background: none;
+      padding: 0 0 12px;
+      color: #6b7280;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+    }
+    .login-tab.active {
+      color: #2563eb;
+    }
+    .login-tab.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #2f77ea, #36b8f4);
+    }
+    .login-field {
+      margin-bottom: 14px;
+    }
+    .login-field input {
+      width: 100%;
+      padding: 15px 16px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(148, 163, 184, 0.32);
+      border-radius: 10px;
+      color: #0f172a;
+      font-size: 15px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+    .login-field input::placeholder {
+      color: #a3aab8;
+    }
+    .login-field input:focus {
+      outline: none;
+      border-color: rgba(59, 130, 246, 0.55);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+    }
+    .login-actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+      margin-bottom: 12px;
+    }
+    .login-check {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #64748b;
+      font-size: 13px;
+    }
+    .login-check input {
+      width: 16px;
+      height: 16px;
+    }
+    .login-link {
+      color: #2f77ea;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .login-submit,
+    .secondary-submit {
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      padding: 15px 18px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .login-submit {
+      color: #fff;
+      background: linear-gradient(90deg, #2f77ea 0%, #33b8f3 100%);
+      box-shadow: 0 12px 28px rgba(51, 138, 240, 0.24);
+    }
+    .secondary-submit {
+      color: #163b76;
+      background: rgba(47, 119, 234, 0.08);
+      border: 1px solid rgba(47, 119, 234, 0.16);
+    }
+    .login-inline-note {
+      font-size: 12px;
+      color: #7c8798;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+    .login-error-box {
+      display: none;
+      color: #b42318;
+      font-size: 13px;
+      margin-bottom: 14px;
+      padding: 12px 14px;
+      background: rgba(254, 243, 242, 0.95);
+      border-radius: 10px;
+      border: 1px solid rgba(240, 128, 128, 0.24);
+    }
+    .login-back {
+      margin-top: 12px;
+      background: transparent;
+      border: none;
+      color: #64748b;
+      font-size: 13px;
+      cursor: pointer;
+      padding: 0;
+    }
+    .login-strength {
+      margin-bottom: 16px;
+    }
+    .login-strength-track {
+      height: 6px;
+      background: rgba(226, 232, 240, 0.9);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .login-strength-text {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 6px;
+    }
+    @media (max-width: 640px) {
+      .login-card {
+        min-height: auto;
+        padding: 26px 20px 24px;
+        border-radius: 24px;
+      }
+      .login-copy h1 {
+        font-size: 30px;
+      }
+      .login-tabs {
+        gap: 18px;
+      }
+    }
 
 </style>
 </head>
 <body>
-<div id="loginPage" style="display:none;position:fixed;inset:0;background:var(--bg-primary);z-index:9999;align-items:center;justify-content:center;">
-  <div style="max-width:400px;width:90%;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:40px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
-    <div style="text-align:center;margin-bottom:32px;">
-      <div style="font-size:48px;margin-bottom:16px;">🔐</div>
-      <h1 style="font-size:24px;font-weight:700;margin-bottom:8px;background:linear-gradient(135deg, var(--text-primary), var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;" id="authTitle">Guoya Dashboard Login</h1>
-      <p style="color:var(--text-secondary);font-size:14px;" id="authSubtitle">Enter your credentials</p>
+<div id="loginPage" class="login-shell">
+  <div class="login-card">
+    <div class="login-brand">
+      <img src="logo.png" alt="果芽云 Guoya Cloud">
     </div>
-    
+    <div class="login-kicker"><span class="login-kicker-dot"></span><span>登录 Log in</span></div>
+    <div class="login-copy">
+      <h1 id="authTitle">欢迎使用<br>果芽云 OpenClaw 控制台</h1>
+      <p id="authSubtitle">使用账号密码登录，查看智能体会话、用量、日志和系统状态。</p>
+    </div>
+    <div class="login-tabs">
+      <button type="button" class="login-tab active" id="loginTabBtn" onclick="showLoginForm()">密码登录</button>
+      <button type="button" class="login-tab" id="registerTabBtn" onclick="showRegistrationForm()">注册账号</button>
+      <button type="button" class="login-tab" id="recoveryTabBtn" onclick="showRecoveryForm()">找回密码</button>
+    </div>
+
     <form id="registerForm" style="display:none;" onsubmit="return handleRegister(event)">
-      <div style="margin-bottom:16px;">
-        <input type="text" id="regUsername" placeholder="Username" style="width:100%;padding:14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:14px;" autocomplete="username" required>
+      <div class="login-field">
+        <input type="text" id="regUsername" placeholder="请输入用户名" autocomplete="username" required>
       </div>
-      <div style="margin-bottom:16px;">
-        <input type="password" id="regPassword" placeholder="Password" style="width:100%;padding:14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:14px;" autocomplete="new-password" required minlength="8">
+      <div class="login-field">
+        <input type="password" id="regPassword" placeholder="请输入密码" autocomplete="new-password" required minlength="8">
       </div>
-      <div style="margin-bottom:16px;">
-        <input type="password" id="regPasswordConfirm" placeholder="Confirm Password" style="width:100%;padding:14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:14px;" autocomplete="new-password" required>
+      <div class="login-field">
+        <input type="password" id="regPasswordConfirm" placeholder="请再次输入密码" autocomplete="new-password" required>
       </div>
-      <div style="margin-bottom:20px;">
-        <div style="height:6px;background:var(--bg-primary);border-radius:3px;overflow:hidden;">
-          <div id="passwordStrengthBar" style="height:100%;width:0%;transition:all 0.3s;border-radius:3px;"></div>
+      <div class="login-strength">
+        <div class="login-strength-track">
+          <div id="passwordStrengthBar" style="height:100%;width:0%;transition:all 0.3s;border-radius:999px;"></div>
         </div>
-        <div id="passwordStrengthText" style="font-size:11px;color:var(--text-muted);margin-top:4px;">Password must be 8+ chars with at least 1 letter and 1 number</div>
+        <div id="passwordStrengthText" class="login-strength-text">密码至少 8 位，并且包含字母和数字</div>
       </div>
-      <div id="registerError" style="display:none;color:var(--red);font-size:13px;margin-bottom:16px;padding:12px;background:rgba(239,68,68,0.1);border-radius:6px;border:1px solid rgba(239,68,68,0.3);"></div>
-      <button type="submit" id="registerBtn" style="width:100%;padding:14px;background:linear-gradient(135deg, var(--accent), var(--purple));color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.2s;">Create Account</button>
+      <div id="registerError" class="login-error-box"></div>
+      <button type="submit" id="registerBtn" class="secondary-submit">创建账号</button>
     </form>
-    
+
     <form id="loginForm" style="display:none;" onsubmit="return handleLogin(event)">
-      <div style="margin-bottom:16px;" id="usernameInputContainer">
-        <input type="text" id="username" placeholder="Username" style="width:100%;padding:14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:14px;" autocomplete="username" required>
+      <div class="login-field" id="usernameInputContainer">
+        <input type="text" id="username" placeholder="请输入用户名" autocomplete="username" required>
       </div>
-      <div style="margin-bottom:16px;" id="passwordInputContainer">
-        <input type="password" id="password" placeholder="Password" style="width:100%;padding:14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:14px;" autocomplete="current-password" required>
+      <div class="login-field" id="passwordInputContainer">
+        <input type="password" id="password" placeholder="请输入密码" autocomplete="current-password" required>
       </div>
-      <div style="margin-bottom:16px;display:none;" id="totpInputContainer">
-        <input type="text" id="totpInput" placeholder="6-digit code" maxlength="6" pattern="[0-9]{6}" style="width:100%;padding:14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:14px;font-family:'JetBrains Mono',monospace;text-align:center;letter-spacing:0.5em;" autocomplete="off" inputmode="numeric">
+      <div class="login-field" style="display:none;" id="totpInputContainer">
+        <input type="text" id="totpInput" placeholder="请输入 6 位验证码" maxlength="6" pattern="[0-9]{6}" autocomplete="off" inputmode="numeric">
       </div>
-      <div style="margin-bottom:16px;display:flex;align-items:center;gap:8px;">
-        <input type="checkbox" id="rememberMeCheckbox" style="width:16px;height:16px;cursor:pointer;">
-        <label for="rememberMeCheckbox" style="color:var(--text-secondary);font-size:14px;cursor:pointer;">Remember me (3 hours)</label>
+      <div class="login-actions-row">
+        <label class="login-check" for="rememberMeCheckbox">
+          <input type="checkbox" id="rememberMeCheckbox">
+          <span>记住登录状态（3小时）</span>
+        </label>
+        <a href="#" onclick="showRecoveryForm();return false;" class="login-link">忘记密码？</a>
       </div>
-      <div id="loginError" style="display:none;color:var(--red);font-size:13px;margin-bottom:16px;padding:12px;background:rgba(239,68,68,0.1);border-radius:6px;border:1px solid rgba(239,68,68,0.3);"></div>
-      <button type="submit" id="loginBtn" style="width:100%;padding:14px;background:linear-gradient(135deg, var(--accent), var(--purple));color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.2s;">Login</button>
-      <div style="text-align:center;margin-top:16px;">
-        <a href="#" onclick="showRecoveryForm();return false;" style="color:var(--accent);font-size:13px;text-decoration:none;">Forgot password?</a>
-      </div>
+      <div id="loginError" class="login-error-box"></div>
+      <button type="submit" id="loginBtn" class="login-submit">登 录</button>
     </form>
-    
+
     <form id="recoveryForm" style="display:none;" onsubmit="return handleRecovery(event)">
-      <div style="margin-bottom:16px;">
-        <input type="text" id="recoveryToken" placeholder="Recovery Token" style="width:100%;padding:14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:14px;font-family:'JetBrains Mono',monospace;" required>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Check your server console or environment variables</div>
+      <div class="login-field">
+        <input type="text" id="recoveryToken" placeholder="请输入 Recovery Token" required>
+        <div class="login-inline-note">可在服务启动终端输出或环境变量中找到。</div>
       </div>
-      <div style="margin-bottom:16px;">
-        <input type="password" id="recoveryNewPassword" placeholder="New Password" style="width:100%;padding:14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:14px;" required minlength="8">
+      <div class="login-field">
+        <input type="password" id="recoveryNewPassword" placeholder="请输入新密码" required minlength="8">
       </div>
-      <div style="margin-bottom:20px;">
-        <input type="password" id="recoveryNewPasswordConfirm" placeholder="Confirm New Password" style="width:100%;padding:14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:14px;" required>
+      <div class="login-field">
+        <input type="password" id="recoveryNewPasswordConfirm" placeholder="请确认新密码" required>
       </div>
-      <div id="recoveryError" style="display:none;color:var(--red);font-size:13px;margin-bottom:16px;padding:12px;background:rgba(239,68,68,0.1);border-radius:6px;border:1px solid rgba(239,68,68,0.3);"></div>
-      <button type="submit" id="recoveryBtn" style="width:100%;padding:14px;background:linear-gradient(135deg, var(--accent), var(--purple));color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.2s;margin-bottom:12px;">Reset Password</button>
-      <button type="button" onclick="showLoginForm()" style="width:100%;padding:12px;background:var(--bg-secondary);color:var(--text-primary);border:1px solid var(--border);border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;">← Back to Login</button>
+      <div id="recoveryError" class="login-error-box"></div>
+      <button type="submit" id="recoveryBtn" class="secondary-submit">重置密码</button>
+      <button type="button" onclick="showLoginForm()" class="login-back">返回密码登录</button>
     </form>
   </div>
 </div>
@@ -3226,7 +3472,7 @@
       <div class="nav-dropdown">
         <div class="nav-dropdown-trigger" onclick="toggleNavDropdown(this, event)"><span class="icon">📊</span> 监控中心 / Monitoring ▾</div>
         <div class="nav-dropdown-content">
-          <div class="nav-item nav-link active" data-page="overview"><span class="icon">📊</span><span class="nav-text">数据概览 / Overview</span></div>
+          <div class="nav-item nav-link active" data-page="overview"><span class="icon">📊</span><span class="nav-text">果芽云总览 / Dashboard</span></div>
           <div class="nav-item nav-link" data-page="sessions"><span class="icon">💬</span><span class="nav-text">会话历史 / Sessions</span></div>
           <div class="nav-item nav-link" data-page="costs"><span class="icon">💰</span><span class="nav-text">费用统计 / Costs</span></div>
           <div class="nav-item nav-link" data-page="feed" style="display:none;"><span class="icon">⚡</span><span class="nav-text">实时动态 / Live Feed</span></div>
@@ -3422,8 +3668,8 @@
 
   <div class="page active" id="overview">
       <div class="page-header">
-        <h1 class="page-title">数据概览 / Overview</h1>
-        <p class="page-subtitle">智能体活动与系统运行状态监控 / Agent activity and system performance</p>
+        <h1 class="page-title">果芽云控制台 / Guoya Dashboard</h1>
+        <p class="page-subtitle">查看智能体运行状态、会话趋势、成本消耗与关键排障入口</p>
       </div>
 
       <div class="grid mb-24" style="grid-template-columns: repeat(3, 1fr);">
@@ -4321,9 +4567,22 @@ function clearStoredToken() {
   sessionStorage.removeItem(TOKEN_EXPIRY_KEY);
 }
 
+function setAuthTab(mode) {
+  const map = {
+    login: 'loginTabBtn',
+    register: 'registerTabBtn',
+    recovery: 'recoveryTabBtn'
+  };
+  Object.entries(map).forEach(([key, id]) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active', key === mode);
+  });
+}
+
 function showRegistrationForm() {
-  document.getElementById('authTitle').textContent = '创建账户 / Create Account';
-  document.getElementById('authSubtitle').textContent = '设置您的面板管理凭据 / Set up your credentials';
+  setAuthTab('register');
+  document.getElementById('authTitle').innerHTML = '创建账号<br>开通果芽云控制台';
+  document.getElementById('authSubtitle').textContent = '设置你的登录账号和密码，完成后即可进入控制台。';
   document.getElementById('registerForm').style.display = 'block';
   document.getElementById('loginForm').style.display = 'none';
   document.getElementById('recoveryForm').style.display = 'none';
@@ -4334,8 +4593,9 @@ function showRegistrationForm() {
 }
 
 function showLoginForm() {
-  document.getElementById('authTitle').textContent = '果芽云面板登录 / Guoya Dashboard Login';
-  document.getElementById('authSubtitle').textContent = '请输入您的登录凭据 / Enter your credentials';
+  setAuthTab('login');
+  document.getElementById('authTitle').innerHTML = '欢迎使用<br>果芽云 OpenClaw 控制台';
+  document.getElementById('authSubtitle').textContent = '使用账号密码登录，查看智能体会话、用量、日志和系统状态。';
   document.getElementById('registerForm').style.display = 'none';
   document.getElementById('loginForm').style.display = 'block';
   document.getElementById('recoveryForm').style.display = 'none';
@@ -4349,8 +4609,9 @@ function showLoginForm() {
 }
 
 function showRecoveryForm() {
-  document.getElementById('authTitle').textContent = '重置密码 / Reset Password';
-  document.getElementById('authSubtitle').textContent = '输入恢复令牌与新密码 / Enter recovery token and new password';
+  setAuthTab('recovery');
+  document.getElementById('authTitle').innerHTML = '重置密码<br>恢复你的登录权限';
+  document.getElementById('authSubtitle').textContent = '输入 Recovery Token 和新密码，完成后返回登录。';
   document.getElementById('registerForm').style.display = 'none';
   document.getElementById('loginForm').style.display = 'none';
   document.getElementById('recoveryForm').style.display = 'block';
@@ -4472,7 +4733,7 @@ async function handleLogin(event) {
   const rememberMe = document.getElementById('rememberMeCheckbox').checked;
   
   loginBtn.disabled = true;
-  loginBtn.textContent = 'Logging in...';
+  loginBtn.textContent = '登 录 中...';
   loginError.style.display = 'none';
   
   try {
@@ -4494,13 +4755,14 @@ async function handleLogin(event) {
     try { data = await res.json(); } catch (e) { data = {}; }
 
     if (data.requiresMfa) {
-      document.getElementById('authSubtitle').textContent = 'Enter your 6-digit TOTP code';
+      document.getElementById('authTitle').innerHTML = '安全验证<br>请输入动态验证码';
+      document.getElementById('authSubtitle').textContent = '检测到已开启 MFA，请输入 6 位 TOTP 验证码。';
       document.getElementById('usernameInputContainer').style.display = 'none';
       document.getElementById('passwordInputContainer').style.display = 'none';
       document.getElementById('totpInputContainer').style.display = 'block';
       totpInput.focus();
       loginBtn.disabled = false;
-      loginBtn.textContent = 'Verify';
+      loginBtn.textContent = '验 证';
       return false;
     }
     
@@ -4515,7 +4777,7 @@ async function handleLogin(event) {
       }
       loginError.style.display = 'block';
       loginBtn.disabled = false;
-      loginBtn.textContent = totpCode ? 'Verify' : 'Login';
+      loginBtn.textContent = totpCode ? '验 证' : '登 录';
       
       if (totpCode) {
         totpInput.value = '';
@@ -4526,7 +4788,7 @@ async function handleLogin(event) {
     loginError.textContent = 'Network error. Please try again.';
     loginError.style.display = 'block';
     loginBtn.disabled = false;
-    loginBtn.textContent = totpCode ? 'Verify' : 'Login';
+    loginBtn.textContent = totpCode ? '验 证' : '登 录';
   }
   
   return false;

@@ -1,602 +1,119 @@
-<img width="2752" height="1536" alt="header" src="https://github.com/user-attachments/assets/f9287e6d-7db3-44e0-9a95-3bf8020f3b19" />
+# Guoya OpenClaw Dashboard
 
-# OpenClaw Agent Dashboard
+OpenClaw 的本地可视化面板，面向已经安装 OpenClaw 的使用场景。
 
-[中文说明（README.zh-CN.md）](README.zh-CN.md)
+这个仓库当前以单文件前端加 Node.js 后端的方式运行，主要用于查看会话、用量、成本、日志、配置和系统状态。README 内容已按当前代码重新整理，不再沿用上游项目的旧截图和旧版本说明。
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Node.js](https://img.shields.io/badge/Node.js-v18+-green.svg)](https://nodejs.org/)
-[![OpenClaw](https://img.shields.io/badge/OpenClaw-Compatible-purple.svg)](https://openclaw.dev)
+## 当前代码包含的功能
 
-A beautiful, secure, real-time monitoring dashboard for OpenClaw agents. Track sessions, monitor API usage, view costs, manage memory files, and keep tabs on system health - all in one place.
+- 会话总览与会话详情
+- 成本统计与模型维度用量统计
+- Claude/Gemini usage 抓取与展示
+- Live Feed 实时消息流
+- Memory 文件查看
+- Key Files/技能文件查看与编辑
+- Cron 任务查看、启停和手动触发
+- 系统状态、健康历史和响应时间
+- 服务状态查看与常用维护操作
+- 日志查看
+- 用户名密码登录
+- Recovery Token 重置密码
+- TOTP MFA
+- 配置读取与保存
+- Docker 信息查看与基础操作
+- Tailscale 状态查看
+- 通知中心与审计日志
 
-## Preview
+说明：
 
-The current repository no longer ships inherited screenshots from the original project. Replace this section with fresh screenshots from your own deployed version when ready.
+- 部分页面在前端里默认隐藏，但后端接口和页面结构仍然存在。
+- Docker、Tailscale、Claude usage、Gemini usage 等功能依赖本机环境，缺少对应命令时会显示为空或不可用。
 
-## ✨ Features
+## 安装方式
 
-- 🤖 **Session Management** - View all agent sessions with real-time activity status
-- 📊 **Rate Limit Monitoring** - Track Claude and Gemini API usage against rolling windows
-- 💰 **Cost Analysis** - Detailed spending breakdowns by model, session, and time period
-- ⚡ **Live Feed** - Real-time stream of agent messages across all sessions
-- 🧠 **Memory Viewer** - Browse and read agent memory files (MEMORY.md, HEARTBEAT.md, daily notes)
-- 📁 **Files Manager** - View and edit workspace files, skills, and configs with security hardening
-- 📈 **System Health** - CPU, RAM, disk, temperature monitoring with sparklines
-- 🔄 **Service Control** - Quick actions to restart OpenClaw, dashboard, or other services
-- 📋 **Log Viewer** - Real-time system logs with auto-refresh
-- ⏰ **Cron Management** - View, enable/disable, and manually trigger cron jobs
-- 🌐 **Tailscale Integration** - View Tailscale status, IP, and connected peers
-- 🎯 **Activity Heatmap** - Visualize peak usage hours over the last 30 days
-- 🔥 **Streak Tracking** - Monitor daily activity streaks
-- 🔍 **Session Search & Filtering** - Filter by status, model, date range with live search
-- 🎨 **Dark/Light Theme** - Toggle between dark and light modes with persistent preference
-- ⌨️ **Keyboard Shortcuts** - Navigate quickly with hotkeys (1-7, Space, /, Esc, ?)
-- 📱 **Mobile Responsive** - Works on phones and tablets
-- 🔔 **Browser Notifications** - Get alerted when usage limits are approaching
-- 📊 **Timeline View** - Visual timeline of session activity
-- 💾 **Git Activity** - Track recent commits across your repos
-- 🎛️ **Claude Usage Scraper** - Fetch real usage data from Claude Code CLI
-- 🔷 **Gemini Usage Tracking** - Monitor Google Gemini model usage with per-model breakdowns
-- 🔀 **Provider Switching** - Toggle between Claude and Gemini usage on the overview card
-- 📊 **Per-Model Selector** - Choose which model/window to display (Opus, Sonnet, Pro, Flash, etc.)
-- 🔄 **Auto-Refresh** - Live data updates every 5 seconds
-- 🌟 **Lifetime Stats** - Total tokens, messages, cost since first session
-- 📈 **Health History** - 24-hour CPU, RAM, temperature, and disk usage sparklines
-- 🎯 **Quick Actions** - One-click system maintenance (updates, cleanup, restarts)
-- 🍎 **macOS Compatible** - Full support for macOS system stats, services, and memory reporting
-- 🛡️ **System Security Dashboard** - UFW rules, open ports, fail2ban, SSH logs, security audit (requires re-authentication)
-- ⚙️ **Config Editor** - Edit OpenClaw configuration with JSON validation, auto-backup, and gateway restart (requires re-authentication)
-- 🐳 **Docker Management** - View containers, images, system usage; start/stop/restart containers; prune unused resources
-- 🔔 **Notification Center** - Audit log event feed with unread badge counter (login, config changes, security events)
-- 🔐 **Username/Password Auth** - Secure registration with PBKDF2 password hashing
-- 🔑 **TOTP MFA** - Optional two-factor authentication (Google Authenticator compatible)
-- 💾 **Remember Me** - Session-only or 3-hour persistent login
-- 🛡️ **Security Hardened** - HSTS, CSP, rate limiting, timing-safe comparisons, audit logging
-- 📦 **Minimal Dependencies** - Pure Node.js, no database or npm packages required. Optional: `jq` (Docker page), `tmux` + `python3` (Claude CLI usage scraper), `docker` (Docker management)
-
-## 🚀 Quick Start (One-Click)
-
-The easiest way to get started is by using the bundled installer:
+### 方式 1：推荐，自动安装
 
 ```bash
-# Clone the repository
-git clone https://github.com/tugcantopaloglu/openclaw-dashboard.git
-cd openclaw-dashboard
-
-# Run the installer
-./install.sh
-```
-
-Follow the prompts to set your workspace path and port. Once finished, run:
-```bash
-./run-dashboard.sh
-```
-
-Visit `http://localhost:7000` (or your chosen port) in your browser.
-
-### OpenClaw Auto Setup (non-interactive)
-
-For agent-based setup (no prompts):
-
-```bash
+git clone https://github.com/evanwyl/guoya-openclaw-dashboard.git
+cd guoya-openclaw-dashboard
 NONINTERACTIVE=1 WORKSPACE_DIR=$HOME/clawd OPENCLAW_DIR=$HOME/.openclaw DASHBOARD_PORT=7000 ./install.sh
 ./run-dashboard.sh
 ```
 
-## 📦 Installation
-
-### Prerequisites
-
-- **Node.js** v18 or higher
-- **OpenClaw** installed
-
-### Manual Configuration
-
-If you prefer starting the server directly, follow these steps:
-
-1. **Configure environment** (optional)
-   ```bash
-   export WORKSPACE_DIR=/path/to/your/workspace
-   export OPENCLAW_DIR=$HOME/.openclaw
-   export OPENCLAW_AGENT=main
-   ```
-
-2. **Start the server**
-   ```bash
-   node server.js
-   ```
-
-   The server will print:
-   ```
-   🔐 Recovery Token
-   <your token value>
-   Dashboard: http://0.0.0.0:7000
-   ```
-
-   **Save the recovery token** — you'll need it if you forget your password.
-
-3. **Access the dashboard**
-   Open `http://localhost:7000` (or your chosen port) and register your account.
-
-### Systemd Service (install.sh)
-
-To run the dashboard as a system service with auto-start and crash recovery:
+浏览器打开：
 
 ```bash
-sudo ./install.sh
+http://localhost:7000
 ```
 
-This will:
-- Create `/etc/systemd/system/agent-dashboard.service`
-- Enable and start the service
-- Set your workspace path and generate a recovery token
-
-View logs:
-```bash
-journalctl -u agent-dashboard -f
-```
-
-### Environment Variables
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DASHBOARD_PORT` | Server port | `7000` |
-| `DASHBOARD_TOKEN` | Recovery token for password reset | Auto-generated on startup |
-| `WORKSPACE_DIR` | OpenClaw workspace path | `$OPENCLAW_WORKSPACE` or current directory |
-| `OPENCLAW_DIR` | OpenClaw config directory | `~/.openclaw` |
-| `OPENCLAW_AGENT` | Agent ID to monitor | `main` |
-| `DASHBOARD_ALLOW_HTTP` | Allow HTTP from non-local IPs | `false` |
-
-**Examples:**
+### 方式 2：手动启动
 
 ```bash
-# Custom port
-DASHBOARD_PORT=8080 node server.js
-
-# Custom recovery token
-DASHBOARD_TOKEN=my_secret_token_12345 node server.js
-
-# Different workspace
-WORKSPACE_DIR=/mnt/data/openclaw node server.js
-```
-
-## 🔐 Authentication
-
-The dashboard uses **username and password authentication** with secure server-side sessions.
-
-### First-Time Registration
-
-1. Visit the dashboard URL (e.g., `http://localhost:7000`)
-2. You'll see a registration screen
-3. Choose a username and password
-4. Click **Register**
-5. Log in with your new credentials
-
-### Login
-
-- Enter your **username** and **password**
-- Optionally check **"Remember me"** to stay logged in for 3 hours (uses `localStorage`)
-- Without "Remember me", your session lasts only until you close the browser (uses `sessionStorage`)
-
-### Password Security
-
-- **PBKDF2 hashing** — 100,000 iterations with SHA-512
-- **Random salt** — Unique per password
-- **Server-side sessions** — Passwords never stored in browser, only session tokens
-- **Timing-safe comparisons** — Prevents timing attacks on password verification
-
-### Rate Limiting
-
-To prevent brute-force attacks:
-- **5 failed login attempts** → 15-minute soft lockout
-- **20 failed login attempts** → Hard lockout (requires service restart)
-- Rate limits are in-memory and reset when the service restarts
-
-## 🔑 Multi-Factor Authentication (MFA)
-
-Add an extra layer of security with time-based one-time passwords (TOTP).
-
-### Enabling MFA
-
-1. **Log in** to the dashboard
-2. Go to the **Security** page (sidebar)
-3. Click **"Enable MFA"**
-4. A **QR code** appears — scan it with your authenticator app:
-   - Google Authenticator (iOS, Android)
-   - Authy (iOS, Android, Desktop)
-   - Microsoft Authenticator (iOS, Android)
-   - 1Password, Bitwarden, or any TOTP-compatible app
-5. Enter the **6-digit code** shown in your app to verify
-6. MFA is now active! 🎉
-
-### Using MFA
-
-Once enabled, every login requires:
-1. Your **username** and **password** (as usual)
-2. A **6-digit TOTP code** from your authenticator app
-
-- Codes refresh every **30 seconds**
-- The dashboard accepts codes with **±1 window tolerance** for clock drift (30 seconds before/after)
-
-### Disabling MFA
-
-1. Go to the **Security** page
-2. Click **"Disable MFA"**
-3. Enter your current **6-digit TOTP code** to confirm
-4. MFA is now disabled
-
-### Resetting MFA (if locked out)
-
-If you lose access to your authenticator app (lost phone, uninstalled app, etc.):
-
-1. **SSH into your server**
-2. **Run this command** to clear the MFA secret:
-   ```bash
-   node -e "const fs=require('fs');const c=JSON.parse(fs.readFileSync('/root/clawd/data/credentials.json','utf8'));delete c.mfaSecret;fs.writeFileSync('/root/clawd/data/credentials.json',JSON.stringify(c,null,2));console.log('MFA cleared')"
-   ```
-3. **Restart the dashboard**:
-   ```bash
-   systemctl restart agent-dashboard
-   ```
-4. Log in with just your **username** and **password**
-5. Re-enable MFA with a new QR code
-
-**Important:** Adjust the path `/root/clawd/data/credentials.json` if your workspace is elsewhere.
-
-## 🔓 Password Recovery
-
-### Forgot Password?
-
-If you forget your password:
-
-1. Click **"Forgot password?"** on the login screen
-2. Enter your **recovery token** (see "Finding Your Recovery Token" below)
-3. Set a **new password**
-4. Log in with your new password
-
-### Finding Your Recovery Token
-
-The recovery token (`DASHBOARD_TOKEN`) is printed when the server starts. You can find it in several places:
-
-#### Check Server Startup Logs
-```bash
-journalctl -u agent-dashboard | grep "Recovery token"
-```
-
-Output:
-```
-🔑 Recovery token: 3e6b91f352418b486a9aa9d82fbbc1b1
-```
-
-#### Check Systemd Override Config
-```bash
-cat /etc/systemd/system/agent-dashboard.service.d/override.conf
-```
-
-Look for:
-```ini
-Environment=DASHBOARD_TOKEN=3e6b91f352418b486a9aa9d82fbbc1b1
-```
-
-#### Check Environment Variable
-If you set it manually:
-```bash
-echo $DASHBOARD_TOKEN
-```
-
-### Changing Your Password
-
-To change your password while logged in:
-
-1. Go to the **Security** page
-2. Enter your **current password**
-3. Enter your **new password**
-4. Click **"Change Password"**
-5. All other sessions are invalidated (you'll need to log in again elsewhere)
-
-### Complete Account Reset (Nuclear Option)
-
-If everything is locked and you can't log in:
-
-1. **SSH into your server**
-2. **Delete the credentials file**:
-   ```bash
-   rm /root/clawd/data/credentials.json
-   ```
-3. **Restart the dashboard**:
-   ```bash
-   systemctl restart agent-dashboard
-   ```
-4. **Visit the dashboard** — the registration screen appears
-5. **Create a new account** from scratch
-
-**Warning:** This deletes your username, password, and MFA settings. Memory files and audit logs are not affected.
-
-## 🛡️ Security Features
-
-The dashboard is built with security best practices:
-
-- **PBKDF2 password hashing** — 100,000 iterations, SHA-512, random salt
-- **Timing-safe comparisons** — Prevents timing attacks on token/password verification
-- **Server-side sessions** — Session tokens stored in memory, passwords never sent to browser
-- **Rate limiting** — Unified rate limiter for login attempts (5 soft / 20 hard lockout)
-- **HTTPS enforcement** — HTTP blocked except from localhost and Tailscale (100.64.0.0/10)
-- **Security headers**:
-  - **HSTS** — Force HTTPS on future visits
-  - **CSP** — Content Security Policy (no inline scripts, same-origin)
-  - **X-Frame-Options: DENY** — Prevent clickjacking
-  - **X-Content-Type-Options: nosniff** — Prevent MIME sniffing
-  - **X-XSS-Protection: 1; mode=block** — Legacy XSS protection
-- **Audit logging** — All auth events and destructive actions logged to `data/audit.log`
-- **CORS** — Same-origin only, no wildcard (`*`) allowed
-- **Input validation**:
-  - Service whitelist for logs and actions
-  - Path traversal protection for file access
-  - Payload size limits (1MB max)
-- **Automatic backups** — `.bak` files created before overwriting workspace files
-
-## 🌐 Network Security
-
-The dashboard is designed for **local or Tailscale access**:
-
-### Recommended Access Methods
-
-1. **Localhost** — Access from the same machine: `http://localhost:7000`
-2. **Tailscale** — Access from your Tailscale network: `http://100.x.x.x:7000`
-   - Tailscale provides **automatic TLS encryption** (MagicDNS + HTTPS)
-   - Tailscale IPs (100.64.0.0 to 100.127.255.255) are exempt from HTTPS enforcement
-3. **Local network** — Access from LAN (use HTTPS or set `DASHBOARD_ALLOW_HTTP=true`)
-
-### HTTPS Enforcement
-
-By default, the dashboard **blocks HTTP access** from non-local IPs. Exemptions:
-- **Localhost** (127.0.0.1, ::1)
-- **Tailscale IPs** (100.64.0.0/10)
-
-For other networks, the dashboard requires HTTPS or the `X-Forwarded-Proto: https` header (from a reverse proxy).
-
-To allow HTTP from all IPs (not recommended):
-```bash
-DASHBOARD_ALLOW_HTTP=true node server.js
-```
-
-### Don't Expose to Public Internet
-
-**This dashboard is NOT hardened for public internet exposure.** While it has authentication and rate limiting, it's designed for private networks. If you must expose it:
-- Use a reverse proxy (nginx, Caddy) with HTTPS
-- Add IP allowlisting
-- Consider VPN (Tailscale, WireGuard) instead
-
-## 🛠️ Troubleshooting
-
-### "Too many failed attempts"
-
-**Problem:** You see "Too many failed login attempts. Please try again later."
-
-**Solutions:**
-- Wait **15 minutes** for the soft lockout to expire
-- Restart the service to clear rate limits:
-  ```bash
-  systemctl restart agent-dashboard
-  ```
-- Rate limits are in-memory and reset on restart
-
-### Can't log in after password change
-
-**Problem:** Your password was changed but you can't log in.
-
-**Solution:** Use the **"Forgot password?"** flow with your recovery token to set a new password.
-
-### MFA code not working
-
-**Problem:** The 6-digit TOTP code is rejected.
-
-**Solutions:**
-- Ensure your **phone's clock is synchronized**:
-  - iOS: Settings → General → Date & Time → Set Automatically
-  - Android: Settings → System → Date & Time → Automatic date & time
-- TOTP codes have **±30 second tolerance** for clock drift
-- Try entering the **next code** (wait 30 seconds for it to refresh)
-- If still failing, **reset MFA via SSH** (see "Resetting MFA" section)
-
-### Dashboard not loading
-
-**Problem:** Browser shows a blank page or connection error.
-
-**Solutions:**
-1. **Check service status**:
-   ```bash
-   systemctl status agent-dashboard
-   ```
-2. **Check logs**:
-   ```bash
-   journalctl -u agent-dashboard -n 50
-   ```
-3. **Verify port**:
-   ```bash
-   curl http://localhost:7000/api/auth/status
-   ```
-   Should return:
-   ```json
-   {"authenticated": false, "requiresRegistration": false}
-   ```
-
-### "HTTPS required" error
-
-**Problem:** Browser shows "HTTPS required. Access via localhost, Tailscale, or enable HTTPS."
-
-**Solutions:**
-- Access via **localhost**: `http://localhost:7000`
-- Access via **Tailscale**: `http://100.x.x.x:7000`
-- Set `DASHBOARD_ALLOW_HTTP=true` in environment (not recommended):
-  ```bash
-  # Add to /etc/systemd/system/agent-dashboard.service.d/override.conf
-  Environment=DASHBOARD_ALLOW_HTTP=true
-  
-  # Reload and restart
-  systemctl daemon-reload
-  systemctl restart agent-dashboard
-  ```
-
-### Blank page after update
-
-**Problem:** Dashboard shows a blank page after pulling new code.
-
-**Solutions:**
-- **Hard refresh**: `Ctrl+Shift+R` (Windows/Linux) or `Cmd+Shift+R` (macOS)
-- **Clear browser cache** for the dashboard URL
-- **Check browser console** (F12 → Console tab) for JavaScript errors
-
-## 📡 API Reference
-
-The dashboard exposes a REST API for programmatic access. All endpoints require authentication via `Authorization: Bearer <sessionToken>` header.
-
-### Unauthenticated Endpoints
-
-- `GET /api/auth/status` — Check authentication status
-- `POST /api/auth/login` — Log in with username/password (+ TOTP if MFA enabled)
-- `POST /api/auth/register` — Register a new account (only if no credentials exist)
-- `POST /api/auth/reset-password` — Reset password with recovery token
-
-### Authenticated Endpoints
-
-All other endpoints require authentication:
-
-- `GET /api/config` — Dashboard configuration
-- `GET /api/sessions` — List all agent sessions
-- `GET /api/usage` — 5-hour rolling window usage data
-- `GET /api/costs` — Spending data by day, model, and session
-- `GET /api/system` — System health metrics
-- `GET /api/memory-files` — List memory files
-- `GET /api/memory-file?path=<path>` — Read a memory file
-- `GET /api/key-files` — List workspace files (skills, configs)
-- `GET /api/key-file?path=<name>` — Read a workspace file
-- `POST /api/key-file` — Write to a workspace file (with backup)
-- `GET /api/crons` — List cron jobs
-- `POST /api/cron/<id>/toggle` — Enable/disable a cron job
-- `POST /api/cron/<id>/run` — Manually trigger a cron job
-- `GET /api/logs?service=<service>&lines=<N>` — Fetch system logs
-- `POST /api/action/<action>` — Run quick actions (restart-openclaw, restart-dashboard, etc.)
-- `POST /api/claude-usage-scrape` — Trigger Claude usage scrape
-- `GET /api/claude-usage` — Get last scraped Claude usage
-- `POST /api/gemini-usage-scrape` — Trigger Gemini usage scrape
-- `GET /api/gemini-usage` — Get last scraped Gemini usage
-- `GET /api/live` — Server-Sent Events stream of real-time messages
-- `GET /api/notifications?limit=<N>` — Audit log events for notification center
-- `POST /api/reauth` — Re-authenticate for sensitive pages (Security, Config)
-- `GET /api/openclaw-config` — Read OpenClaw configuration file
-- `PUT /api/openclaw-config` — Save config with auto-backup and gateway restart
-- `GET /api/sys-security` — System security info (UFW, ports, fail2ban, SSH logs)
-- `GET /api/docker` — List Docker containers, images, and system usage
-- `POST /api/docker/action` — Docker actions (start/stop/restart container, prune)
-- `GET /api/services` — List systemd services
-- `POST /api/services/action` — Service actions (start/stop/restart, whitelisted only)
-
-For detailed request/response examples, see the previous version of this README or explore the API in the browser's Network tab.
-
-## 📂 Data Files
-
-The dashboard stores data in your workspace directory:
-
-| File | Purpose |
-|------|---------|
-| `data/credentials.json` | Username + hashed password + MFA secret |
-| `data/audit.log` | Security audit trail (auto-rotates at 10MB) |
-| `data/health-history.json` | CPU/RAM/Temp/Disk history for sparklines |
-| `data/claude-usage.json` | Last scraped Claude usage data |
-| `data/gemini-usage.json` | Last scraped Gemini usage data |
-
-**Credentials file structure:**
-```json
-{
-  "username": "admin",
-  "passwordHash": "pbkdf2_sha512$100000$...",
-  "salt": "...",
-  "mfaSecret": "BASE32SECRET..." // Only if MFA enabled
-}
-```
-
-## 🔗 OpenClaw Integration
-
-The dashboard automatically detects:
-- **Sessions** from `$OPENCLAW_DIR/agents/$AGENT_ID/sessions/`
-- **Cron jobs** from `$OPENCLAW_DIR/cron/jobs.json`
-- **Memory files** from `$WORKSPACE_DIR/MEMORY.md`, `HEARTBEAT.md`, and `memory/*.md`
-- **Git repos** from `$WORKSPACE_DIR/projects/*/`
-- **Health data** saved to `$WORKSPACE_DIR/data/health-history.json`
-
-### Required/Optional Files
-
-The dashboard works best when these files exist:
-- `$WORKSPACE_DIR/MEMORY.md` - Agent long-term memory
-- `$WORKSPACE_DIR/HEARTBEAT.md` - Heartbeat task list
-- `$WORKSPACE_DIR/memory/YYYY-MM-DD.md` - Daily memory notes
-- `$WORKSPACE_DIR/scripts/scrape-claude-usage.sh` - Claude usage scraper
-- `$WORKSPACE_DIR/scripts/parse-claude-usage.py` - Claude usage parser
-- Optional: `$WORKSPACE_DIR/scripts/scrape-gemini-usage.sh` - Gemini usage scraper
-- Optional: `$WORKSPACE_DIR/scripts/parse-gemini-usage.py` - Gemini usage parser
-
-## ⌨️ Keyboard Shortcuts
-
-| Key | Action |
-|-----|--------|
-| `1` | Switch to Overview |
-| `2` | Switch to Sessions |
-| `3` | Switch to Costs |
-| `4` | Switch to Rate Limits |
-| `5` | Switch to Memory |
-| `6` | Switch to Files |
-| `7` | Switch to Live Feed |
-| `8` | Switch to Logs |
-| `9` | Switch to Security |
-| `Space` | Pause/Resume Feed (when on Live Feed page) |
-| `/` | Focus search box |
-| `Esc` | Close modals and overlays |
-| `?` | Show keyboard shortcuts help |
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these guidelines:
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
-
-### Development Setup
-
-```bash
-git clone https://github.com/tugcantopaloglu/openclaw-dashboard.git
-cd openclaw-dashboard
-export WORKSPACE_DIR=/path/to/test/workspace
+cd guoya-openclaw-dashboard
+export WORKSPACE_DIR=$HOME/clawd
+export OPENCLAW_DIR=$HOME/.openclaw
+export OPENCLAW_AGENT=main
 node server.js
 ```
 
-The dashboard has no build step — edit `server.js` or `index.html` and reload.
+首次启动后，终端会打印 Recovery Token。请保存好，忘记密码时会用到。
 
-### Code Style
+## 运行要求
 
-- **No comments** in code (self-documenting)
-- **Brief and direct** function names
+- Node.js 18 或更高
+- 本机已安装 OpenClaw
+- `python3`：Claude/Gemini usage 解析脚本需要
+- `tmux`：Claude usage 抓取需要
+- `jq`：Docker 页面部分命令需要
+- `docker`：Docker 页面需要
+- `tailscale`：Tailscale 状态页需要
 
-## 📄 License
+## 常用环境变量
 
-MIT License - see [LICENSE](LICENSE) file for details.
+| 变量 | 作用 | 默认值 |
+|---|---|---|
+| `DASHBOARD_PORT` | 面板端口 | `7000` |
+| `WORKSPACE_DIR` | 工作目录 | 当前目录或 `$OPENCLAW_WORKSPACE` |
+| `OPENCLAW_DIR` | OpenClaw 目录 | `~/.openclaw` |
+| `OPENCLAW_AGENT` | 默认 agent | `main` |
+| `DASHBOARD_TOKEN` | 密码找回 token | 自动生成 |
+| `DASHBOARD_ALLOW_HTTP` | 允许非 localhost 明文 HTTP | `false` |
+| `NONINTERACTIVE` | 安装脚本无交互模式 | `0` |
 
-## 🙏 Acknowledgments
+## 目录说明
 
-- Built with [Claude Code](https://claude.ai)
-- Built for [OpenClaw](https://openclaw.dev)
-- Inspired by modern dashboards (Grafana, Vercel, Railway)
-- Font: [Inter](https://rsms.me/inter/) & [JetBrains Mono](https://www.jetbrains.com/lp/mono/)
+- [server.js](server.js)：后端入口与 API
+- [index.html](index.html)：前端页面
+- [install.sh](install.sh)：安装脚本
+- [run-dashboard.sh](run-dashboard.sh)：启动脚本
+- [scripts/scrape-claude-usage.sh](scripts/scrape-claude-usage.sh)：Claude usage 抓取
+- [scripts/parse-claude-usage.py](scripts/parse-claude-usage.py)：Claude usage 解析
+- [scripts/scrape-gemini-usage.sh](scripts/scrape-gemini-usage.sh)：Gemini usage 抓取
+- [scripts/parse-gemini-usage.py](scripts/parse-gemini-usage.py)：Gemini usage 解析
 
-## 📞 Support
+## 数据来源
 
-- **Issues:** [GitHub Issues](https://github.com/tugcantopaloglu/openclaw-dashboard/issues)
-- **Twitter:** [@tugcantopaloglu](https://twitter.com/tugcantopaloglu)
+面板主要读取以下位置的数据：
 
----
+- `$OPENCLAW_DIR/agents/$OPENCLAW_AGENT/sessions/`
+- `$OPENCLAW_DIR/cron/jobs.json`
+- `$WORKSPACE_DIR/MEMORY.md`
+- `$WORKSPACE_DIR/HEARTBEAT.md`
+- `$WORKSPACE_DIR/memory/*.md`
+- `$WORKSPACE_DIR/data/*.json`
 
-Made with ✨ by [Tuğcan Topaloğlu](https://github.com/tugcantopaloglu)
+## 安全说明
+
+- 默认更适合本机或内网使用，不建议直接裸露到公网
+- 已包含登录、会话校验、MFA、基础限流和审计日志
+- 如果需要外网访问，建议放在反向代理和 HTTPS 后面
+
+## 当前文档状态
+
+- README 已移除上游仓库遗留截图
+- 功能描述按当前代码重新整理
+- `RELEASE_NOTES.md` 已改为本仓库自己的发布说明
+
+## License
+
+MIT，见 [LICENSE](LICENSE)

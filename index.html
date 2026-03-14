@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agent Dashboard</title>
+<title>Guoya OpenClaw Dashboard</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%236366f1;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%238b5cf6;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='45' fill='url(%23grad)'/%3E%3Ccircle cx='35' cy='40' r='8' fill='%23fff'/%3E%3Ccircle cx='65' cy='40' r='8' fill='%23fff'/%3E%3Cpath d='M 30 65 Q 50 75 70 65' stroke='%23fff' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3152,7 +3152,7 @@
   <div style="max-width:400px;width:90%;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:40px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
     <div style="text-align:center;margin-bottom:32px;">
       <div style="font-size:48px;margin-bottom:16px;">🔐</div>
-      <h1 style="font-size:24px;font-weight:700;margin-bottom:8px;background:linear-gradient(135deg, var(--text-primary), var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;" id="authTitle">Dashboard Login</h1>
+      <h1 style="font-size:24px;font-weight:700;margin-bottom:8px;background:linear-gradient(135deg, var(--text-primary), var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;" id="authTitle">Guoya Dashboard Login</h1>
       <p style="color:var(--text-secondary);font-size:14px;" id="authSubtitle">Enter your credentials</p>
     </div>
     
@@ -3568,7 +3568,7 @@
           <h3 class="card-title">核心快速操作 / Quick Actions</h3>
           <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
             <button onclick="quickAction('restart-openclaw', event)" class="qa-btn qa-danger">🔄 Restart OpenClaw</button>
-            <button onclick="quickAction('restart-dashboard', event)" class="qa-btn">🔄 Restart Dashboard</button>
+            <button onclick="quickAction('restart-dashboard', event)" class="qa-btn">🔄 Restart Guoya Dashboard</button>
             <button onclick="quickAction('clear-cache', event)" class="qa-btn">🗑️ Clear Cache</button>
             <button onclick="scrapeClaudeUsage()" class="qa-btn">📊 Usage Scrape</button>
             <button onclick="quickAction('restart-tailscale', event)" class="qa-btn">🌐 Restart Tailscale</button>
@@ -4013,7 +4013,7 @@
         <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
           <select id="logService" style="padding:8px 12px;background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border);border-radius:8px;font-size:14px;font-weight:500;">
             <option value="openclaw">OpenClaw</option>
-            <option value="agent-dashboard">Agent Dashboard</option>
+            <option value="agent-dashboard">Guoya Dashboard</option>
             <option value="tailscaled">Tailscaled</option>
           </select>
           <input type="number" id="logLines" value="100" min="10" max="1000" step="10" style="width:100px;padding:8px 12px;background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border);border-radius:8px;font-size:14px;">
@@ -4334,7 +4334,7 @@ function showRegistrationForm() {
 }
 
 function showLoginForm() {
-  document.getElementById('authTitle').textContent = '仪表盘登录 / Dashboard Login';
+  document.getElementById('authTitle').textContent = '果芽云面板登录 / Guoya Dashboard Login';
   document.getElementById('authSubtitle').textContent = '请输入您的登录凭据 / Enter your credentials';
   document.getElementById('registerForm').style.display = 'none';
   document.getElementById('loginForm').style.display = 'block';
@@ -7260,7 +7260,7 @@ function showToast(message, type = 'info', duration = 4000) {
 async function quickAction(action, evt) {
   const confirmMsg = {
     'restart-openclaw': 'Restart OpenClaw? This will interrupt running tasks.',
-    'restart-dashboard': 'Restart Dashboard? Page will reload.',
+    'restart-dashboard': 'Restart Guoya Dashboard? Page will reload.',
     'restart-tailscale': 'Restart Tailscale? Network may drop briefly.',
     'update-openclaw': 'Update OpenClaw? This may take a minute.',
     'kill-tmux': 'Kill all tmux sessions? (including Claude persistent session)',
@@ -7511,7 +7511,7 @@ function updatePageTitle() {
   try {
     const cu = _cachedClaudeUsage;
     if (cu && cu.session) {
-      document.title = cu.session.percent + '% | Agent Dashboard';
+      document.title = cu.session.percent + '% | Guoya Dashboard';
     }
   } catch {}
 }

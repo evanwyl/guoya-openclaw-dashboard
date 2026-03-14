@@ -1,137 +1,29 @@
-# OpenClaw Dashboard v3.0.0 - Release Notes
+# Release Notes
 
-## 🎨 UI & Theming
+## v0.1.0 - 2026-03-14
 
-### 🌙 Dark/Light Theme Toggle
-- One-click toggle button (top-right, next to notification bell)
-- Comprehensive CSS overrides for all cards, inputs, sidebar, modals
-- Persistent preference via localStorage
-- Light theme with clean white cards, subtle shadows, and adjusted text colors
+这是当前仓库作为独立项目整理后的首个公开版本说明，不再沿用上游项目的旧版本号和旧发布记录。
 
-### 📱 Crash Counter Labels
-- Crash widget now clearly labeled with "💥 Crashes" header
-- "today" and "7-day" labels next to values for clarity
+### 本次整理内容
 
-### 📋 Memory Files Collapse
-- Overview memory files limited to 5 items by default
-- "Show all (X files) ↓" button expands the full list
+- README 改为基于当前代码重新描述
+- 移除上游仓库遗留截图展示
+- 增加中文说明与更适合本仓库的安装方式
+- 安装脚本支持 `NONINTERACTIVE=1`
+- 补齐 Gemini usage 抓取和解析脚本
+- 修正 OpenClaw 配置文件路径说明
+- 保留当前代码中的认证、MFA、配置编辑、Docker、日志、Cron、会话、用量和成本相关能力
 
-## 🛡️ Security & System
+### 当前版本重点
 
-### 🛡️ System Security Dashboard
-- New "Sys Security" page in sidebar
-- 5 panels: UFW rules, open ports, fail2ban status, SSH login logs, OpenClaw audit
-- **Re-authentication required** — password + TOTP before access
-- All command outputs HTML-escaped to prevent XSS
+- 可通过 `install.sh` 进行安装
+- 可通过 `run-dashboard.sh` 或 `node server.js` 启动
+- 支持 OpenClaw 会话、成本、用量、Memory、Files、Cron、日志和系统状态查看
+- 支持登录、重置密码和 TOTP MFA
+- 支持本地环境下的 Docker、Tailscale、配置编辑和审计通知
 
-### ⚙️ Config Editor
-- Edit `openclaw.json` directly from the dashboard
-- Client-side JSON validation before save
-- Automatic `.bak.timestamp` backup before overwriting
-- Gateway restart after save with confirmation dialog
-- **Re-authentication required**
+### 说明
 
-### 🔒 Re-authentication Gate
-- Security, Sys Security, and Config Editor pages require password + TOTP re-verification
-- One verification per browser session
-- Uses existing `verifyPassword()` and `verifyTOTP()` functions
-- Failed attempts logged to audit trail
-
-## 🐳 Docker Management
-- New "Docker" page in sidebar
-- Container list with status indicators (🟢/🔴), image, ports
-- Start/Stop/Restart buttons per container with confirmation
-- Image list with repository, tag, and size
-- `docker system df` overview
-- Prune stopped containers and unused images
-- Container ID validation: only `[a-zA-Z0-9_.-]` accepted (injection protection)
-- Whitelisted actions only: `start`, `stop`, `restart`, `prune-containers`, `prune-images`
-
-## 🔔 Notification Center
-- Bell icon opens dropdown panel with recent audit log events
-- Event types: login, logout, reauth, config changes, docker actions, security views
-- Icons per event type for quick scanning
-- Unread badge counter with 30-second polling
-- Click outside to dismiss panel
-- Last-seen timestamp persisted in localStorage
-
-## 📊 System Monitoring
-
-### Temperature & Disk Sparklines
-- TEMP and DISK gauges now have mini history graphs (like CPU and RAM)
-- Health history saves `temp` and `disk` values every 5 minutes
-- 24-hour data retention (288 snapshots)
-
-## 🔧 Infrastructure
-
-### Claude CLI Usage Scraper
-- `scripts/scrape-claude-usage.sh` and `scripts/parse-claude-usage.py` included in repo
-- Uses persistent tmux session for fast scraping
-- Lock file prevents concurrent runs
-- Fixed: `/usage` command typed fully instead of `/u` + autocomplete (Claude CLI v2.1.69 change)
-
-### install.sh Updates
-- Removed token-based auth references (dashboard uses username/password now)
-- Added `jq` and `tmux` dependency checks
-- Copies scraper scripts to workspace during install
-- Updated first-time setup instructions
-
-### Documentation
-- README updated with all new features and API endpoints
-- Optional dependencies table added
-- "No External Dependencies" updated to "Minimal Dependencies"
-- 10 new API endpoints documented
-
-## 🆕 New API Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/reauth` | POST | Re-authenticate for sensitive pages |
-| `/api/openclaw-config` | GET | Read OpenClaw configuration |
-| `/api/openclaw-config` | PUT | Save config with backup + restart |
-| `/api/sys-security` | GET | UFW, ports, fail2ban, SSH logs |
-| `/api/docker` | GET | Containers, images, system usage |
-| `/api/docker/action` | POST | Container/image actions |
-| `/api/services` | GET | List systemd services |
-| `/api/services/action` | POST | Start/stop/restart services |
-| `/api/notifications` | GET | Audit log events |
-
-## ⬆️ Upgrade from v2.x
-
-1. Pull latest: `git pull origin main`
-2. Install optional dependencies: `sudo apt install jq tmux`
-3. Restart service: `systemctl restart agent-dashboard`
-4. New pages appear automatically in sidebar
-5. Clear browser cache if theme toggle doesn't appear (`Ctrl+Shift+R`)
-
----
-
-*Previous versions:*
-- *[v2.0.0 — Authentication & Security Hardening](#v200)*
-- *[v1.0.0 — Initial Public Release](#v100)*
-
----
-
-# OpenClaw Dashboard v2.0.0 - Release Notes
-
-## 🔐 Authentication & Security Hardening
-
-Major security release — the dashboard now requires authentication and includes enterprise-grade security features.
-
-### 🆕 New Features
-
-- 🔑 Username/Password Authentication with PBKDF2 hashing
-- 🛡️ Multi-Factor Authentication (TOTP)
-- 🔒 Password Recovery via recovery token
-- 🌐 HTTPS Enforcement for non-localhost connections
-- Security headers (HSTS, CSP, X-Frame-Options, etc.)
-- Rate limiting (5 soft / 20 hard lockout)
-- Audit logging with auto-rotation
-
-See git history for full v2.0.0 details.
-
----
-
-# OpenClaw Dashboard v1.0.0
-
-Initial public release with session management, cost analysis, live feed, memory viewer, system health monitoring, and more.
+- 某些功能依赖宿主机环境，例如 `docker`、`tailscale`、`tmux`、`jq`
+- 部分页面虽然在代码中存在，但前端默认可能隐藏
+- 后续如果出现你自己的正式发布版本，可以继续从 `v0.1.1`、`v0.2.0` 或 `v1.0.0` 开始维护

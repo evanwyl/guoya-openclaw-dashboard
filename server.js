@@ -1972,7 +1972,7 @@ const server = http.createServer((req, res) => {
     }
     if (req.url === '/api/config') {
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ name: 'OpenClaw Dashboard', version: '1.0.0' }));
+      res.end(JSON.stringify({ name: 'Guoya OpenClaw Dashboard', version: '1.0.0' }));
       return;
     }
     if (req.url === '/api/reauth' && req.method === 'POST') {

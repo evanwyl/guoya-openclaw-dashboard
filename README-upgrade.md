@@ -22,11 +22,11 @@
 ## 2. 仓库信息
 
 ### 仓库实际路径
-`/Users/jeffery/.openclaw/workspace/openclaw-dashboard`
+`<project-root>`
 
 ### 当前项目结构
 ```text
-/Users/jeffery/.openclaw/workspace/openclaw-dashboard
+<project-root>
 ├── .git/
 ├── .gitignore
 ├── README.md
@@ -308,18 +308,18 @@
 本次优先关注这些文件：
 
 #### 前端主入口
-- `/Users/jeffery/.openclaw/workspace/openclaw-dashboard/index.html`
+- `<project-root>/index.html`
 
 #### 后端主入口
-- `/Users/jeffery/.openclaw/workspace/openclaw-dashboard/server.js`
+- `<project-root>/server.js`
 
 #### usage 抓取脚本
-- `/Users/jeffery/.openclaw/workspace/openclaw-dashboard/scripts/scrape-claude-usage.sh`
-- `/Users/jeffery/.openclaw/workspace/openclaw-dashboard/scripts/parse-claude-usage.py`
+- `<project-root>/scripts/scrape-claude-usage.sh`
+- `<project-root>/scripts/parse-claude-usage.py`
 
 #### 历史数据
-- `/Users/jeffery/.openclaw/workspace/openclaw-dashboard/data/health-history.json`
-- `/Users/jeffery/.openclaw/workspace/openclaw-dashboard/disk-history.json`
+- `<project-root>/data/health-history.json`
+- `<project-root>/disk-history.json`
 
 ### 8.2 改造原则
 - 优先在 `index.html` 中重构页面结构和导航
@@ -505,7 +505,7 @@
 
 ## 14. 一句话执行要求
 
-基于 `/Users/jeffery/.openclaw/workspace/openclaw-dashboard` 现有代码继续升级，  
+基于 `<project-root>` 现有代码继续升级，  
 以 `index.html` 和 `server.js` 为核心改造入口，  
 保留现有 session / logs / cron / cost / auth / restart 等能力，  
 完成多 agent、Feishu routing、plugin、connection mode、cost 强化和新群排障能力的增量升级，  

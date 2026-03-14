@@ -5,9 +5,26 @@ const os = require('os');
 const { exec } = require('child_process');
 const crypto = require('crypto');
 
+function resolveWorkspaceDir() {
+  const candidates = [
+    process.env.WORKSPACE_DIR,
+    process.env.OPENCLAW_WORKSPACE,
+    path.join(process.env.HOME || os.homedir(), '.openclaw', 'workspace'),
+    path.join(process.env.HOME || os.homedir(), 'clawd'),
+    process.cwd()
+  ].filter(Boolean);
+
+  for (const candidate of candidates) {
+    try {
+      if (fs.existsSync(candidate)) return candidate;
+    } catch {}
+  }
+  return candidates[0] || process.cwd();
+}
+
 const PORT = parseInt(process.env.DASHBOARD_PORT || '7000');
 const OPENCLAW_DIR = process.env.OPENCLAW_DIR || path.join(os.homedir(), '.openclaw');
-const WORKSPACE_DIR = process.env.WORKSPACE_DIR || process.env.OPENCLAW_WORKSPACE || process.cwd();
+const WORKSPACE_DIR = resolveWorkspaceDir();
 const DEFAULT_AGENT_ID = process.env.OPENCLAW_AGENT || 'all';
 const sessDir = path.join(OPENCLAW_DIR, 'agents', DEFAULT_AGENT_ID === 'all' ? 'main' : DEFAULT_AGENT_ID, 'sessions');
 const cronFile = path.join(OPENCLAW_DIR, 'cron', 'jobs.json');
@@ -482,6 +499,101 @@ function getRequestedAgentId(req) {
     if (/^[a-zA-Z0-9._-]+$/.test(requested)) return requested;
   } catch {}
   return DEFAULT_AGENT_ID;
+}
+
+function getOpenClawConfigPath() {
+  const candidates = [
+    process.env.OPENCLAW_CONFIG,
+    path.join(process.env.HOME || os.homedir(), '.openclaw', 'config.json'),
+    path.join(process.env.HOME || os.homedir(), '.openclaw', 'openclaw.json')
+  ].filter(Boolean);
+  return candidates.find(p => fs.existsSync(p)) || candidates[0];
+}
+
+function loadOpenClawConfigSafe() {
+  try {
+    const configPath = getOpenClawConfigPath();
+    if (!configPath || !fs.existsSync(configPath)) return { config: null, path: configPath || null };
+    const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    return { config, path: configPath };
+  } catch {
+    return { config: null, path: getOpenClawConfigPath() || null };
+  }
+}
+
+function getBindingsData() {
+  const { config, path: configPath } = loadOpenClawConfigSafe();
+  if (!config || typeof config !== 'object') return [];
+  const candidates = [
+    config.bindings,
+    config.routing,
+    config.routes,
+    config.feishuRouting,
+    config.mappings
+  ];
+  for (const candidate of candidates) {
+    if (Array.isArray(candidate)) {
+      return candidate.map((item, index) => ({
+        id: item.id || `binding-${index + 1}`,
+        agentId: item.agentId || item.agent || item.targetAgent || item.target || item.name || 'unknown',
+        match: item.match || item.rule || item.when || item
+      }));
+    }
+    if (candidate && Array.isArray(candidate.bindings)) {
+      return candidate.bindings.map((item, index) => ({
+        id: item.id || `binding-${index + 1}`,
+        agentId: item.agentId || item.agent || item.targetAgent || item.target || item.name || 'unknown',
+        match: item.match || item.rule || item.when || item
+      }));
+    }
+  }
+  if (Array.isArray(config.entries)) {
+    return config.entries
+      .filter(entry => entry && (entry.match || entry.peer || entry.channel))
+      .map((entry, index) => ({
+        id: entry.id || `entry-${index + 1}`,
+        agentId: entry.agentId || entry.agent || entry.name || entry.plugin || 'unknown',
+        match: entry.match || { channel: entry.channel, peer: entry.peer }
+      }));
+  }
+  return [];
+}
+
+function getPluginsData() {
+  const { config } = loadOpenClawConfigSafe();
+  if (!config || typeof config !== 'object') return {};
+  const result = {};
+
+  if (config.plugins && typeof config.plugins === 'object' && !Array.isArray(config.plugins)) {
+    if (config.plugins.entries && typeof config.plugins.entries === 'object' && !Array.isArray(config.plugins.entries)) {
+      for (const [name, value] of Object.entries(config.plugins.entries)) {
+        result[name] = typeof value === 'object' && value ? value : { enabled: value !== false };
+      }
+    }
+  }
+
+  if (config.plugins && typeof config.plugins === 'object' && !Array.isArray(config.plugins)) {
+    for (const [name, value] of Object.entries(config.plugins)) {
+      if (name === 'entries') continue;
+      result[name] = typeof value === 'object' && value ? value : { enabled: value !== false };
+    }
+  }
+
+  if (Array.isArray(config.entries)) {
+    config.entries.forEach((entry, index) => {
+      if (!entry || typeof entry !== 'object') return;
+      const name = entry.name || entry.plugin || entry.id || `entry-${index + 1}`;
+      if (!result[name]) result[name] = entry;
+    });
+  }
+
+  if (config.capabilities && typeof config.capabilities === 'object') {
+    for (const [name, value] of Object.entries(config.capabilities)) {
+      if (!result[name]) result[name] = typeof value === 'object' && value ? value : { enabled: value !== false };
+    }
+  }
+
+  return result;
 }
 
 function getAgentSessionDirs(agentId = DEFAULT_AGENT_ID) {
@@ -2035,9 +2147,19 @@ const server = http.createServer((req, res) => {
       res.end(JSON.stringify(messages));
       return;
     }
-    if (req.url === '/api/crons') {
+    if (req.url === '/api/crons' || req.url.startsWith('/api/crons?')) {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(getCronJobs()));
+      return;
+    }
+    if (req.url === '/api/bindings' || req.url.startsWith('/api/bindings?')) {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(getBindingsData()));
+      return;
+    }
+    if (req.url === '/api/plugins' || req.url.startsWith('/api/plugins?')) {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(getPluginsData()));
       return;
     }
     if (req.url === '/api/git') {

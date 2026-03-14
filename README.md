@@ -50,7 +50,7 @@ Windows 说明：
 ```bash
 git clone https://github.com/evanwyl/guoya-openclaw-dashboard.git
 cd guoya-openclaw-dashboard
-NONINTERACTIVE=1 WORKSPACE_DIR=$HOME/clawd OPENCLAW_DIR=$HOME/.openclaw DASHBOARD_PORT=7000 ./install.sh
+NONINTERACTIVE=1 OPENCLAW_DIR=$HOME/.openclaw DASHBOARD_PORT=7000 ./install.sh
 ./run-dashboard.sh
 ```
 
@@ -81,9 +81,9 @@ http://localhost:7000
 
 ```bash
 cd guoya-openclaw-dashboard
-export WORKSPACE_DIR=$HOME/clawd
+export WORKSPACE_DIR=$HOME/.openclaw/workspace
 export OPENCLAW_DIR=$HOME/.openclaw
-export OPENCLAW_AGENT=main
+export OPENCLAW_AGENT=all
 node server.js
 ```
 
@@ -104,9 +104,9 @@ node server.js
 | 变量 | 作用 | 默认值 |
 |---|---|---|
 | `DASHBOARD_PORT` | 面板端口 | `7000` |
-| `WORKSPACE_DIR` | 工作目录 | 当前目录或 `$OPENCLAW_WORKSPACE` |
+| `WORKSPACE_DIR` | 工作目录 | 优先 `~/.openclaw/workspace`，否则 `$OPENCLAW_WORKSPACE` 或 `~/clawd` |
 | `OPENCLAW_DIR` | OpenClaw 目录 | `~/.openclaw` |
-| `OPENCLAW_AGENT` | 默认 agent | `main` |
+| `OPENCLAW_AGENT` | 默认 agent | `all` |
 | `DASHBOARD_TOKEN` | 密码找回 token | 自动生成 |
 | `DASHBOARD_ALLOW_HTTP` | 允许非 localhost 明文 HTTP | `false` |
 | `NONINTERACTIVE` | 安装脚本无交互模式 | `0` |
@@ -128,7 +128,7 @@ node server.js
 
 面板主要读取以下位置的数据：
 
-- `$OPENCLAW_DIR/agents/$OPENCLAW_AGENT/sessions/`
+- `$OPENCLAW_DIR/agents/<agent>/sessions/`
 - `$OPENCLAW_DIR/cron/jobs.json`
 - `$WORKSPACE_DIR/MEMORY.md`
 - `$WORKSPACE_DIR/HEARTBEAT.md`

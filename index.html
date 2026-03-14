@@ -3,8 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Guoya OpenClaw Dashboard</title>
-<link rel="icon" type="image/svg+xml" href="favicon.svg?v=3">
+<title>果芽 OpenClaw Dashboard</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico?v=6">
+<link rel="icon" type="image/png" sizes="64x64" href="guoya-mark-64.png?v=6">
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico?v=6">
+<link rel="apple-touch-icon" href="guoya-mark.png?v=6">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -5525,7 +5528,7 @@ let notificationsEnabled = false;
 async function fetchCrons() {
   if (document.getElementById('cron').classList.contains('active') === false) return;
   try {
-    const res = await fetch('/api/crons', { headers: { 'Authorization': 'Bearer ' + getStoredToken() } });
+    const res = await authFetch(API_BASE + '/api/crons');
     if (!res.ok) throw new Error('API request failed');
     const responseData = await res.json();
     
@@ -5577,7 +5580,7 @@ async function fetchCrons() {
 async function fetchRouting() {
   if (document.getElementById('routing').classList.contains('active') === false) return;
   try {
-    const res = await fetch('/api/bindings', { headers: { 'Authorization': 'Bearer ' + getStoredToken() } });
+    const res = await authFetch(API_BASE + '/api/bindings');
     const bindings = await res.json();
     const tbody = document.getElementById('bindingsTbody');
     if (bindings.length === 0) {
@@ -5600,7 +5603,7 @@ async function fetchRouting() {
 async function fetchPlugins() {
   if (document.getElementById('plugins').classList.contains('active') === false) return;
   try {
-    const res = await fetch('/api/plugins', { headers: { 'Authorization': 'Bearer ' + getStoredToken() } });
+    const res = await authFetch(API_BASE + '/api/plugins');
     const plugins = await res.json();
     const container = document.getElementById('pluginsListContainer');
     const keys = Object.keys(plugins);
@@ -5635,7 +5638,7 @@ async function fetchPlugins() {
 async function fetchAgents() {
   if (document.getElementById('agents').classList.contains('active') === false) return;
   try {
-    const res = await fetch('/api/agents', { headers: { 'Authorization': 'Bearer ' + getStoredToken() } });
+    const res = await authFetch(API_BASE + '/api/agents');
     if (!res.ok) throw new Error('Failed to fetch agents');
     const payload = await res.json();
     const agents = (payload.agents || []).map(id => ({ id, name: id }));

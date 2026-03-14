@@ -28,6 +28,8 @@ Write-Host "Node.js $(node --version) detected"
 if (-not $WorkspaceDir) {
   if ($env:OPENCLAW_WORKSPACE) {
     $WorkspaceDir = $env:OPENCLAW_WORKSPACE
+  } elseif (Test-Path (Join-Path $HOME ".openclaw\workspace")) {
+    $WorkspaceDir = Join-Path $HOME ".openclaw\workspace"
   } else {
     $defaultWorkspace = Join-Path $HOME "clawd"
     if ($NonInteractive) {
@@ -84,7 +86,7 @@ foreach ($file in @("parse-claude-usage.py", "parse-gemini-usage.py")) {
   "DASHBOARD_PORT=$DashboardPort",
   "WORKSPACE_DIR=$WorkspaceDir",
   "OPENCLAW_DIR=$OpenClawDir",
-  "OPENCLAW_AGENT=main"
+  "OPENCLAW_AGENT=all"
 ) | Set-Content -Path (Join-Path $scriptDir ".env.windows")
 
 Write-Host ""

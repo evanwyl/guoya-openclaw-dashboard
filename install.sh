@@ -55,6 +55,8 @@ echo ""
 if [ -z "$WORKSPACE_DIR" ]; then
   if [ -n "${OPENCLAW_WORKSPACE:-}" ]; then
     WORKSPACE_DIR="$OPENCLAW_WORKSPACE"
+  elif [ -d "$HOME/.openclaw/workspace" ]; then
+    WORKSPACE_DIR="$HOME/.openclaw/workspace"
   else
     DEFAULT_WORKSPACE="$HOME/clawd"
     if [ "$NONINTERACTIVE" = "1" ]; then
@@ -143,6 +145,7 @@ echo "Workspace:     $WORKSPACE_DIR"
 echo "OpenClaw Dir:  $OPENCLAW_DIR"
 echo "Port:          $DASHBOARD_PORT"
 echo "Install Dir:   $CURRENT_DIR"
+echo "Agent Scope:   all"
 echo ""
 
 if [ "$OS_TYPE" == "Linux" ]; then
@@ -167,6 +170,7 @@ ExecStart=$(which node) $CURRENT_DIR/server.js
 Environment=DASHBOARD_PORT=$DASHBOARD_PORT
 Environment=WORKSPACE_DIR=$WORKSPACE_DIR
 Environment=OPENCLAW_DIR=$OPENCLAW_DIR
+Environment=OPENCLAW_AGENT=all
 Restart=always
 RestartSec=5
 

@@ -9,6 +9,26 @@ $ErrorActionPreference = "Stop"
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $envFile = Join-Path $scriptDir ".env.windows"
 
+function Find-NodeBinary {
+  $cmd = Get-Command node -ErrorAction SilentlyContinue
+  if ($cmd -and $cmd.Source) {
+    return $cmd.Source
+  }
+
+  $candidates = @(
+    "C:\Program Files\nodejs\node.exe",
+    "C:\Program Files (x86)\nodejs\node.exe",
+    (Join-Path $env:LOCALAPPDATA "Programs\nodejs\node.exe"),
+    (Join-Path $HOME "AppData\Local\Programs\nodejs\node.exe")
+  ) | Where-Object { $_ -and (Test-Path $_) }
+
+  if ($candidates.Count -gt 0) {
+    return $candidates[0]
+  }
+
+  return $null
+}
+
 if (Test-Path $envFile) {
   Get-Content $envFile | ForEach-Object {
     if ($_ -match "^\s*([^=]+)=(.*)\s*$") {
@@ -34,10 +54,13 @@ if (-not $env:WORKSPACE_DIR) {
 if (-not $env:OPENCLAW_DIR) { $env:OPENCLAW_DIR = Join-Path $HOME ".openclaw" }
 if (-not $env:OPENCLAW_AGENT) { $env:OPENCLAW_AGENT = "all" }
 
-if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
-  Write-Host "Node.js not found in PATH. Please install Node.js 18+ and retry."
+$nodeBin = Find-NodeBinary
+if (-not $nodeBin) {
+  Write-Host "Node.js 18+ not found."
+  Write-Host "Please install Node.js LTS, or add node.exe to PATH."
+  Write-Host "Common path: C:\Program Files\nodejs\node.exe"
   exit 1
 }
 
 Set-Location $scriptDir
-node server.js
+& $nodeBin "server.js"

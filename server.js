@@ -2004,7 +2004,7 @@ const server = http.createServer((req, res) => {
     }
     if (req.url === '/api/openclaw-config' && req.method === 'GET') {
       if (!requireAuth(req, res)) return;
-      const configPath = process.env.OPENCLAW_CONFIG || path.join(process.env.HOME || '/root', '.openclaw', 'openclaw.json');
+      const configPath = process.env.OPENCLAW_CONFIG || path.join(process.env.HOME || '/root', '.openclaw', 'config.json');
       try {
         const content = fs.readFileSync(configPath, 'utf8');
         JSON.parse(content);
@@ -2022,7 +2022,7 @@ const server = http.createServer((req, res) => {
         try {
           const { config } = JSON.parse(body);
           JSON.parse(config);
-          const configPath = process.env.OPENCLAW_CONFIG || path.join(process.env.HOME || '/root', '.openclaw', 'openclaw.json');
+          const configPath = process.env.OPENCLAW_CONFIG || path.join(process.env.HOME || '/root', '.openclaw', 'config.json');
           const backupPath = configPath + '.bak.' + Date.now();
           fs.copyFileSync(configPath, backupPath);
           fs.writeFileSync(configPath, config, 'utf8');
@@ -2615,6 +2615,16 @@ const server = http.createServer((req, res) => {
       
       return;
     }
+  }
+
+  const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+  if (parsedUrl.pathname.endsWith('.png')) {
+    try {
+      const file = fs.readFileSync(path.join(__dirname, parsedUrl.pathname.substring(1)));
+      res.writeHead(200, { 'Content-Type': 'image/png' });
+      res.end(file);
+      return;
+    } catch(e) {}
   }
 
   try {

@@ -1,43 +1,27 @@
-# Dependencies
-node_modules/
-
-# Data files
-data/
-*.json
-
-# Logs
+# Node logs
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+data/audit.log
 
-# Environment
-.env
-.env.local
-.env.*.local
+# Credentials and sensitive data
+data/credentials.json
+data/mfa-secret.txt
 
-# OS
+# Backup files
+*.bak
+*.bak*
+*.tmp
+*.tmp.*
+
+# System files
 .DS_Store
 Thumbs.db
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# OpenClaw history and data
+data/health-history.json
+data/claude-usage.json
+data/gemini-usage.json
+disk-history.json
 
-# Temporary files
-*.tmp
-*.temp
-.cache/
-
-# Build outputs (if any in future)
-dist/
-build/
-
-# Private data
-MEMORY.md
-HEARTBEAT.md
-memory/
-sessions/
+# Local environment variables
+.env
+.env.local

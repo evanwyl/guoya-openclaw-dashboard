@@ -9,6 +9,2009 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+
+    :root {
+      --bg: #eef2f6;
+      --panel: #ffffff;
+      --panel-soft: #fbfbfd;
+      --surface-1: rgba(255, 255, 255, 0.98);
+      --surface-2: rgba(252, 253, 255, 0.94);
+      --surface-3: rgba(246, 249, 253, 0.92);
+      --glass-1: rgba(255, 255, 255, 0.78);
+      --glass-2: rgba(248, 250, 255, 0.74);
+      --border: rgba(17, 24, 39, 0.09);
+      --border-soft: rgba(17, 24, 39, 0.06);
+      --border-strong: rgba(17, 24, 39, 0.14);
+      --text: #1d1d1f;
+      --muted: #6e6e73;
+      --ok: #248a3d;
+      --warn: #b57f10;
+      --over: #d23f31;
+      --todo: #6e6e73;
+      --progress: #0071e3;
+      --blocked: #b05c12;
+      --done: #248a3d;
+      --focus: #0071e3;
+      --apple-glass-blur: 22px;
+      --shadow-soft: 0 8px 24px rgba(15, 23, 42, 0.06);
+      --shadow-hard: 0 22px 56px rgba(15, 23, 42, 0.1);
+      --shadow-float: 0 18px 44px rgba(15, 23, 42, 0.09);
+      --shadow-press: 0 10px 24px rgba(15, 23, 42, 0.08);
+      --card-fill:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(250, 251, 253, 0.975) 56%, rgba(244, 247, 251, 0.95)),
+        radial-gradient(circle at 100% 0%, rgba(210, 223, 242, 0.18), transparent 54%);
+      --card-fill-soft:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.975), rgba(248, 250, 253, 0.955) 58%, rgba(242, 246, 250, 0.93)),
+        radial-gradient(circle at 100% 0%, rgba(219, 228, 242, 0.12), transparent 52%);
+      --card-border: rgba(15, 23, 42, 0.07);
+      --card-border-strong: rgba(15, 23, 42, 0.11);
+      --card-shadow-soft: 0 14px 30px rgba(15, 23, 42, 0.05), 0 2px 8px rgba(15, 23, 42, 0.03);
+      --card-shadow: 0 20px 42px rgba(15, 23, 42, 0.065), 0 3px 10px rgba(15, 23, 42, 0.035);
+      --card-shadow-hover: 0 28px 52px rgba(15, 23, 42, 0.085), 0 4px 14px rgba(15, 23, 42, 0.04);
+      --ring-soft: 0 0 0 4px rgba(0, 113, 227, 0.1);
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --font-large-title: 40px;
+      --font-title-1: 28px;
+      --font-title-2: 22px;
+      --font-body: 15px;
+      --font-caption: 12px;
+      --space-1: 8px;
+      --space-2: 16px;
+      --space-3: 24px;
+      --space-4: 32px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", "Helvetica Neue", sans-serif;
+      color: var(--text);
+      font-size: var(--font-body);
+      line-height: 1.58;
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 8% -10%, rgba(164, 192, 230, 0.22), transparent 34%),
+        radial-gradient(circle at 96% 0%, rgba(218, 226, 240, 0.18), transparent 32%),
+        linear-gradient(180deg, #f3f5f8 0%, #e9edf3 46%, #e5eaf0 100%);
+      position: relative;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+    .ui-preload .app-shell { opacity: 1; transform: translateY(0); }
+    body.ui-ready .app-shell { opacity: 1; transform: translateY(0); transition: opacity 260ms ease, transform 320ms ease; }
+    body.page-leave .app-shell { opacity: 0; transform: translateY(10px) scale(0.996); transition: opacity 140ms ease, transform 150ms ease; }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.16) 42%, transparent 60%),
+        radial-gradient(circle at 50% -18%, rgba(255, 255, 255, 0.54), transparent 46%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+    button {
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    h1, h2, h3 { margin: 0; line-height: 1.24; letter-spacing: -0.012em; }
+    a {
+      color: #0071e3;
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 2px;
+    }
+    a:focus-visible {
+      outline: none;
+      border-radius: 10px;
+      box-shadow: var(--ring-soft);
+    }
+    .app-shell {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100vh;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      gap: 0;
+      overflow: hidden;
+    }
+    /* inspector-collapsed override disabled for topnav layout */
+    body.inspector-collapsed .inspector-sidebar {
+      display: none;
+    }
+    .sidebar {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 4px;
+      border: none;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      background: #ffffff;
+      border-radius: 0;
+      padding: 0 20px;
+      height: 52px;
+      width: 100%;
+      box-sizing: border-box;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.02), 0 4px 12px rgba(0,0,0,0.02);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9000;
+      animation: none;
+      will-change: transform;
+    }
+    .brand {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(15, 23, 42, 0.05);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      background:
+        linear-gradient(135deg, rgba(232, 239, 255, 0.66), rgba(255, 255, 255, 0.92)),
+        radial-gradient(circle at 82% 14%, rgba(255, 255, 255, 0.8), transparent 56%);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.72);
+    }
+    .brand-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(0, 113, 227, 0.26);
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #0060c5;
+      background: rgba(255, 255, 255, 0.84);
+      text-transform: uppercase;
+    }
+    .brand h1 { font-size: 23px; font-weight: 760; margin-top: 9px; }
+    .brand .meta { margin-top: 6px; }
+    .meta { color: var(--muted); font-size: 13px; line-height: 1.62; }
+    .meta-inline { color: var(--muted); font-size: 12px; margin-left: 6px; }
+    .nav-links { margin-top: 14px; display: grid; gap: 9px; }
+    .nav-link {
+      display: block;
+      border: 1px solid rgba(17, 24, 39, 0.06);
+      border-radius: 16px;
+      text-decoration: none;
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(251, 253, 255, 0.78));
+      padding: 12px 13px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76);
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+    .nav-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+      border-color: rgba(17, 24, 39, 0.1);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(251, 253, 255, 0.98));
+    }
+    .nav-link span { display: block; font-size: 15px; font-weight: 640; color: #1d1d1f; }
+    .nav-link small { display: block; font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.45; }
+    .nav-link.active {
+      border-color: rgba(0, 113, 227, 0.2);
+      background:
+        linear-gradient(180deg, rgba(234, 244, 255, 0.92), rgba(249, 252, 255, 0.98)),
+        radial-gradient(circle at 0% 0%, rgba(0, 113, 227, 0.08), transparent 38%);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.82),
+        0 10px 24px rgba(0, 113, 227, 0.08);
+    }
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      background:
+        linear-gradient(180deg, rgba(251, 253, 255, 0.88), rgba(244, 247, 251, 0.8)),
+        radial-gradient(circle at 100% 0%, rgba(214, 225, 243, 0.14), transparent 46%);
+      box-shadow: 0 28px 60px rgba(15, 23, 42, 0.09);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      animation: panel-in 350ms ease both;
+    }
+    .section-title { font-size: var(--font-large-title); font-weight: 760; letter-spacing: -0.03em; line-height: 1.05; }
+    .section-blurb { margin-top: 4px; font-size: var(--font-body); color: #6e6e73; }
+    .section-hero-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-2);
+    }
+    .section-head-copy { min-width: 0; }
+    .section-head-actions { display: flex; align-items: center; gap: var(--space-1); }
+    .panel-toggle {
+      border: 1px solid rgba(17, 24, 39, 0.09);
+      border-radius: 999px;
+      padding: 7px 13px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.92));
+      color: #334155;
+      font-size: var(--font-caption);
+      font-weight: 620;
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.86);
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, color 180ms ease, background 180ms ease;
+    }
+    .panel-toggle:hover {
+      transform: translateY(-1px);
+      border-color: rgba(0, 113, 227, 0.24);
+      color: #005bb8;
+      background: linear-gradient(180deg, rgba(241, 248, 255, 0.98), rgba(250, 253, 255, 0.96));
+      box-shadow: 0 10px 24px rgba(0, 113, 227, 0.08);
+    }
+    .content-stack { margin-top: var(--space-2); display: grid; gap: var(--space-2); }
+    .content-stack > #overview-decision-home { order: 1; }
+    .content-stack > #overview-primary-section { order: 2; }
+    .content-stack > #overview-secondary-shell { order: 3; }
+    .content-stack > #global-visibility-card { order: 4; }
+    .executive-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 12px; }
+    .overview-v3-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: var(--space-2);
+      align-items: stretch;
+    }
+    .overview-primary-card {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(150deg, rgba(232, 242, 255, 0.94), rgba(255, 255, 255, 0.98)),
+        radial-gradient(circle at 88% 18%, rgba(167, 196, 234, 0.22), transparent 52%);
+      border-color: rgba(0, 113, 227, 0.24);
+      box-shadow: 0 18px 34px rgba(30, 72, 118, 0.12);
+    }
+    .overview-primary-card::after {
+      content: "";
+      position: absolute;
+      right: -28px;
+      top: -34px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 113, 227, 0.15), transparent 66%);
+      pointer-events: none;
+    }
+    .overview-primary-head {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-2);
+      align-items: flex-start;
+    }
+    .overview-primary-core { margin-top: 14px; }
+    .overview-primary-value {
+      font-size: 42px;
+      letter-spacing: -0.04em;
+      font-weight: 760;
+      color: #102a43;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .overview-primary-label {
+      margin-top: 4px;
+      font-size: var(--font-caption);
+      color: #516174;
+      letter-spacing: 0.02em;
+    }
+    .overview-focus-stage {
+      margin-top: var(--space-2);
+      display: grid;
+      grid-template-columns: 138px minmax(0, 1fr);
+      align-items: center;
+      gap: 12px;
+      border: 1px solid rgba(16, 42, 67, 0.1);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.88);
+    }
+    .overview-focus-ring {
+      width: 118px;
+      height: 118px;
+      border-radius: 50%;
+      background: conic-gradient(var(--focus-tone) calc(var(--focus-score) * 1%), rgba(191, 203, 219, 0.36) 0);
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(16, 42, 67, 0.14);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.66);
+    }
+    .overview-focus-core {
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.97);
+      border: 1px solid rgba(16, 42, 67, 0.12);
+      display: grid;
+      grid-template-rows: auto auto;
+      justify-items: center;
+      align-content: center;
+      gap: 3px;
+      padding: 8px 6px;
+      box-sizing: border-box;
+    }
+    .overview-focus-score {
+      font-size: 28px;
+      font-weight: 760;
+      letter-spacing: -0.03em;
+      color: #1c2836;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .overview-focus-unit {
+      font-size: 10px;
+      color: #6f7985;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-weight: 620;
+      line-height: 1.15;
+      text-align: center;
+      max-width: 56px;
+      text-wrap: balance;
+    }
+    .overview-focus-copy {
+      min-width: 0;
+      display: grid;
+      gap: 4px;
+    }
+    .overview-focus-headline {
+      font-size: 22px;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      color: #0f2840;
+      font-weight: 740;
+    }
+    .overview-focus-sub {
+      font-size: 13px;
+      color: #4f5f71;
+      line-height: 1.45;
+    }
+    .overview-focus-meta {
+      font-size: 12px;
+      color: #6a7787;
+      line-height: 1.45;
+    }
+    .overview-primary-directive {
+      margin-top: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 113, 227, 0.2);
+      background: rgba(255, 255, 255, 0.88);
+      color: #0e5ba6;
+      padding: 5px 10px;
+      width: fit-content;
+      font-size: 12px;
+      font-weight: 620;
+      letter-spacing: 0.01em;
+    }
+    .overview-primary-card .overview-quick-links {
+      margin-top: var(--space-2);
+      justify-content: flex-start;
+      min-width: 0;
+    }
+    .overview-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-2);
+    }
+    .overview-decision-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-2);
+      align-items: start;
+    }
+    .overview-kpi-card {
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: var(--space-2);
+      background: var(--card-fill-soft);
+      box-shadow: var(--card-shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+    .overview-kpi-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(0, 113, 227, 0.74), rgba(91, 183, 255, 0.72));
+    }
+    .overview-kpi-card.tone-warn {
+      border-color: rgba(181, 127, 16, 0.3);
+      background: linear-gradient(180deg, rgba(255, 251, 243, 0.98), rgba(255, 255, 255, 0.96));
+    }
+    .overview-kpi-card.tone-warn::before {
+      background: linear-gradient(90deg, rgba(194, 136, 25, 0.84), rgba(230, 179, 76, 0.7));
+    }
+    .overview-kpi-card.tone-neutral {
+      border-color: rgba(107, 114, 128, 0.24);
+      background: linear-gradient(180deg, rgba(248, 249, 252, 0.98), rgba(255, 255, 255, 0.96));
+    }
+    .overview-kpi-card.tone-neutral::before {
+      background: linear-gradient(90deg, rgba(110, 117, 125, 0.66), rgba(177, 182, 189, 0.62));
+    }
+    .overview-kpi-label {
+      font-size: var(--font-caption);
+      color: #6b7280;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-weight: 620;
+    }
+    .overview-kpi-value {
+      margin-top: 8px;
+      font-size: 42px;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      color: #111827;
+      font-weight: 740;
+      font-variant-numeric: tabular-nums;
+    }
+    .overview-kpi-detail {
+      margin-top: 8px;
+      color: #6b7280;
+      font-size: var(--font-caption);
+      line-height: 1.45;
+    }
+    .overview-secondary-shell > .fold-body {
+      margin-top: var(--space-2);
+      display: grid;
+      gap: var(--space-2);
+    }
+    .overview-hero-strip {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .overview-hero-card {
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 13px 13px 11px;
+      background: var(--card-fill-soft);
+      box-shadow: var(--card-shadow-soft);
+    }
+    .overview-hero-card .label {
+      font-size: 11px;
+      color: #6f7379;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 620;
+    }
+    .overview-hero-card .value {
+      margin-top: 6px;
+      font-size: 29px;
+      line-height: 1.02;
+      letter-spacing: -0.024em;
+      color: #1d1d1f;
+      font-weight: 740;
+    }
+    .overview-hero-card .hint {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #6e6e73;
+      line-height: 1.45;
+    }
+    .overview-main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(320px, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    .overview-main-grid > .card { align-self: start; }
+    .overview-main-grid .overview-span { grid-column: 1 / -1; }
+    .exec-card {
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      background: var(--card-fill-soft);
+      padding: 15px 15px 13px;
+      box-shadow: var(--card-shadow-soft);
+    }
+    .exec-title { font-size: 11px; color: #6a6d72; letter-spacing: 0.045em; text-transform: uppercase; font-weight: 620; }
+    .exec-metric { margin-top: 7px; font-size: 30px; font-weight: 740; color: #1d1d1f; letter-spacing: -0.024em; line-height: 1.04; }
+    #current-task-health {
+      background:
+        linear-gradient(155deg, rgba(234, 244, 255, 0.92), rgba(255, 255, 255, 0.98)),
+        radial-gradient(circle at 88% 12%, rgba(197, 221, 250, 0.24), transparent 50%);
+      border-color: rgba(0, 113, 227, 0.22);
+      box-shadow: 0 14px 30px rgba(14, 63, 126, 0.1);
+      overflow: hidden;
+    }
+    .overview-command-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .overview-action-grid {
+      margin-top: 2px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .overview-action-item {
+      display: block;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      background: var(--card-fill-soft);
+      padding: 11px;
+      min-height: 92px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
+      color: inherit;
+      text-decoration: none;
+    }
+    .overview-action-item.hot {
+      border-color: rgba(181, 120, 16, 0.38);
+      background: linear-gradient(180deg, rgba(255, 248, 233, 0.98), rgba(255, 255, 255, 0.95));
+    }
+    .overview-action-item:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.92),
+        0 14px 28px rgba(17, 24, 39, 0.08);
+    }
+    .overview-action-item span {
+      display: block;
+      font-size: 12px;
+      color: #6b6f76;
+      letter-spacing: 0.01em;
+    }
+    .overview-action-item strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 30px;
+      line-height: 1;
+      letter-spacing: -0.025em;
+      color: #1d1d1f;
+    }
+    .overview-action-item small {
+      display: block;
+      margin-top: 6px;
+      font-size: 12px;
+      color: #6b6f76;
+      line-height: 1.45;
+    }
+    .overview-task-strip {
+      margin-top: 12px;
+      border: 1px solid rgba(17, 24, 39, 0.09);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .overview-task-metric {
+      margin-top: 5px;
+      font-size: 15px;
+      color: #2a2a2d;
+      line-height: 1.45;
+    }
+    .decision-list {
+      display: grid;
+      gap: 10px;
+    }
+    .decision-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 12px 13px;
+      background: var(--card-fill-soft);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.86),
+        0 10px 20px rgba(15, 23, 42, 0.035);
+      color: inherit;
+      text-decoration: none;
+    }
+    .decision-row:hover {
+      transform: translateY(-1px);
+      border-color: rgba(17, 24, 39, 0.1);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.88),
+        0 12px 26px rgba(17, 24, 39, 0.06);
+    }
+    .decision-row-copy {
+      min-width: 0;
+      display: grid;
+      gap: 3px;
+    }
+    .decision-row-copy strong {
+      font-size: 14px;
+      color: #1d1d1f;
+      line-height: 1.4;
+    }
+    .decision-row-value,
+    .decision-row-link {
+      font-size: 12px;
+      color: #0b6db3;
+      font-weight: 650;
+      white-space: nowrap;
+      align-self: center;
+    }
+    .overview-busy-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .overview-busy-card {
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 12px;
+      background: var(--card-fill-soft);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.86),
+        0 10px 20px rgba(15, 23, 42, 0.03);
+      display: grid;
+      gap: 6px;
+    }
+    .overview-busy-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: baseline;
+    }
+    .overview-busy-head strong {
+      font-size: 14px;
+      color: #1d1d1f;
+    }
+    .overview-busy-head span {
+      font-size: 11px;
+      color: #6e6e73;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 640;
+    }
+    .overview-busy-copy {
+      font-size: 13px;
+      color: #2b3946;
+      line-height: 1.5;
+    }
+    .overview-quick-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      min-width: 180px;
+    }
+    .overview-quick-links .btn {
+      padding: 7px 11px;
+      border-radius: 9px;
+      white-space: nowrap;
+      background: linear-gradient(180deg, rgba(238, 246, 255, 0.96), rgba(255, 255, 255, 0.98));
+    }
+    .overview-usage-card {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 251, 255, 0.97)),
+        radial-gradient(circle at 85% 14%, rgba(217, 231, 255, 0.2), transparent 52%);
+    }
+    .overview-pulse-card {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.95)),
+        radial-gradient(circle at 12% -5%, rgba(192, 218, 244, 0.18), transparent 45%);
+    }
+    .card {
+      position: relative;
+      border: 1px solid var(--card-border);
+      background: var(--card-fill);
+      padding: 18px 18px 17px;
+      border-radius: 20px;
+      box-shadow: var(--card-shadow);
+      animation: card-in 360ms ease both;
+      transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease, background 200ms ease;
+      overflow-x: auto;
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.24);
+      pointer-events: none;
+    }
+    .card, .nav-link, .overview-hero-card { animation-delay: calc(var(--stagger-index, 0) * 36ms); }
+    .panel.is-reflowing .card,
+    .panel.is-reflowing .overview-kpi-card {
+      transition: transform 230ms ease, opacity 230ms ease;
+    }
+    .card:hover {
+      transform: translateY(-1px);
+      border-color: var(--card-border-strong);
+      box-shadow: var(--card-shadow-hover);
+    }
+    .card h2 { font-size: var(--font-title-2); color: #1d1d1f; margin-bottom: var(--space-1); letter-spacing: -0.022em; line-height: 1.14; }
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 11px;
+      border: 1px solid transparent;
+      letter-spacing: 0.02em;
+      background: rgba(255, 255, 255, 0.88);
+      font-weight: 640;
+    }
+    .badge.ok, .badge.done { color: #1d7435; border-color: rgba(36, 138, 61, 0.3); background: rgba(238, 251, 242, 0.95); }
+    .badge.warn { color: #94680e; border-color: rgba(181, 127, 16, 0.32); background: rgba(255, 248, 232, 0.95); }
+    .badge.over, .badge.blocked, .badge.action-required, .badge.critical, .badge.fail, .badge.blocked_no_token { color: #b53125; border-color: rgba(210, 63, 49, 0.34); background: rgba(255, 240, 238, 0.95); }
+    .badge.info, .badge.in_progress, .badge.active, .badge.armed, .badge.live, .badge.spawned, .badge.spawn { color: #0059b4; border-color: rgba(0, 113, 227, 0.32); background: rgba(236, 246, 255, 0.95); }
+    .badge.todo, .badge.planned, .badge.message, .badge.tool_event, .badge.idle, .badge.disabled { color: #666a70; border-color: rgba(125, 129, 136, 0.3); background: rgba(248, 248, 249, 0.95); }
+    .badge.accepted { color: #1d7435; border-color: rgba(36, 138, 61, 0.3); background: rgba(238, 251, 242, 0.95); }
+    .badge.enabled, .badge.pass { color: #1d7435; border-color: rgba(36, 138, 61, 0.3); background: rgba(238, 251, 242, 0.95); }
+    .badge.dry_run { color: #94680e; border-color: rgba(181, 127, 16, 0.32); background: rgba(255, 248, 232, 0.95); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+      margin-top: 10px;
+      min-width: 780px;
+    }
+    th,
+    td {
+      border-bottom: 1px solid rgba(17, 24, 39, 0.08);
+      text-align: left;
+      padding: 12px 9px;
+      vertical-align: top;
+      word-break: normal;
+      overflow-wrap: break-word;
+      line-height: 1.48;
+    }
+    th {
+      color: #6e6e73;
+      font-size: 13px;
+      font-weight: 660;
+      letter-spacing: 0.005em;
+      white-space: nowrap;
+    }
+    tr:hover td { background: rgba(245, 247, 250, 0.84); }
+    .global-visibility-card {
+      overflow-x: auto;
+    }
+    .global-visibility-card .ops-board {
+      min-width: 980px;
+      table-layout: auto;
+    }
+    ul { margin: 7px 0 0 18px; padding: 0; }
+    .story-list { margin-top: 8px; line-height: 1.45; }
+    .group-list { display: grid; gap: 10px; margin-top: 8px; }
+    .group-section {
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      background: var(--card-fill-soft);
+      box-shadow: var(--card-shadow-soft);
+      padding: 0;
+      overflow: hidden;
+    }
+    .group-section summary {
+      list-style: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 660;
+      color: #1d1d1f;
+      padding: 11px 13px;
+      background: linear-gradient(180deg, rgba(245, 248, 252, 0.96), rgba(252, 253, 255, 0.92));
+      border-bottom: 1px solid rgba(17, 24, 39, 0.08);
+    }
+    .group-items {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 0;
+    }
+    .group-item {
+      border-top: 1px solid rgba(17, 24, 39, 0.08);
+      padding: 11px 13px;
+      background: rgba(255,255,255,0.98);
+    }
+    .group-item:first-child { border-top: none; }
+    .group-item-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .group-item-head strong {
+      font-size: 14px;
+      color: #1d1d1f;
+      line-height: 1.45;
+    }
+    .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-top: 8px; }
+    .filters label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 5px; font-weight: 580; }
+    .filters select,
+    .filters input {
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 251, 255, 0.96));
+      color: var(--text);
+      border: 1px solid rgba(17, 24, 39, 0.11);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 13px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76);
+    }
+    .filters select:focus,
+    .filters input:focus {
+      outline: none;
+      border-color: rgba(0, 113, 227, 0.28);
+      box-shadow: var(--ring-soft), inset 0 1px 0 rgba(255, 255, 255, 0.84);
+    }
+    .filter-actions { margin-top: 8px; display: flex; gap: 10px; align-items: center; }
+    .btn {
+      -webkit-appearance: none;
+      appearance: none;
+      border: 1px solid rgba(0, 113, 227, 0.18);
+      border-radius: 999px;
+      background:
+        linear-gradient(180deg, rgba(244, 249, 255, 0.98), rgba(255, 255, 255, 0.98)),
+        radial-gradient(circle at 50% 0%, rgba(0, 113, 227, 0.08), transparent 58%);
+      color: #0058b1;
+      padding: 8px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 630;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.88),
+        0 8px 18px rgba(0, 113, 227, 0.08);
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, color 180ms ease, background 180ms ease;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(0, 113, 227, 0.24);
+      color: #004f9f;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 14px 24px rgba(0, 113, 227, 0.12);
+      background:
+        linear-gradient(180deg, rgba(238, 247, 255, 0.99), rgba(255, 255, 255, 0.99)),
+        radial-gradient(circle at 50% 0%, rgba(0, 113, 227, 0.1), transparent 58%);
+    }
+    .btn:focus-visible {
+      outline: none;
+      box-shadow: var(--ring-soft), inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 12px 24px rgba(0, 113, 227, 0.1);
+    }
+    .board { margin-top: 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .lane {
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 12px;
+      background: var(--card-fill-soft);
+      box-shadow: var(--card-shadow-soft);
+      min-height: 128px;
+    }
+    .lane h3 { margin: 0; font-size: 14px; color: #1f2023; letter-spacing: -0.01em; }
+    .lane-count { color: var(--muted); font-size: 12px; margin-top: 3px; }
+    .task-chip,
+    .project-chip {
+      margin-top: 8px;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 10px;
+      background: var(--card-fill-soft);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.84),
+        0 8px 18px rgba(15, 23, 42, 0.03);
+      font-size: 13px;
+      line-height: 1.56;
+    }
+    .task-chip.mapping {
+      border-color: rgba(181, 111, 18, 0.34);
+      background: rgba(255, 248, 236, 0.95);
+    }
+    .task-chip code,
+    .project-chip code { color: #0065cc; }
+    .bars { margin-top: 8px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; }
+    .bar-row { margin-top: 8px; }
+    .bar-meta { font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; gap: 6px; }
+    .bar-track { margin-top: 4px; border: 1px solid rgba(17, 24, 39, 0.1); border-radius: 999px; height: 8px; background: rgba(227, 230, 236, 0.62); overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 999px; }
+    .bar-fill.ok { background: #18a97a; }
+    .bar-fill.warn { background: #d69a1d; }
+    .bar-fill.over { background: #cc4545; }
+    .queue-list { list-style: none; margin: 8px 0 0 0; padding: 0; display: grid; gap: 9px; }
+    .queue-item {
+      margin-top: 0;
+      border: 1px solid var(--card-border);
+      border-radius: 15px;
+      padding: 11px;
+      background: var(--card-fill-soft);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.86),
+        0 10px 20px rgba(15, 23, 42, 0.03);
+    }
+    .queue-actions { margin-top: 7px; display: flex; align-items: center; gap: 8px; }
+    .inline-form { display: inline; margin: 0; }
+    .status-strip { margin-top: 10px; display: grid; gap: 9px; grid-template-columns: repeat(auto-fit, minmax(138px, 1fr)); }
+    .status-strip.compact { grid-template-columns: repeat(auto-fit, minmax(116px, 1fr)); }
+    .status-chip {
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      background: var(--card-fill-soft);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.88),
+        0 12px 24px rgba(15, 23, 42, 0.04);
+    }
+    .status-chip span { color: #6d6f75; font-size: 12px; letter-spacing: 0.01em; }
+    .status-chip strong { font-size: 24px; line-height: 1.08; letter-spacing: -0.02em; color: #1d1d1f; }
+    .usage-chip strong { font-size: 22px; }
+    .status-chip small { display: none; }
+    .dashboard-strip {
+      grid-template-columns: repeat(4, minmax(0, 1fr)) 150px 150px;
+      gap: 10px;
+    }
+    .task-hub-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(360px, 1fr);
+      gap: var(--space-2);
+      align-items: start;
+    }
+    .task-hub-primary {
+      background:
+        linear-gradient(155deg, rgba(234, 244, 255, 0.92), rgba(255, 255, 255, 0.98)),
+        radial-gradient(circle at 88% 12%, rgba(197, 221, 250, 0.24), transparent 50%);
+      border-color: rgba(0, 113, 227, 0.22);
+      box-shadow: 0 14px 30px rgba(14, 63, 126, 0.1);
+    }
+    .task-hub-stat-grid {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .task-hub-stat {
+      border: 1px solid var(--card-border);
+      border-radius: 15px;
+      background: var(--card-fill-soft);
+      padding: 12px;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.88),
+        0 10px 20px rgba(15, 23, 42, 0.035);
+      display: grid;
+      gap: 4px;
+    }
+    .task-hub-stat span {
+      font-size: 12px;
+      color: #6b6f76;
+      letter-spacing: 0.01em;
+    }
+    .task-hub-stat strong {
+      font-size: 28px;
+      line-height: 1;
+      color: #1d1d1f;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+    }
+    .task-hub-stat small {
+      font-size: 12px;
+      color: #6b6f76;
+      line-height: 1.45;
+    }
+    .task-hub-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-2);
+      align-items: start;
+    }
+    .task-hub-board-grid {
+      grid-template-columns: minmax(0, 1.6fr) minmax(340px, 1fr);
+    }
+    .task-hub-sidebar {
+      display: grid;
+      gap: var(--space-2);
+      align-content: start;
+    }
+    .execution-chain-list {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr));
+      gap: 16px;
+      align-items: stretch;
+    }
+    .execution-chain-card {
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 18px;
+      background: var(--card-fill-soft);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.9),
+        0 18px 34px rgba(15, 23, 42, 0.05);
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+      overflow: hidden;
+      min-height: 100%;
+    }
+    .execution-chain-head {
+      display: grid;
+      gap: 10px;
+    }
+    .execution-chain-copy {
+      min-width: 0;
+      display: grid;
+      gap: 6px;
+    }
+    .execution-chain-copy strong {
+      font-size: clamp(24px, 0.85vw + 18px, 31px);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      color: #1d1d1f;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      overflow: hidden;
+      overflow-wrap: anywhere;
+      word-break: normal;
+    }
+    .execution-chain-context {
+      color: #6d6f75;
+      font-size: 14px;
+      line-height: 1.55;
+      letter-spacing: -0.01em;
+    }
+    .execution-chain-badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 6px;
+      max-width: none;
+      min-width: 0;
+      align-content: flex-start;
+    }
+    .execution-chain-meta-stack {
+      display: grid;
+      gap: 10px;
+    }
+    .execution-chain-meta-line {
+      color: #6d6f75;
+      font-size: 14px;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .execution-chain-flow {
+      border: 1px solid rgba(0, 113, 227, 0.12);
+      border-radius: 18px;
+      padding: 12px 14px;
+      background:
+        linear-gradient(180deg, rgba(245, 249, 255, 0.98), rgba(255, 255, 255, 0.96)),
+        radial-gradient(circle at 0% 0%, rgba(0, 113, 227, 0.06), transparent 58%);
+      color: #29527a;
+      font-size: 14px;
+      line-height: 1.62;
+    }
+    .execution-chain-summary {
+      color: #2f3237;
+      font-size: 15px;
+      line-height: 1.62;
+      letter-spacing: -0.01em;
+    }
+    .execution-chain-arrow {
+      color: #6b6f76;
+      margin: 0 4px;
+    }
+    .execution-chain-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 4px;
+    }
+    .execution-chain-card code,
+    .execution-chain-flow code {
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .execution-chain-card .meta {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .timeline-summary-strip {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .timeline-stat {
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 11px;
+      background: var(--card-fill-soft);
+      display: grid;
+      gap: 4px;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.84),
+        0 10px 20px rgba(15, 23, 42, 0.03);
+    }
+    .timeline-stat span {
+      font-size: 12px;
+      color: #6b6f76;
+    }
+    .timeline-stat strong {
+      font-size: 26px;
+      line-height: 1;
+      color: #1d1d1f;
+      letter-spacing: -0.03em;
+    }
+    .timeline-stat small {
+      font-size: 12px;
+      color: #6e6e73;
+      line-height: 1.45;
+    }
+    .signal-gauge-card {
+      padding: 11px 11px 12px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,252,255,0.95)),
+        radial-gradient(circle at 100% 0%, rgba(220, 233, 255, 0.12), transparent 52%);
+    }
+    .signal-gauge-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .signal-gauge-main { margin-top: 8px; display: grid; grid-template-columns: 68px minmax(0, 1fr); gap: 10px; align-items: center; }
+    .signal-gauge {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: conic-gradient(var(--gauge-tone) calc(var(--gauge-pct) * 1%), rgba(199, 208, 220, 0.34) 0);
+      border: 1px solid rgba(17, 24, 39, 0.12);
+      display: grid;
+      place-items: center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.54);
+    }
+    .signal-gauge-core {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(17, 24, 39, 0.11);
+      display: grid;
+      place-items: center;
+    }
+    .signal-gauge-core strong {
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+    .signal-gauge-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-width: 0;
+    }
+    .signal-gauge-meta small {
+      display: block;
+      color: #6e6e73;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .signal-gauge-meta a {
+      color: #0068d3;
+      font-size: 13px;
+      text-decoration: none;
+      font-weight: 620;
+    }
+    .summary-gauge-card {
+      justify-content: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,250,253,0.95));
+      gap: 7px;
+    }
+    .summary-gauge-card strong { font-size: 30px; }
+    .summary-track {
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(196, 208, 224, 0.42);
+      overflow: hidden;
+      border: 1px solid rgba(17, 24, 39, 0.08);
+    }
+    .summary-fill {
+      height: 100%;
+      background: linear-gradient(90deg, rgba(33, 154, 85, 0.9), rgba(78, 191, 121, 0.95));
+      border-radius: 999px;
+    }
+    .summary-fill.warn {
+      background: linear-gradient(90deg, rgba(196, 137, 25, 0.9), rgba(217, 165, 58, 0.95));
+    }
+    .signal-gauge-card.state-updated { animation: status-bump 760ms ease; }
+    .overview-kpi-card.state-updated-soft,
+    .overview-primary-card.state-updated-soft {
+      animation: kpi-bump 860ms ease;
+    }
+    .overview-pulse-card .status-strip {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .overview-pulse-card .status-chip {
+      border-radius: 14px;
+      padding: 11px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(248, 252, 255, 0.95));
+      border-color: rgba(17, 24, 39, 0.1);
+    }
+    .overview-pulse-card .status-chip span {
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: #7a7f86;
+    }
+    .overview-pulse-card .status-chip strong {
+      font-size: 21px;
+      color: #1d1d1f;
+    }
+    #usage-pulse .status-strip { grid-template-columns: 1fr; }
+    #usage-pulse .usage-chip {
+      border-radius: 16px;
+      padding: 12px;
+      border-color: rgba(17, 24, 39, 0.1);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 251, 255, 0.95));
+    }
+    #usage-pulse .usage-chip strong {
+      font-size: 34px;
+      letter-spacing: -0.03em;
+      line-height: 1.04;
+      margin-top: 1px;
+    }
+    .quick-filters { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .quick-chip { border: 1px solid rgba(17, 24, 39, 0.16); border-radius: 999px; padding: 6px 11px; font-size: 12px; text-decoration: none; color: #4f545a; background: rgba(255, 255, 255, 0.95); }
+    .quick-chip.active { border-color: rgba(0, 113, 227, 0.42); color: #005cb9; background: rgba(236, 246, 255, 0.96); }
+    .segment-switch {
+      margin-top: 8px;
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      border: 1px solid rgba(17, 24, 39, 0.08);
+      border-radius: 999px;
+      padding: 5px;
+      background:
+        linear-gradient(180deg, rgba(248, 250, 253, 0.98), rgba(255, 255, 255, 0.96)),
+        radial-gradient(circle at 50% 0%, rgba(221, 232, 255, 0.18), transparent 58%);
+      gap: 6px;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.88),
+        0 8px 18px rgba(17, 24, 39, 0.05);
+    }
+    .segment-item {
+      -webkit-appearance: none;
+      appearance: none;
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      border-radius: 999px;
+      min-height: 40px;
+      padding: 0 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: #4f545a;
+      text-decoration: none;
+      font-weight: 620;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      transition: transform 160ms ease, color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+    }
+    .segment-item:hover {
+      transform: translateY(-1px);
+      color: #2f3944;
+      background: rgba(255, 255, 255, 0.72);
+    }
+    .segment-item.active {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(247, 250, 255, 0.98)),
+        radial-gradient(circle at 50% 0%, rgba(0, 113, 227, 0.12), transparent 60%);
+      color: #0059b2;
+      box-shadow:
+        inset 0 0 0 1px rgba(0, 113, 227, 0.16),
+        0 8px 18px rgba(0, 113, 227, 0.12);
+    }
+    .segment-item:focus-visible {
+      outline: none;
+      box-shadow: var(--ring-soft), inset 0 0 0 1px rgba(0, 113, 227, 0.18);
+    }
+    .cron-board { margin-top: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; }
+    .cron-owner-card {
+      border: 1px solid rgba(17, 24, 39, 0.07);
+      border-radius: 18px;
+      background: linear-gradient(170deg, rgba(255, 255, 255, 0.97), rgba(250, 252, 255, 0.94));
+      padding: 12px;
+      box-shadow: 0 10px 22px rgba(17, 24, 39, 0.04);
+    }
+    .cron-owner-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+    .cron-owner-head h3 { font-size: 16px; color: #1d1d1f; letter-spacing: -0.012em; }
+    .cron-job-list { list-style: none; margin: 8px 0 0 0; padding: 0; display: grid; gap: 8px; }
+    .cron-job-list li {
+      border: 1px solid rgba(17, 24, 39, 0.07);
+      border-radius: 14px;
+      padding: 10px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.96));
+    }
+    .cron-job-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .cron-job-head strong { font-size: 13px; color: #1d1d1f; line-height: 1.45; }
+    .toolbar { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .readiness-grid { margin-top: 8px; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; }
+    .readiness-chip {
+      border: 1px solid rgba(17, 24, 39, 0.07);
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.96));
+      padding: 11px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.86);
+    }
+    .readiness-chip .label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; }
+    .readiness-chip .score { font-size: 22px; margin-top: 4px; letter-spacing: -0.02em; }
+    .empty-state { margin-top: 10px; border: 1px dashed rgba(181, 127, 16, 0.32); padding: 13px; border-radius: 12px; background: rgba(255, 250, 240, 0.92); color: #7e5a1a; font-size: 13px; line-height: 1.68; }
+    .office-grid { margin-top: 8px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .office-card {
+      border: 1px solid rgba(17, 24, 39, 0.1);
+      border-radius: 16px;
+      padding: 13px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(251, 253, 255, 0.95));
+      box-shadow: 0 8px 20px rgba(17, 24, 39, 0.06);
+    }
+    .office-head { display: grid; grid-template-columns: 146px minmax(0, 1fr); gap: 12px; align-items: start; }
+    .office-info .topline { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .office-info .topline strong { font-size: 15px; letter-spacing: -0.01em; }
+    .agent-avatar {
+      border: 1px solid rgba(17, 24, 39, 0.12);
+      border-top: 3px solid var(--agent-accent);
+      border-radius: 12px;
+      padding: 10px;
+      background:
+        linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.95)),
+        radial-gradient(circle at 84% 14%, rgba(255, 255, 255, 0.74), transparent 48%);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.56);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      max-width: 146px;
+    }
+    .agent-stage {
+      position: relative;
+      height: auto;
+      aspect-ratio: 224 / 160;
+      border-radius: 10px;
+      border: 1px solid rgba(17, 24, 39, 0.1);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(240, 247, 255, 0.8)),
+        repeating-linear-gradient(
+          0deg,
+          rgba(31, 41, 55, 0.04) 0px,
+          rgba(31, 41, 55, 0.04) 1px,
+          transparent 1px,
+          transparent 8px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          rgba(31, 41, 55, 0.04) 0px,
+          rgba(31, 41, 55, 0.04) 1px,
+          transparent 1px,
+          transparent 8px
+        );
+      overflow: hidden;
+    }
+    .agent-pixel-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      filter: saturate(1.06) contrast(1.04);
+    }
+    .agent-animal-label {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #4d5259;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .staff-brief-grid {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .staff-brief-card {
+      border: 1px solid rgba(17, 24, 39, 0.07);
+      border-radius: 22px;
+      padding: 15px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(249, 251, 255, 0.97)),
+        radial-gradient(circle at 100% 0%, rgba(221, 232, 255, 0.18), transparent 52%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.82),
+        0 16px 34px rgba(17, 24, 39, 0.06);
+      display: grid;
+      gap: 12px;
+    }
+    .staff-brief-head {
+      display: grid;
+      grid-template-columns: 122px minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+    }
+    .staff-avatar {
+      width: 122px;
+      padding: 9px;
+      border-radius: 18px;
+      border: 1px solid rgba(17, 24, 39, 0.08);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.95)),
+        radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--agent-accent) 12%, transparent), transparent 62%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 10px 20px rgba(17, 24, 39, 0.05);
+    }
+    .staff-avatar .agent-stage {
+      aspect-ratio: 1 / 1;
+      border-radius: 12px;
+    }
+    .staff-brief-identity h3 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.15;
+      color: #1d1d1f;
+    }
+    .staff-role {
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #5c6570;
+      font-weight: 620;
+    }
+    .staff-brief-list {
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+    .staff-brief-row {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 8px;
+      align-items: start;
+      padding-top: 8px;
+      border-top: 1px solid rgba(17, 24, 39, 0.06);
+    }
+    .staff-brief-row:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+    .staff-brief-row dt {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #7b8490;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .staff-brief-row dd {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.55;
+      color: #24313d;
+      font-weight: 560;
+    }
+    .office-focus { margin: 6px 0 0 18px; padding: 0; }
+    .office-focus li { margin-top: 4px; }
+    .office-floor { margin-top: 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+    .zone { border: 1px solid rgba(22, 86, 116, 0.2); border-radius: 12px; padding: 10px; background: rgba(247, 252, 255, 0.95); }
+    .zone h3 { font-size: 13px; color: #1a4e66; margin-bottom: 4px; }
+    .zone .meta { margin-bottom: 6px; }
+    .desk-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+    .desk-chip {
+      border: 1px solid rgba(22, 86, 116, 0.2);
+      border-radius: 9px;
+      padding: 7px;
+      font-size: 12px;
+      background: rgba(255, 255, 255, 0.95);
+    }
+    .desk-chip strong { color: #15485f; }
+    .calendar-grid { margin-top: 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+    .calendar-day {
+      border: 1px solid rgba(17, 24, 39, 0.07);
+      border-radius: 18px;
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 251, 255, 0.96));
+      box-shadow: 0 10px 22px rgba(17, 24, 39, 0.04);
+    }
+    .calendar-day h3 { font-size: 14px; margin: 0; color: #1f2937; }
+    .calendar-event-list { list-style: none; margin: 8px 0 0 0; padding: 0; display: grid; gap: 8px; }
+    .calendar-event {
+      border: 1px solid rgba(17, 24, 39, 0.07);
+      border-radius: 14px;
+      padding: 10px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(250, 252, 255, 0.97));
+    }
+    .calendar-event-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .mission-banner {
+      margin-top: 8px;
+      border: 1px solid rgba(0, 113, 227, 0.24);
+      border-radius: 12px;
+      padding: 10px;
+      background: linear-gradient(180deg, rgba(236, 246, 255, 0.96), rgba(255, 255, 255, 0.98));
+      color: #11385a;
+      font-weight: 620;
+      line-height: 1.5;
+    }
+    .memory-timeline { margin-top: 10px; display: grid; gap: 8px; }
+    .memory-row {
+      border: 1px solid rgba(17, 24, 39, 0.1);
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.95);
+      display: grid;
+      grid-template-columns: 110px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+    .memory-day {
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    .memory-title { font-size: 15px; color: #1f2937; font-weight: 650; line-height: 1.4; }
+    .file-workbench {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+      gap: 12px;
+      align-items: stretch;
+    }
+    .file-sidebar,
+    .file-editor-panel {
+      border: 1px solid rgba(17, 24, 39, 0.07);
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.96)),
+        radial-gradient(circle at 100% 0%, rgba(221, 232, 255, 0.16), transparent 52%);
+      padding: 14px;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 18px 36px rgba(17, 24, 39, 0.06);
+    }
+    .file-sidebar { display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 10px; }
+    .file-sidebar-tools { display: grid; gap: 8px; }
+    .file-facet-switch {
+      justify-self: start;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 8px;
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      padding: 0;
+      border-radius: 0;
+    }
+    .file-facet-switch .segment-item {
+      min-height: 38px;
+      padding: 0 16px;
+      border: 1px solid rgba(17, 24, 39, 0.08);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(249, 251, 255, 0.94));
+      color: #4d5560;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.84),
+        0 8px 18px rgba(17, 24, 39, 0.04);
+    }
+    .file-facet-switch .segment-item:hover {
+      border-color: rgba(17, 24, 39, 0.12);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(250, 252, 255, 0.97));
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.88),
+        0 10px 20px rgba(17, 24, 39, 0.06);
+    }
+    .file-facet-switch .segment-item.active {
+      border-color: rgba(0, 113, 227, 0.16);
+      background:
+        linear-gradient(180deg, rgba(240, 247, 255, 0.99), rgba(255, 255, 255, 0.98)),
+        radial-gradient(circle at 50% 0%, rgba(0, 113, 227, 0.08), transparent 60%);
+      color: #0059b2;
+      box-shadow:
+        inset 0 0 0 1px rgba(0, 113, 227, 0.12),
+        0 10px 22px rgba(0, 113, 227, 0.08);
+    }
+    .file-filter-input,
+    .file-token-input {
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      border: 1px solid rgba(17, 24, 39, 0.1);
+      border-radius: 15px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(249, 251, 255, 0.97));
+      padding: 11px 13px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #1d1d1f;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+    }
+    .file-filter-input:focus,
+    .file-token-input:focus {
+      outline: none;
+      border-color: rgba(0, 113, 227, 0.24);
+      box-shadow: var(--ring-soft), inset 0 1px 0 rgba(255, 255, 255, 0.88);
+    }
+    .file-filter-input::placeholder,
+    .file-token-input::placeholder,
+    .docs-search input::placeholder,
+    .file-editor-textarea::placeholder {
+      color: #8c9198;
+    }
+    .file-nav {
+      display: grid;
+      gap: 8px;
+      max-height: 660px;
+      overflow: auto;
+      padding-right: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(126, 138, 154, 0.45) transparent;
+    }
+    .file-nav::-webkit-scrollbar,
+    .panel::-webkit-scrollbar,
+    .card::-webkit-scrollbar,
+    textarea::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    .file-nav::-webkit-scrollbar-thumb,
+    .panel::-webkit-scrollbar-thumb,
+    .card::-webkit-scrollbar-thumb,
+    textarea::-webkit-scrollbar-thumb {
+      border-radius: 999px;
+      background: rgba(126, 138, 154, 0.42);
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    .file-nav::-webkit-scrollbar-track,
+    .panel::-webkit-scrollbar-track,
+    .card::-webkit-scrollbar-track,
+    textarea::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .file-nav-item {
+      -webkit-appearance: none;
+      appearance: none;
+      border: 1px solid rgba(17, 24, 39, 0.07);
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(250, 251, 253, 0.96), rgba(255, 255, 255, 0.95));
+      padding: 12px 13px;
+      text-align: left;
+      display: grid;
+      gap: 4px;
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      transition: border-color 180ms ease, transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+    }
+    .file-nav-item[hidden] {
+      display: none !important;
+    }
+    .file-nav-item:hover {
+      border-color: rgba(17, 24, 39, 0.1);
+      background: linear-gradient(180deg, rgba(247, 250, 255, 0.99), rgba(255, 255, 255, 0.98));
+      transform: translateY(-1px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.84),
+        0 10px 24px rgba(17, 24, 39, 0.06);
+    }
+    .file-nav-item.active {
+      border-color: rgba(0, 113, 227, 0.16);
+      background:
+        linear-gradient(180deg, rgba(240, 247, 255, 0.99), rgba(255, 255, 255, 0.99)),
+        radial-gradient(circle at 0% 0%, rgba(0, 113, 227, 0.08), transparent 42%);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.84),
+        0 14px 28px rgba(0, 113, 227, 0.09);
+    }
+    .file-nav-title { font-size: 14px; font-weight: 650; color: #1d1d1f; }
+    .file-nav-meta { font-size: 12px; color: #6e6e73; line-height: 1.5; }
+    .file-editor-panel {
+      display: grid;
+      grid-template-rows: auto minmax(360px, 1fr) auto;
+      gap: 10px;
+      min-height: 0;
+    }
+    .file-editor-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .file-editor-title { font-size: 18px; font-weight: 680; color: #1d1d1f; line-height: 1.25; }
+    .file-editor-textarea {
+      width: 100%;
+      min-height: 480px;
+      border: 1px solid rgba(17, 24, 39, 0.1);
+      border-radius: 18px;
+      background:
+        linear-gradient(180deg, rgba(251, 252, 254, 0.99), rgba(247, 249, 252, 0.98));
+      padding: 16px 18px;
+      font: 13px/1.65 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      color: #17202a;
+      resize: vertical;
+      outline: none;
+      box-sizing: border-box;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.74);
+    }
+    .file-editor-textarea:focus {
+      border-color: rgba(0, 113, 227, 0.24);
+      box-shadow: var(--ring-soft), inset 0 1px 0 rgba(255, 255, 255, 0.78);
+    }
+    .docs-toolbar {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 150px;
+      gap: 8px;
+      align-items: center;
+    }
+    .docs-search { margin-top: 0; }
+    .docs-search input {
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      border: 1px solid rgba(17, 24, 39, 0.1);
+      border-radius: 15px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(249, 251, 255, 0.97));
+      padding: 11px 13px;
+      font-size: 14px;
+      font-family: inherit;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+    }
+    .docs-source-filter-wrap select {
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      border: 1px solid rgba(17, 24, 39, 0.1);
+      border-radius: 15px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(249, 251, 255, 0.97));
+      padding: 11px 13px;
+      font-size: 13px;
+      color: #364152;
+      font-family: inherit;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+    }
+    .docs-search input:focus,
+    .docs-source-filter-wrap select:focus {
+      outline: none;
+      border-color: rgba(0, 113, 227, 0.24);
+      box-shadow: var(--ring-soft), inset 0 1px 0 rgba(255, 255, 255, 0.88);
+    }
+    .docs-grid { margin-top: 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; }
+    .doc-card {
+      border: 1px solid rgba(17, 24, 39, 0.07);
+      border-radius: 16px;
+      padding: 11px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.96));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.84);
+      display: grid;
+      gap: 6px;
+    }
+    .doc-card.is-hidden { display: none; }
+    .doc-card-head { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+    details summary { cursor: pointer; color: #1a4e66; font-size: 13px; font-weight: 620; }
+    .card.compact-details summary {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 15px;
+      color: #143e60;
+      font-weight: 680;
+    }
+    .card.compact-details summary::after {
+      content: var(--fold-open-label);
+      font-size: 11px;
+      color: #6a7380;
+      border: 1px solid rgba(22, 86, 116, 0.14);
+      border-radius: 999px;
+      padding: 4px 9px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.92));
+    }
+    .card.compact-details[open] summary::after { content: var(--fold-close-label); }
+    .card.compact-details > .meta { margin-top: 8px; }
+    .card.compact-details .fold-body { margin-top: 10px; }
+    .compact-table-details summary {
+      list-style: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #1c5471;
+      font-weight: 620;
+      cursor: pointer;
+    }
+    .compact-table-details summary::after {
+      content: var(--fold-open-label);
+      font-size: 11px;
+      color: #6a7380;
+      border: 1px solid rgba(22, 86, 116, 0.14);
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.92));
+    }
+    .compact-table-details[open] summary::after { content: var(--fold-close-label); }
+    code { color: #0b6db3; font-size: 12px; }
+    .subscription-pill {
+      margin-top: 8px;
+      border: 1px solid rgba(22, 86, 116, 0.14);
+      border-radius: 16px;
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(247, 252, 255, 0.98), rgba(255, 255, 255, 0.97));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.84);
+    }
+    .quota-compact { display: grid; gap: 10px; margin-top: 8px; }
+    .quota-row {
+      border: 1px solid rgba(22, 86, 116, 0.1);
+      border-radius: 14px;
+      padding: 10px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 251, 255, 0.96));
+    }
+    .quota-head { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+    .quota-label { font-size: 13px; font-weight: 650; color: #14374d; }
+    .quota-value { font-size: 12px; color: var(--muted); }
+    .quota-track { margin-top: 6px; border: 1px solid rgba(20, 92, 124, 0.16); border-radius: 999px; height: 8px; background: rgba(210, 228, 238, 0.52); overflow: hidden; }
+    .quota-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #0f7bb2, #1f9f80); }
+    .quota-foot { margin-top: 4px; font-size: 11px; color: var(--muted); }
+    .pie-wrap { margin-top: 10px; display: grid; grid-template-columns: minmax(180px, 220px) minmax(0, 1fr); gap: 12px; align-items: center; }
+    .pie-chart {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 1px solid rgba(21, 82, 112, 0.18);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.52), 0 8px 18px rgba(16, 53, 76, 0.08);
+      position: relative;
+      margin: 0 auto;
+    }
+    .pie-hole {
+      position: absolute;
+      inset: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(21, 82, 112, 0.14);
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10px;
+    }
+    .pie-hole strong { font-size: 17px; color: #11364e; letter-spacing: -0.01em; }
+    .pie-hole span { margin-top: 2px; font-size: 11px; color: var(--muted); line-height: 1.35; }
+    .pie-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+    .pie-legend li {
+      display: grid;
+      grid-template-columns: 10px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #1a4259;
+      border-bottom: 1px dashed rgba(22, 86, 116, 0.1);
+      padding-bottom: 4px;
+    }
+    .pie-swatch { width: 10px; height: 10px; border-radius: 999px; }
+    .pie-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pie-val { color: var(--muted); font-variant-numeric: tabular-nums; }
+    @keyframes card-in {
+      from { opacity: 0; transform: translateY(7px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes panel-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes status-pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.015); }
+      100% { transform: scale(1); }
+    }
+    @keyframes status-bump {
+      0% { transform: translateY(0); box-shadow: 0 0 0 rgba(0, 113, 227, 0); }
+      30% { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0, 113, 227, 0.2); }
+      100% { transform: translateY(0); box-shadow: 0 0 0 rgba(0, 113, 227, 0); }
+    }
+    @keyframes kpi-bump {
+      0% { transform: translateY(0); box-shadow: 0 0 0 rgba(0, 113, 227, 0); }
+      24% { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(0, 113, 227, 0.16); }
+      100% { transform: translateY(0); box-shadow: 0 0 0 rgba(0, 113, 227, 0); }
+    }
+    @media (max-width: 1600px) {
+      .app-shell { grid-template-columns: 214px minmax(0, 1fr) 272px; gap: 16px; padding: 18px; }
+      .section-title { font-size: 34px; }
+      .overview-v3-shell { grid-template-columns: 1fr; }
+      .overview-decision-grid { grid-template-columns: 1fr 1fr; }
+      .overview-kpi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .task-hub-shell { grid-template-columns: 1fr; }
+      .task-hub-grid { grid-template-columns: 1fr; }
+      .task-hub-board-grid { grid-template-columns: 1fr; }
+      .overview-busy-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .office-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .staff-brief-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 1320px) {
+      .app-shell { grid-template-columns: 1fr 284px; }
+      .app-shell > .sidebar:first-of-type { grid-column: 1 / -1; }
+      .panel { grid-column: 1; }
+      .section-hero-head { flex-direction: column; align-items: stretch; }
+      .section-head-actions { justify-content: flex-start; }
+      .overview-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .overview-decision-grid { grid-template-columns: 1fr; }
+      .overview-main-grid { grid-template-columns: 1fr; }
+      .overview-pulse-card .status-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .task-hub-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .timeline-summary-strip { grid-template-columns: 1fr; }
+      .overview-busy-grid { grid-template-columns: 1fr; }
+      .dashboard-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .execution-chain-list { grid-template-columns: 1fr; }
+      .file-workbench { grid-template-columns: 1fr; }
+      .staff-brief-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 1080px) {
+      .app-shell { grid-template-columns: 1fr; }
+      .sidebar, .panel { order: unset; }
+      .section-title { font-size: 25px; }
+      .overview-v3-shell { grid-template-columns: 1fr; }
+      .overview-kpi-grid { grid-template-columns: 1fr; }
+      .overview-decision-grid { grid-template-columns: 1fr; }
+      .overview-primary-value { font-size: 46px; }
+      .overview-focus-stage { grid-template-columns: 1fr; }
+      .overview-focus-ring { width: 104px; height: 104px; }
+      .overview-focus-core { width: 72px; height: 72px; }
+      .overview-focus-score { font-size: 24px; }
+      .overview-main-grid { grid-template-columns: 1fr; }
+      .overview-action-grid { grid-template-columns: 1fr; }
+      .overview-task-strip { flex-direction: column; }
+      .overview-quick-links { justify-content: flex-start; min-width: 0; }
+      .task-hub-stat-grid { grid-template-columns: 1fr; }
+      .task-hub-shell { grid-template-columns: 1fr; }
+      .task-hub-grid { grid-template-columns: 1fr; }
+      .task-hub-board-grid { grid-template-columns: 1fr; }
+      .overview-pulse-card .status-strip { grid-template-columns: 1fr; }
+      .dashboard-strip { grid-template-columns: 1fr; }
+      .signal-gauge-main { grid-template-columns: 64px minmax(0, 1fr); }
+      .office-grid { grid-template-columns: 1fr; }
+      .staff-brief-head { grid-template-columns: 1fr; }
+      .staff-avatar { width: min(156px, 100%); }
+      .staff-brief-grid { grid-template-columns: 1fr; }
+      table { min-width: 720px; }
+      .global-visibility-card .ops-board { min-width: 900px; }
+      .pie-wrap { grid-template-columns: 1fr; }
+      .office-head { grid-template-columns: 1fr; }
+      .agent-avatar { max-width: 180px; }
+      .memory-row { grid-template-columns: 1fr; }
+      .docs-toolbar { grid-template-columns: 1fr; }
+      .file-editor-head { flex-direction: column; }
+      .file-editor-panel { grid-template-rows: auto minmax(280px, 1fr) auto; }
+      .file-editor-textarea { min-height: 360px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  
+/* ==== OLD CSS OVERRIDES ==== */
+
 * {
   margin: 0;
   padding: 0;
@@ -16,263 +2019,43 @@
 }
 
 :root {
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #13131a;
-  --bg-tertiary: #1a1a24;
-  --bg-card: #1f1f2e;
-  --border: #2a2a3a;
-  --text-primary: #e4e4e7;
-  --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
-  --accent: #6366f1;
-  --accent-glow: rgba(99, 102, 241, 0.3);
-  --green: #10b981;
-  --green-glow: rgba(16, 185, 129, 0.2);
-  --red: #ef4444;
-  --yellow: #f59e0b;
-  --purple: #a855f7;
-  --blue: #3b82f6;
-  --cyan: #06b6d4;
+  --bg-primary: var(--bg);
+  --bg-secondary: var(--panel-soft);
+  --bg-tertiary: rgba(255,255,255,0.6);
+  --bg-card: var(--card-fill-soft);
+  --border: var(--border-soft);
+  --text-primary: var(--text);
+  --text-secondary: var(--muted);
+  --text-muted: #8e8e93;
+  --accent: #0071e3;
+  --accent-glow: rgba(0, 113, 227, 0.15);
+  --green: var(--ok);
+  --green-glow: rgba(36, 138, 61, 0.15);
+  --red: var(--over);
+  --yellow: var(--warn);
+  --purple: #bf5af2;
+  --blue: #007aff;
+  --cyan: #32ade6;
 }
 
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  overflow-x: hidden;
-  padding-bottom: 40px;
-}
 
-.app {
-  display: flex;
-  min-height: calc(100vh - 40px);
-}
 
-.sidebar {
-  width: 72px;
-  background: var(--bg-secondary);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  height: calc(100vh - 40px);
-  left: 0;
-  top: 0;
-  z-index: 100;
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
-.sidebar:hover {
-  width: 240px;
-}
+/* Legacy sidebar hover effects removed */
 
-.sidebar-header {
-  padding: 20px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.logo {
-  font-size: 28px;
-  filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.4));
-  flex-shrink: 0;
-}
-
-.brand {
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  background: linear-gradient(135deg, var(--text-primary), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.sidebar:hover .brand {
-  opacity: 1;
-}
-
-.nav {
-  flex: 1;
-  padding: 16px 0;
-  overflow-y: auto;
-}
-.sidebar:hover .nav {
-  padding: 16px 8px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 0;
-  justify-content: center;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  color: var(--text-secondary);
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 4px;
-  position: relative;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.nav-item:hover {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-.sidebar:hover .nav-item {
-  justify-content: flex-start;
-  padding: 14px 16px;
-}
-
-.nav-item.active {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
-  color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent), 0 4px 12px rgba(99, 102, 241, 0.2);
-}
-
-.nav-item .icon {
-  font-size: 20px;
-  width: 24px;
-  text-align: center;
-  flex-shrink: 0;
-}
-
-.nav-text {
-  display: none;
-}
-
-.sidebar:hover .nav-text {
-  display: inline;
-}
-
-.main {
-  flex: 1;
-  margin-left: 72px;
-  padding: 32px;
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-.page {
-  display: none;
-  animation: fadeIn 0.3s ease;
-}
-
-.page.active {
-  display: block;
-}
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.page-header {
-  margin-bottom: 32px;
-}
 
-.page-title {
-  font-size: 32px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 8px;
-  background: linear-gradient(135deg, var(--text-primary), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
 
-.page-subtitle {
-  color: var(--text-secondary);
-  font-size: 15px;
-}
-
-.card {
-  background: linear-gradient(135deg, rgba(31, 31, 46, 0.8), rgba(31, 31, 46, 0.95));
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 24px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.card:hover {
-  border-color: rgba(99, 102, 241, 0.5);
-  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15), 0 0 32px rgba(99, 102, 241, 0.1);
-  transform: translateY(-2px);
-}
-
-.card-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 20px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.grid {
-  display: grid;
-  gap: 24px;
-}
-
-.grid-4 {
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-}
-
-.grid-3 {
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-
-.grid-2 {
-  grid-template-columns: repeat(2, 1fr);
-  align-items: stretch;
-}
 
 @media (max-width: 900px) {
-  .grid-2 { grid-template-columns: 1fr; }
+
 }
 
-.metric {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.metric-value {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.metric-label {
-  font-size: 13px;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.metric-subtitle {
-  font-size: 12px;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
 
 .metric.green .metric-value {
   color: var(--green);
@@ -356,16 +2139,17 @@ body {
   display: flex;
   gap: 8px;
   padding: 8px 10px;
-  background: linear-gradient(135deg, rgba(26, 26, 36, 0.6), rgba(31, 31, 46, 0.4));
+  background: var(--bg-primary);
   border-radius: 8px;
   border-left: 3px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   font-size: 12px;
 }
 
 .activity-item:hover {
-  background: linear-gradient(135deg, rgba(31, 31, 46, 0.8), rgba(26, 26, 36, 0.6));
+  background: var(--bg-secondary);
   border-left-color: var(--accent);
   transform: translateX(4px);
 }
@@ -381,16 +2165,17 @@ body {
 }
 
 .activity-dot {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  margin-top: 5px;
+  margin-top: 6px;
   flex-shrink: 0;
+  background: var(--border);
 }
 
 .activity-dot.running {
-  background: var(--green);
-  box-shadow: 0 0 8px var(--green-glow);
+  background: var(--ok);
+  box-shadow: 0 0 10px rgba(36, 138, 61, 0.4);
   animation: pulse 2s ease-in-out infinite;
 }
 
@@ -410,13 +2195,18 @@ body {
   justify-content: space-between;
   gap: 8px;
   margin-bottom: 4px;
+  min-height: 20px;
 }
 
 .activity-name {
   font-weight: 600;
   font-size: 13px;
   color: var(--text-primary);
-  flex-shrink: 0;
+  flex-shrink: 1; /* allow shrinking so ellipsis works */
+  min-width: 0;   /* required for flex-child truncation */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .activity-snippet {
@@ -438,19 +2228,30 @@ body {
   flex-wrap: wrap;
 }
 
+
+
 .badge {
-  padding: 2px 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
   border-radius: 4px;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-  display: inline-block;
+  line-height: normal;
+  white-space: nowrap;
+  flex-shrink: 0;
+  height: 18px;
+  min-height: 18px;
+  max-height: 18px;
+  margin: 0;
+  box-sizing: border-box;
 }
 
-.badge.main { background: #6366f1; color: #fff; }
+.badge.main { background: var(--accent); color: #fff; }
 .badge.sub { background: rgba(6, 182, 212, 0.2); color: var(--cyan); }
-.badge.cron { background: rgba(245, 158, 11, 0.2); color: var(--yellow); }
+.badge.cron { background: rgba(255, 159, 10, 0.2); color: var(--yellow); }
 .badge.group { background: rgba(59, 130, 246, 0.2); color: var(--blue); }
 
 .model-tag {
@@ -896,54 +2697,9 @@ body {
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-  .sidebar {
-    width: 100vw;
-    height: auto;
-    bottom: 0;
-    top: auto;
-    left: 0;
-    right: 0;
-    border-right: none;
-    border-top: 1px solid var(--border);
-    flex-direction: row;
-    padding: 0;
-    z-index: 150;
-  }
-  .sidebar:hover {
-    width: 100vw;
-  }
-  .sidebar-header {
-    display: none;
-  }
-  .nav {
-    flex-direction: row;
-    padding: 0;
-    overflow-x: auto;
-    width: 100%;
-    justify-content: space-around;
-  }
-  .nav-item {
-    flex-direction: column;
-    padding: 8px 12px;
-    margin: 0;
-    gap: 4px;
-    min-width: 60px;
-  }
-  .nav-item .icon {
-    font-size: 20px;
-  }
-  .nav-text {
-    opacity: 1;
-    font-size: 10px;
-  }
-  .main {
-    margin-left: 0;
-    margin-bottom: 80px;
-    padding: 16px;
-  }
-  .page-title {
-    font-size: 24px;
-  }
+
+/* legacy mobile sidebar hover removed */
+
   .grid-4, .grid-3, .grid-2 {
     grid-template-columns: 1fr !important;
   }
@@ -990,20 +2746,18 @@ body {
 
 /* Notification bell */
 .notification-bell {
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  width: 40px;
-  height: 40px;
+  position: relative;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--bg-card);
+  background: transparent;
   border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 18px;
-  z-index: 200;
+  font-size: 16px;
+  flex-shrink: 0;
   transition: all 0.2s;
 }
 .notification-bell:hover {
@@ -1035,7 +2789,7 @@ body {
 }
 .notif-panel {
   position: fixed;
-  top: 60px;
+  top: 62px;
   right: 16px;
   width: 380px;
   max-height: 500px;
@@ -1076,7 +2830,7 @@ body {
 .notif-content { flex: 1; }
 .notif-time { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
 .notif-event { color: var(--text-primary); }
-body.light-theme .notif-panel { background: #ffffff; border-color: #d1d1d6; box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+
 /* Keyboard shortcuts overlay */
 .shortcuts-overlay {
   display: none;
@@ -1230,79 +2984,170 @@ body.light-theme .notif-panel { background: #ffffff; border-color: #d1d1d6; box-
     transform: translateX(50px);
   }
 }
-body.light-theme {
-  --bg-primary: #f5f5f7;
-  --bg-secondary: #e8e8ed;
-  --bg-tertiary: #dcdce2;
-  --bg-card: #ffffff;
-  --border: #d1d1d6;
-  --text-primary: #1a1a1a;
-  --text-secondary: #4a4a4f;
-  --text-muted: #8e8e93;
-  --accent: #6366f1;
-  --accent-glow: rgba(99, 102, 241, 0.15);
-  --green: #10b981;
-  --green-glow: rgba(16, 185, 129, 0.1);
-  --red: #ef4444;
-  --yellow: #f59e0b;
-  --purple: #a855f7;
-  --blue: #3b82f6;
-  --cyan: #06b6d4;
-}
-body.light-theme .sidebar { background: #eaeaef; border-right-color: #d1d1d6; }
-body.light-theme .sidebar:hover { background: #e0e0e5; }
-body.light-theme .status-bar { background: #eaeaef; border-top-color: #d1d1d6; }
-body.light-theme .card { background: #ffffff !important; border-color: #d1d1d6; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
-body.light-theme .card:hover { box-shadow: 0 4px 12px rgba(99,102,241,0.12); border-color: rgba(99,102,241,0.4); }
-body.light-theme .nav-item:hover { background: rgba(0,0,0,0.06); }
-body.light-theme .nav-item.active { background: rgba(99,102,241,0.12); }
-body.light-theme input, body.light-theme textarea, body.light-theme select { background: #f0f0f5 !important; color: #1a1a1a !important; border-color: #d1d1d6 !important; }
-body.light-theme .session-modal-overlay { background: rgba(0,0,0,0.4); }
-body.light-theme .mono { color: #4a4a4f; }
-body.light-theme pre { background: #f0f0f5 !important; color: #1a1a1a; }
-body.light-theme code { background: #e8e8ed; color: #1a1a1a; }
-body.light-theme .notification-bell { background: #ffffff; border-color: #d1d1d6; }
-body.light-theme #themeToggle { background: #ffffff; border-color: #d1d1d6; }
-body.light-theme button { color: var(--text-primary); }
-body.light-theme .toast { background: #ffffff; border-color: #d1d1d6; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-body.light-theme .health-ring-container { background: #ffffff !important; }
-body.light-theme [style*="linear-gradient(135deg, rgba(26"] { background: #f5f5f7 !important; }
-body.light-theme [style*="linear-gradient(135deg, rgba(31"] { background: #ffffff !important; }
-body.light-theme .page-header { color: #1a1a1a; }
-body.light-theme .brand { background: linear-gradient(135deg, #1a1a1a, var(--accent)); -webkit-background-clip: text; background-clip: text; }
-body.light-theme svg text { fill: #4a4a4f; }
-body.light-theme .streak-day { border-color: #d1d1d6; }
-body.light-theme [style*="background:var(--bg-tertiary)"] { background: #dcdce2 !important; }
-body.light-theme .activity-item { background: #f0f0f5 !important; }
-body.light-theme .activity-item:hover { background: #e8e8ed !important; }
-body.light-theme .system-grid .card { background: #ffffff !important; }
-body.light-theme .radial-gauge-bg { stroke: #d1d1d6; }
-body.light-theme .session-row:hover { background: rgba(99,102,241,0.06); }
-body.light-theme .log-line:hover { background: rgba(0,0,0,0.03); }
-body.light-theme ::selection { background: rgba(99,102,241,0.2); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #themeToggle {
-  position: fixed;
-  top: 16px;
-  right: 64px;
-  width: 40px;
-  height: 40px;
+  position: relative;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--bg-card);
+  background: transparent;
   border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 18px;
-  z-index: 200;
+  font-size: 16px;
+  flex-shrink: 0;
   transition: all 0.2s;
 }
-#themeToggle:hover { background: var(--bg-tertiary); transform: scale(1.05); }
+#themeToggle:hover { background: var(--bg-tertiary); }
+
+    /* Restored structural CSS for router */
+    .page { display: none; }
+    .page.active { display: block; }
+    .page-header { margin-bottom: var(--space-3); }
+    .page-title { font-size: var(--font-title-1); font-weight: 760; letter-spacing: -0.02em; color: var(--text); }
+    .page-subtitle { margin-top: 4px; font-size: var(--font-body); color: var(--muted); }
+    .nav {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 2px;
+      flex: 1;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav::-webkit-scrollbar { display: none; }
+
+    .nav-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .nav-dropdown-trigger {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 8px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 7px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: background 0.15s ease, color 0.15s ease;
+      white-space: nowrap;
+    }
+    .nav-dropdown-trigger:hover, .nav-dropdown:hover .nav-dropdown-trigger {
+      background: rgba(0,0,0,0.05);
+      color: var(--text);
+    }
+    .nav-dropdown-content {
+      display: none;
+      position: fixed !important;
+      top: 52px;
+      margin-top: 5px;
+      padding-top: 6px;
+      left: 0;
+      background-color: #ffffff;
+      min-width: 160px;
+      box-shadow: 0px 8px 32px rgba(0,0,0,0.08), 0px 0px 1px rgba(0,0,0,0.1);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 12px;
+      padding: 8px;
+      z-index: 999999 !important;
+    }
+    .nav-dropdown.open .nav-dropdown-content {
+      display: block;
+      animation: fadeIn 0.15s ease;
+    }
+    .nav-dropdown-content .nav-item {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px 10px !important;
+    }
+
+    .nav-item {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 8px !important;
+      font-size: 12px !important;
+      font-weight: 500;
+      border-radius: 7px !important;
+      white-space: nowrap;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: background 0.15s ease, color 0.15s ease;
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+    .nav-item .icon { font-size: 13px !important; }
+    .nav-item:hover {
+      background: rgba(0,0,0,0.05) !important;
+      color: var(--text) !important;
+    }
+    .nav-item.active {
+      background: rgba(59,130,246,0.12) !important;
+      color: #2563eb !important;
+      font-weight: 500;
+    }
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      padding: 0 !important;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+    .app {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      min-height: 100vh;
+    }
+        .main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; min-width: 0; position: relative; padding-top: 52px; padding-left: 24px; padding-right: 24px; height: 100vh; box-sizing: border-box; }
+    .card { background: var(--card-fill-soft); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-2); box-shadow: var(--shadow-soft); margin-bottom: var(--space-2); }
+    .btn { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; cursor: pointer; color: var(--text-primary); transition: 0.2s; }
+    .btn:hover { border-color: var(--accent); color: var(--accent); }
+    .grid { display: grid; gap: var(--space-2); }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
 </style>
 </head>
 <body>
-<div id="themeToggle" onclick="toggleTheme()">🌙</div>
-
 <div id="loginPage" style="display:none;position:fixed;inset:0;background:var(--bg-primary);z-index:9999;align-items:center;justify-content:center;">
   <div style="max-width:400px;width:90%;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:40px;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
     <div style="text-align:center;margin-bottom:32px;">
@@ -1372,89 +3217,227 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
 
 <div class="app" id="mainApp" style="display:none;">
   <aside class="sidebar">
-    <div class="sidebar-header">
-      <div class="logo">✨</div>
-      <div class="brand">Agent</div>
-    </div>
-    <nav class="nav">
-      <div class="nav-item active" data-page="overview">
-        <span class="icon">📊</span>
-        <span class="nav-text">Overview</span>
+    <div class="sidebar-header" style="margin-bottom: 16px; padding: 8px 12px; display: flex; justify-content: flex-start;">
+      <div class="brand" style="display:flex; align-items:center;">
+        <img src="logo.png" alt="果芽云 Guoya Cloud" style="width: 130px; height: auto; display: block;" />
       </div>
-      <div class="nav-item" data-page="sessions">
-        <span class="icon">🤖</span>
-        <span class="nav-text">Sessions</span>
+     <nav class="nav" style="gap:16px;">
+      <!-- 1. 监控中心 / Monitoring -->
+      <div class="nav-dropdown">
+        <div class="nav-dropdown-trigger" onclick="toggleNavDropdown(this, event)"><span class="icon">📊</span> 监控中心 / Monitoring ▾</div>
+        <div class="nav-dropdown-content">
+          <div class="nav-item nav-link active" data-page="overview"><span class="icon">📊</span><span class="nav-text">数据概览 / Overview</span></div>
+          <div class="nav-item nav-link" data-page="sessions"><span class="icon">💬</span><span class="nav-text">会话历史 / Sessions</span></div>
+          <div class="nav-item nav-link" data-page="costs"><span class="icon">💰</span><span class="nav-text">费用统计 / Costs</span></div>
+          <div class="nav-item nav-link" data-page="feed" style="display:none;"><span class="icon">⚡</span><span class="nav-text">实时动态 / Live Feed</span></div>
+        </div>
       </div>
-      <div class="nav-item" data-page="costs">
-        <span class="icon">💰</span>
-        <span class="nav-text">Costs</span>
+
+      <!-- 2. 智能体 / Agent Core -->
+      <div class="nav-dropdown">
+        <div class="nav-dropdown-trigger" onclick="toggleNavDropdown(this, event)"><span class="icon">💻</span> 智能体内核 / Agent Core ▾</div>
+        <div class="nav-dropdown-content">
+          <div class="nav-item nav-link" data-page="agents"><span class="icon">💻</span><span class="nav-text">我的智能体 / Agents</span></div>
+          <div class="nav-item nav-link" data-page="routing"><span class="icon">🔀</span><span class="nav-text">飞书路由 / Routing</span></div>
+          <div class="nav-item nav-link" data-page="memory" style="display:none;"><span class="icon">🧠</span><span class="nav-text">长期记忆 / Memory</span></div>
+          <div class="nav-item nav-link" data-page="files" style="display:none;"><span class="icon">📁</span><span class="nav-text">文件中心 / Files</span></div>
+        </div>
       </div>
-      <div class="nav-item" data-page="limits">
-        <span class="icon">📈</span>
-        <span class="nav-text">Limits</span>
+
+      <!-- 3. 后台功能 / Capabilities -->
+      <div class="nav-dropdown">
+        <div class="nav-dropdown-trigger" onclick="toggleNavDropdown(this, event)"><span class="icon">🧩</span> 后台功能 / Capabilities ▾</div>
+        <div class="nav-dropdown-content">
+          <div class="nav-item nav-link" data-page="plugins"><span class="icon">🧩</span><span class="nav-text">插件列表 / Plugins</span></div>
+          <div class="nav-item nav-link" data-page="cron"><span class="icon">⏰</span><span class="nav-text">定时任务 / Cron</span></div>
+        </div>
       </div>
-      <div class="nav-item" data-page="memory">
-        <span class="icon">🧠</span>
-        <span class="nav-text">Memory</span>
-      </div>
-      <div class="nav-item" data-page="files">
-        <span class="icon">📁</span>
-        <span class="nav-text">Files</span>
-      </div>
-      <div class="nav-item" data-page="logs">
-        <span class="icon">📋</span>
-        <span class="nav-text">Logs</span>
-      </div>
-      <div class="nav-item" data-page="feed">
-        <span class="icon">⚡</span>
-        <span class="nav-text">Live Feed</span>
-      </div>
-      <div class="nav-item" data-page="security">
-        <span class="icon">🔒</span>
-        <span class="nav-text">Security</span>
-      </div>
-      <div class="nav-item" data-page="sys-security">
-        <span class="icon">🛡️</span>
-        <span class="nav-text">Sys Security</span>
-      </div>
-      <div class="nav-item" data-page="config-editor">
-        <span class="icon">⚙️</span>
-        <span class="nav-text">Config</span>
-      </div>
-      <div class="nav-item" data-page="docker">
-        <span class="icon">🐳</span>
-        <span class="nav-text">Docker</span>
+
+      <!-- 4. 系统管理 / System -->
+      <div class="nav-dropdown">
+        <div class="nav-dropdown-trigger" onclick="toggleNavDropdown(this, event)"><span class="icon">⚙️</span> 系统管理 / System ▾</div>
+        <div class="nav-dropdown-content">
+          <div class="nav-item nav-link" data-page="settings"><span class="icon">⚙️</span><span class="nav-text">连接配置 / Settings</span></div>
+          <div class="nav-item nav-link" data-page="troubleshooting"><span class="icon">🛠️</span><span class="nav-text">系统排障 / Diagnose</span></div>
+          <div class="nav-item nav-link" data-page="logs" style="display:none;"><span class="icon">📋</span><span class="nav-text">运行日志 / Logs</span></div>
+          <div class="nav-item nav-link" data-page="security" style="display:none;"><span class="icon">🔒</span><span class="nav-text">安全中心 / Security</span></div>
+          <div class="nav-item nav-link" data-page="sys-security" style="display:none;"><span class="icon">🛡️</span><span class="nav-text">系统安全 / Sys Security</span></div>
+          <div class="nav-item nav-link" data-page="config-editor" style="display:none;"><span class="icon">⚙️</span><span class="nav-text">配置编辑 / Config</span></div>
+          <div class="nav-item nav-link" data-page="docker" style="display:none;"><span class="icon">🐳</span><span class="nav-text">Docker管理 / Docker</span></div>
+          <div class="nav-item nav-link" data-page="limits" style="display:none;"><span class="icon">📈</span><span class="nav-text">资源配额 / Limits</span></div>
+        </div>
       </div>
     </nav>
-    <div style="padding:16px;border-top:1px solid var(--border);margin-top:auto;">
-      <div id="mfaStatusIndicator" style="padding:4px 8px;margin-bottom:8px;font-size:10px;text-align:center;border-radius:6px;display:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
-      <div class="nav-item" onclick="handleLogout()" style="color:var(--red);margin-bottom:0;">
+    <div style="display:flex; align-items:center; gap:8px; margin-left:auto; padding-left:16px; flex-shrink:0;">
+      <div id="mfaStatusIndicator" style="padding:4px 8px;font-size:10px;text-align:center;border-radius:6px;display:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+      <div id="themeToggle" onclick="toggleTheme()" title="切换主题 / Toggle Theme">🌙</div>
+      <div class="notification-bell" id="notificationBell" onclick="toggleNotifPanel()" title="系统通知 / Notifications">🔔<span class="notification-badge" id="notifBadge">0</span></div>
+      <div class="nav-item nav-link" onclick="handleLogout()" style="color:var(--red);margin:0;">
         <span class="icon">🚪</span>
-        <span class="nav-text">Logout</span>
+        <span class="nav-text">退出登录 / Logout</span>
       </div>
     </div>
   </aside>
 
   <main class="main">
+
     
-    <div class="page active" id="overview">
+    <!-- Phase 2/3: Added skeletons for new pages -->
+    <div class="page" id="agents">
       <div class="page-header">
-        <h1 class="page-title">Overview</h1>
-        <p class="page-subtitle">Agent activity and system performance</p>
+        <h1 class="page-title">Agents (代理机器人列表)</h1>
+        <div class="page-subtitle">当前系统中独立运行与托管的所有 AI Agent。每个 Agent 拥有自己独立的记忆域、工作流与系统指令。</div>
+      </div>
+      <div class="grid grid-3" id="agentsListContainer">
+        <div class="card"><div class="empty-state">正在加载 Agents...</div></div>
+      </div>
+    </div>
+    
+    <div class="page" id="routing">
+      <div class="page-header">
+        <h1 class="page-title">Feishu Routing (飞书路由规则)</h1>
+        <div class="page-subtitle">管理外部消息源 (如飞书聊天、群组) 与底层处理 Agent 之间的自动分发映射关系。</div>
+      </div>
+      <div class="card" style="margin-bottom:20px;">
+        <h2>当前路由表 (Bindings)</h2>
+        <div class="meta" style="margin-bottom:12px;">当匹配到以下来源的消息时，系统会自动路由至其关联的 Agent。此规则在 <code>openclaw.json</code> 中定义。</div>
+        <table class="sessions-table" style="width:100%;">
+          <thead>
+            <tr>
+              <th style="text-align:left;">Target Agent (目标处理者)</th>
+              <th style="text-align:left;">Channel (接入渠道)</th>
+              <th style="text-align:left;">Peer Type (对话类型)</th>
+              <th style="text-align:left;">Peer ID (群或用户唯一标识)</th>
+            </tr>
+          </thead>
+          <tbody id="bindingsTbody">
+            <tr><td colspan="4">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="card" style="border-color:var(--warn); background:linear-gradient(180deg, rgba(255, 251, 243, 0.98), rgba(255, 255, 255, 0.96));">
+         <h2 style="color:var(--warn);"><span class="icon">🛠️</span> 飞书新群无响应排障指南 (Troubleshooting)</h2>
+         <p style="font-size:13px; line-height:1.5;">如果机器人在新的飞书群内拉起后没有响应，请按顺序检查：</p>
+         <ul style="font-size:13px; padding-left:20px; line-height:1.6; color:var(--text-secondary);">
+           <li>核对上表的 <b>Peer ID</b> 必须与要绑定的新飞书群 Chat ID 完全一致 (通常以 <code>oc_</code> 开头)。</li>
+           <li>修改 <code>openclaw.json</code> 后，请去 <b>Settings</b> 页点击 <b>重启 OpenClaw 核心</b> 使动态路由生效。</li>
+           <li>前往 <a href="#" onclick="switchPage('logs');">System Logs (系统日志)</a> 检查飞书插件是否收到了 Webhook 网络回调。</li>
+           <li>刚入群的机器人至少需要 <b>被明确 @ 提及一次</b> 才能获取读取上下文和响应的权限。</li>
+         </ul>
+      </div>
+    </div>
+    
+    <div class="page" id="plugins">
+      <div class="page-header">
+        <h1 class="page-title">Plugins Platform (插件平台模块)</h1>
+        <div class="page-subtitle">当前系统中加载并启用的外部接入模块与能力扩展配置 (源自 openclaw.json entries)。</div>
+      </div>
+      <div class="grid grid-3" id="pluginsListContainer">
+        <div class="card"><div class="empty-state">Loading plugins...</div></div>
+      </div>
+    </div>
+    
+    <div class="page" id="cron">
+      <div class="page-header">
+        <h1 class="page-title">Cron / Jobs (定时任务)</h1>
+        <div class="page-subtitle">基于 Cron 表达式自动触发调度执行的机器人主动推送任务 (例如每天定时的天气播报或早报)。</div>
+      </div>
+      <div class="grid grid-2" id="cronTbody">
+         <div class="card"><div class="empty-state">Loading crons...</div></div>
+      </div>
+    </div>
+    
+    <div class="page" id="troubleshooting">
+      <div class="page-header">
+        <h1 class="page-title">Troubleshooting (排障与诊断)</h1>
+        <div class="page-subtitle">系统日志流入口与常见崩溃诊断。</div>
+      </div>
+      <div class="card" style="margin-bottom:20px; border-top: 4px solid var(--red);">
+        <h3 style="color:var(--red); margin-top:0;"><span class="icon">🚨</span> 系统级崩溃与异常</h3>
+        <p style="font-size:14px; margin-bottom:16px;">如果您遇到非业务层面的未知错误、Docker容器假死、或者完全不工作，请立刻前往底层的内核日志进行排查：</p>
+        <button class="btn" style="background:var(--bg-secondary); border:1px solid var(--border);" onclick="switchPage('logs');">👉 前往 System Logs</button>
+      </div>
+    </div>
+    
+    <div class="page" id="settings">
+      <div class="page-header">
+        <h1 class="page-title">Settings / Connections (系统控制中心)</h1>
+        <div class="page-subtitle">核心引擎的全局控制、状态监测以及被降级的旧版高级调试入口。</div>
+      </div>
+      <div class="grid grid-2 mb-24" style="margin-bottom:32px;">
+        <div class="card" style="display:flex; flex-direction:column; padding:24px;">
+          <h3 class="card-title" style="margin-top:0;">当前连接状态 (Connection Info)</h3>
+          <div style="font-size:14px; line-height:2.0; color:var(--text-secondary); margin-top:12px;">
+             <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-soft); padding-bottom:4px; margin-bottom:4px;"><span>实例目标:</span> <b style="color:var(--text); font-family:monospace;">OpenClaw Node (Local)</b></div>
+             <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-soft); padding-bottom:4px; margin-bottom:4px;"><span>环境基准路劲:</span> <code style="padding:2px 6px;font-size:12px; border-radius:4px; background:var(--bg-secondary);">~/.openclaw/</code></div>
+             <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-soft); padding-bottom:4px; margin-bottom:4px;"><span>通讯事件机制:</span> <b style="color:var(--text);">HTTP Polling + SSE</b></div>
+             <div style="display:flex; justify-content:space-between; margin-top:8px;"><span>核心进程监控:</span> <span id="settingsHealth" style="color:var(--green);font-weight:600; padding:2px 8px; border-radius:12px; background:rgba(36,138,61,0.1);"><span class="icon" style="font-size:12px; margin-right:4px;">🟢</span> Online & Heartbeat OK</span></div>
+          </div>
+        </div>
+        <div class="card" style="display:flex; flex-direction:column; padding:24px;">
+          <h3 class="card-title" style="margin-top:0;">Quick Actions (核心操作面板)</h3>
+          <div style="font-size:13px; color:var(--text-secondary); margin-bottom:16px;">当你调整了 `openclaw.json` (如更改了路由或者新加了模型 Key)，你必须执行 <strong style="color:var(--text)">重启引擎</strong> 才能让新设定立刻在内存中热重载生效。</div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:auto;">
+            <button class="btn" style="flex:1; background:#ef4444; color:white; border-color:#dc2626; font-weight:600; padding:10px;" onclick="confirmAction('restart-openclaw')">重启 OpenClaw 引擎</button>
+            <button class="btn" style="flex:1; padding:10px;" onclick="confirmAction('clear-cache')">清空会话持久化缓存</button>
+          </div>
+          <button class="btn" style="margin-top:12px; background:transparent; border-color:transparent; color:var(--accent);" onclick="confirmAction('check-update')">检查框架引擎版本...</button>
+        </div>
+      </div>
+      
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <h3 class="card-title" style="margin:0;">Legacy Advanced Consoles (保留的旧版高级视图)</h3>
+        <span style="font-size:11px; padding:2px 6px; background:var(--bg-secondary); border-radius:4px; color:var(--text-muted); border:1px solid var(--border-soft);">保留供开发者底层排障与细化调整使用</span>
+      </div>
+      
+      <div class="grid grid-4" id="settings-legacy-links">
+        <a class="card" href="#" onclick="switchPage('memory'); return false;" style="text-decoration:none; color:inherit; display:flex; flex-direction:column; align-items:center; padding:20px 8px; text-align:center; transition:all 0.2s;">
+          <span style="font-size:28px; margin-bottom:12px;">🧠</span><span style="font-size:14px; font-weight:600; color:var(--text);">Memory<br><span style="font-size:12px; color:var(--muted);font-weight:400;margin-top:4px;display:block;">记忆与心智树管理</span></span>
+        </a>
+        <a class="card" href="#" onclick="switchPage('config-editor'); return false;" style="text-decoration:none; color:inherit; display:flex; flex-direction:column; align-items:center; padding:20px 8px; text-align:center; transition:all 0.2s;">
+          <span style="font-size:28px; margin-bottom:12px;">⚙️</span><span style="font-size:14px; font-weight:600; color:var(--text);">Config Editor<br><span style="font-size:12px; color:var(--muted);font-weight:400;margin-top:4px;display:block;">openclaw.json编辑器</span></span>
+        </a>
+        <a class="card" href="#" onclick="switchPage('files'); return false;" style="text-decoration:none; color:inherit; display:flex; flex-direction:column; align-items:center; padding:20px 8px; text-align:center; transition:all 0.2s;">
+          <span style="font-size:28px; margin-bottom:12px;">📁</span><span style="font-size:14px; font-weight:600; color:var(--text);">Files Explorer<br><span style="font-size:12px; color:var(--muted);font-weight:400;margin-top:4px;display:block;">工作区根目录树结构</span></span>
+        </a>
+        <a class="card" href="#" onclick="switchPage('logs'); return false;" style="text-decoration:none; color:inherit; display:flex; flex-direction:column; align-items:center; padding:20px 8px; text-align:center; transition:all 0.2s;">
+          <span style="font-size:28px; margin-bottom:12px;">📋</span><span style="font-size:14px; font-weight:600; color:var(--text);">System Logs<br><span style="font-size:12px; color:var(--muted);font-weight:400;margin-top:4px;display:block;">内核系统进程全日志</span></span>
+        </a>
+        <a class="card" href="#" onclick="switchPage('sys-security'); return false;" style="text-decoration:none; color:inherit; display:flex; flex-direction:column; align-items:center; padding:20px 8px; text-align:center; transition:all 0.2s;">
+          <span style="font-size:28px; margin-bottom:12px;">🛡️</span><span style="font-size:14px; font-weight:600; color:var(--text);">Sys Security<br><span style="font-size:12px; color:var(--muted);font-weight:400;margin-top:4px;display:block;">Linux 防火墙与拦截</span></span>
+        </a>
+        <a class="card" href="#" onclick="switchPage('feed'); return false;" style="text-decoration:none; color:inherit; display:flex; flex-direction:column; align-items:center; padding:20px 8px; text-align:center; transition:all 0.2s;">
+          <span style="font-size:28px; margin-bottom:12px;">⚡</span><span style="font-size:14px; font-weight:600; color:var(--text);">Live Feed<br><span style="font-size:12px; color:var(--muted);font-weight:400;margin-top:4px;display:block;">SSE 实时推理事件流</span></span>
+        </a>
+        <a class="card" href="#" onclick="switchPage('docker'); return false;" style="text-decoration:none; color:inherit; display:flex; flex-direction:column; align-items:center; padding:20px 8px; text-align:center; transition:all 0.2s;">
+          <span style="font-size:28px; margin-bottom:12px;">🐳</span><span style="font-size:14px; font-weight:600; color:var(--text);">Docker Stats<br><span style="font-size:12px; color:var(--muted);font-weight:400;margin-top:4px;display:block;">被管理的容器占用图</span></span>
+        </a>
+        <a class="card" href="#" onclick="switchPage('limits'); return false;" style="text-decoration:none; color:inherit; display:flex; flex-direction:column; align-items:center; padding:20px 8px; text-align:center; transition:all 0.2s;">
+          <span style="font-size:28px; margin-bottom:12px;">📈</span><span style="font-size:14px; font-weight:600; color:var(--text);">Usage Limits<br><span style="font-size:12px; color:var(--muted);font-weight:400;margin-top:4px;display:block;">高速消费 Token 阻断</span></span>
+        </a>
+      </div>
+    </div>
+
+
+  <div class="page active" id="overview">
+      <div class="page-header">
+        <h1 class="page-title">数据概览 / Overview</h1>
+        <p class="page-subtitle">智能体活动与系统运行状态监控 / Agent activity and system performance</p>
       </div>
 
       <div class="grid mb-24" style="grid-template-columns: repeat(3, 1fr);">
         <div class="card">
           <div class="metric green">
             <div class="metric-value"><span id="runningAgents">0</span></div>
-            <div class="metric-label">Running Agents</div>
-            <div class="metric-subtitle"><span id="totalSessions">0</span> total · <span id="activeSessions">0</span> active</div>
+            <div class="metric-label">运行中智能体 / Running Agents</div>
+            <div class="metric-subtitle"><span id="totalSessions">0</span> 总计 · <span id="activeSessions">0</span> 活跃</div>
           </div>
         </div>
         <div class="card">
           <div class="metric accent">
             <div class="metric-value" id="todaySpend">$0.00</div>
-            <div class="metric-label">Today's Spend</div>
+            <div class="metric-label">今日支出 / Today's Spend</div>
             <div class="metric-subtitle" id="todayTokensOut" style="font-family:'JetBrains Mono',monospace"></div>
           </div>
         </div>
@@ -1490,7 +3473,7 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
       </div>
 
       <div class="card mb-24">
-        <h3 class="card-title">System Health</h3>
+        <h3 class="card-title">系统状态 / System Health</h3>
         <div class="system-grid">
           <div class="system-metric">
             <div class="radial-gauge">
@@ -1571,18 +3554,18 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
 
       <div class="grid grid-2 mb-24">
         <div class="card">
-          <h3 class="card-title">Services Status</h3>
+          <h3 class="card-title">服务列表状态 / Services Status</h3>
           <div id="servicesStatus"></div>
         </div>
         <div class="card">
-          <h3 class="card-title">Cron Jobs</h3>
+          <h3 class="card-title">定时任务调度 / Cron Jobs</h3>
           <div id="cronJobs" style="max-height:320px;overflow-y:auto;"></div>
         </div>
       </div>
 
       <div class="grid grid-2 mb-24">
         <div class="card">
-          <h3 class="card-title">Quick Actions</h3>
+          <h3 class="card-title">核心快速操作 / Quick Actions</h3>
           <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
             <button onclick="quickAction('restart-openclaw', event)" class="qa-btn qa-danger">🔄 Restart OpenClaw</button>
             <button onclick="quickAction('restart-dashboard', event)" class="qa-btn">🔄 Restart Dashboard</button>
@@ -1599,7 +3582,7 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
           </div>
         </div>
         <div class="card">
-          <h3 class="card-title">Tailscale Status</h3>
+          <h3 class="card-title">内网穿透状态 / Tailscale Status</h3>
           <div id="tailscaleStatus" style="display:flex;flex-direction:column;gap:12px;">
             <div style="font-size:13px;color:var(--text-muted);">Loading...</div>
           </div>
@@ -1608,30 +3591,30 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
 
       <div class="grid grid-2 mb-24">
         <div class="card">
-          <h3 class="card-title">Lifetime Stats</h3>
+          <h3 class="card-title">数据统计 / Lifetime Stats</h3>
           <div id="lifetimeStats" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;">
-            <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;">Total Tokens</div><div class="mono" style="font-size:20px;font-weight:700;" id="ltTokens">--</div></div>
-            <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;">Total Messages</div><div class="mono" style="font-size:20px;font-weight:700;" id="ltMessages">--</div></div>
-            <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;">Total Cost</div><div class="mono" style="font-size:20px;font-weight:700;color:var(--accent);" id="ltCost">--</div></div>
-            <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;">Total Sessions</div><div class="mono" style="font-size:20px;font-weight:700;" id="ltSessions">--</div></div>
-            <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;">First Session</div><div style="font-size:13px;font-weight:600;" id="ltFirstDate">--</div></div>
-            <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;">Days Active</div><div style="font-size:20px;font-weight:700;color:var(--green);" id="ltDaysActive">--</div></div>
+            <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;">总计 Tokens / Tokens</div><div class="mono" style="font-size:20px;font-weight:700;" id="ltTokens">--</div></div>
+            <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;">消息总数 / Messages</div><div class="mono" style="font-size:20px;font-weight:700;" id="ltMessages">--</div></div>
+            <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;">总计费用 / Cost</div><div class="mono" style="font-size:20px;font-weight:700;color:var(--accent);" id="ltCost">--</div></div>
+            <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;">会话总数 / Sessions</div><div class="mono" style="font-size:20px;font-weight:700;" id="ltSessions">--</div></div>
+            <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;">首次运行 / First Date</div><div style="font-size:13px;font-weight:600;" id="ltFirstDate">--</div></div>
+            <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;">运行天数 / Days Active</div><div style="font-size:20px;font-weight:700;color:var(--green);" id="ltDaysActive">--</div></div>
           </div>
         </div>
         <div class="card">
-          <h3 class="card-title">Activity Streak</h3>
+          <h3 class="card-title">活跃热度 / Activity Streak</h3>
           <div style="display:flex;align-items:center;gap:24px;">
             <div style="text-align:center;">
               <div style="font-size:48px;margin-bottom:8px;">🔥</div>
               <div style="font-size:36px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent);" id="currentStreak">0</div>
-              <div style="font-size:12px;color:var(--text-muted);text-transform:uppercase;">Current Streak</div>
+              <div style="font-size:12px;color:var(--text-muted);text-transform:uppercase;">连续活跃 / Current</div>
             </div>
             <div style="flex:1;">
               <div style="margin-bottom:12px;">
-                <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">Longest Streak</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">最高纪录 / Longest</div>
                 <div style="font-size:24px;font-weight:700;font-family:'JetBrains Mono',monospace;" id="longestStreak">0</div>
               </div>
-              <div style="font-size:10px;color:var(--text-muted);margin-bottom:8px;">Last 30 Days</div>
+              <div style="font-size:10px;color:var(--text-muted);margin-bottom:8px;">最近 30 天 / Last 30 Days</div>
               <div id="streakCalendar" style="display:grid;grid-template-columns:repeat(10,1fr);gap:3px;"></div>
             </div>
           </div>
@@ -1640,34 +3623,34 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
 
       <div class="grid grid-2 mb-24" style="align-items:start;">
         <div class="card">
-          <h3 class="card-title">Recent Activity</h3>
+          <h3 class="card-title">近期活动 / Recent Activity</h3>
           <div class="activity-feed" id="recentActivity" style="max-height:400px;overflow-y:auto;"></div>
-          <a href="#" class="view-all-link" data-page="sessions">View All Sessions →</a>
+          <a href="#" class="view-all-link" data-page="sessions">查看所有会话 / View All Sessions →</a>
         </div>
         <div>
           <div class="card mb-24">
-            <h3 class="card-title">Daily Spend (Last 7 Days)</h3>
+            <h3 class="card-title">每日支出概况 (最近 7 天) / Daily Spend</h3>
             <div class="bar-chart" id="dailySpendChart"></div>
           </div>
           <div class="card">
-            <h3 class="card-title">Memory Files</h3>
+            <h3 class="card-title">记忆文件 / Memory Files</h3>
             <div id="memoryFiles"></div>
           </div>
         </div>
       </div>
 
       <div class="card mb-24">
-        <h3 class="card-title">Git Activity (7 Days)</h3>
+        <h3 class="card-title">Git 活动历史 (最近 7 天) / Git Activity</h3>
         <div id="gitActivity" style="max-height:320px;overflow-y:auto;"></div>
       </div>
 
       <div class="grid grid-2 mb-24">
         <div class="card">
-          <h3 class="card-title">Today's Token Breakdown by Model</h3>
+          <h3 class="card-title">今日模型消耗明细 / Token Breakdown</h3>
           <div id="tokenBreakdown"></div>
         </div>
         <div class="card">
-          <h3 class="card-title">Session Models</h3>
+          <h3 class="card-title">模型会话分布 / Session Models</h3>
           <div id="sessionModels"></div>
         </div>
       </div>
@@ -1675,41 +3658,41 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
 
     <div class="page" id="sessions">
       <div class="page-header">
-        <h1 class="page-title">Sessions</h1>
-        <p class="page-subtitle">All agent sessions and their activity</p>
+        <h1 class="page-title">会话记录 / Sessions</h1>
+        <p class="page-subtitle">查看所有智能体会话及其活动详情</p>
       </div>
 
       <div class="card mb-24" id="sessionsStatsBar" style="padding:16px 24px;">
         <div style="display:flex;gap:32px;flex-wrap:wrap;align-items:center;">
           <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Sessions</span>
+            <span style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">总会话数 / Sessions</span>
             <span class="mono" style="font-size:20px;font-weight:700;" id="statsSessionCount">0</span>
           </div>
           <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Tokens</span>
+            <span style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">总消耗 / Tokens</span>
             <span class="mono" style="font-size:20px;font-weight:700;" id="statsTotalTokens">0</span>
           </div>
           <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Cost</span>
+            <span style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">总费用 / Cost</span>
             <span class="mono" style="font-size:20px;font-weight:700;color:var(--accent);" id="statsTotalCost">$0.00</span>
           </div>
         </div>
       </div>
 
       <div class="card mb-24" style="padding:16px 24px;">
-        <h3 class="card-title" style="margin-bottom:12px;">Session Timeline</h3>
+        <h3 class="card-title" style="margin-bottom:12px;">活跃时间轴 / Timeline</h3>
         <div id="timelineCanvas" style="min-height:60px;"></div>
       </div>
 
 
       <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:20px;padding:16px 20px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;">
         <div class="filter-chips" id="statusFilters">
-          <div class="chip active" data-filter="all">All</div>
-          <div class="chip" data-filter="running">Active</div>
-          <div class="chip" data-filter="complete">Idle</div>
-          <div class="chip" data-filter="subagent">Subs</div>
-          <div class="chip" data-filter="cron">Cron</div>
-          <div class="chip" data-filter="group">Groups</div>
+          <div class="chip active" data-filter="all">全部 / All</div>
+          <div class="chip" data-filter="running">活跃 / Active</div>
+          <div class="chip" data-filter="complete">空闲 / Idle</div>
+          <div class="chip" data-filter="subagent">子任务 / Subs</div>
+          <div class="chip" data-filter="cron">定时任务 / Cron</div>
+          <div class="chip" data-filter="group">群聊会话 / Groups</div>
         </div>
         <div style="width:1px;height:24px;background:var(--border);"></div>
         <div class="filter-chips" id="modelFilters">
@@ -1746,22 +3729,22 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
 
     <div class="page" id="limits">
       <div class="page-header">
-        <h1 class="page-title">Rate Limits</h1>
-        <p class="page-subtitle">Claude Max 5x · 5-hour rolling usage windows</p>
+        <h1 class="page-title">访问频率限制 / Rate Limits</h1>
+        <p class="page-subtitle">Claude Max 5x · 每 5 小时滚动使用窗口 / Usage windows</p>
       </div>
 
       <div class="card mb-24">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-          <h3 class="card-title" style="margin:0;">Claude Code Usage (Anthropic)</h3>
+          <h3 class="card-title" style="margin:0;">Claude 代码使用量 / Usage (Anthropic)</h3>
           <div style="display:flex;align-items:center;gap:12px;">
-            <span style="font-size:11px;color:var(--text-muted);" id="claudeUsageScrapedAt">Not scraped yet</span>
-            <button onclick="scrapeClaudeUsage()" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);cursor:pointer;font-size:12px;" id="scrapeBtn">⟳ Refresh</button>
+            <span style="font-size:11px;color:var(--text-muted);" id="claudeUsageScrapedAt">尚未获取数据 / Not scraped</span>
+            <button onclick="scrapeClaudeUsage()" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);cursor:pointer;font-size:12px;" id="scrapeBtn">⟳ 刷新数据 / Refresh</button>
           </div>
         </div>
         <div style="display:flex;flex-direction:column;gap:20px;" id="claudeUsageBars">
           <div>
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
-              <span style="font-weight:600;font-size:14px;">Session</span>
+              <span style="font-weight:600;font-size:14px;">当前会话 / Session</span>
               <span class="mono" style="font-size:12px;color:var(--text-secondary);" id="cuSessionLabel">--</span>
             </div>
             <div style="height:24px;background:var(--bg-primary);border-radius:12px;overflow:hidden;position:relative;">
@@ -1772,7 +3755,7 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
           </div>
           <div>
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
-              <span style="font-weight:600;font-size:14px;">Weekly (All Models)</span>
+              <span style="font-weight:600;font-size:14px;">每周总额 (所有模型) / Weekly (All Models)</span>
               <span class="mono" style="font-size:12px;color:var(--text-secondary);" id="cuWeeklyLabel">--</span>
             </div>
             <div style="height:24px;background:var(--bg-primary);border-radius:12px;overflow:hidden;position:relative;">
@@ -1783,7 +3766,7 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
           </div>
           <div>
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
-              <span style="font-weight:600;font-size:14px;">Weekly (Sonnet)</span>
+              <span style="font-weight:600;font-size:14px;">每周总额 (Sonnet) / Weekly (Sonnet)</span>
               <span class="mono" style="font-size:12px;color:var(--text-secondary);" id="cuSonnetLabel">--</span>
             </div>
             <div style="height:24px;background:var(--bg-primary);border-radius:12px;overflow:hidden;position:relative;">
@@ -1797,10 +3780,10 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
 
       <div class="card mb-24">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-          <h3 class="card-title" style="margin:0;">Gemini Usage (Google)</h3>
+          <h3 class="card-title" style="margin:0;">Gemini 代码使用量 / Usage (Google)</h3>
           <div style="display:flex;align-items:center;gap:12px;">
-            <span style="font-size:11px;color:var(--text-muted);" id="geminiUsageScrapedAt">Not scraped yet</span>
-            <button onclick="scrapeGeminiUsage()" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);cursor:pointer;font-size:12px;" id="geminiScrapeBtn">⟳ Refresh</button>
+            <span style="font-size:11px;color:var(--text-muted);" id="geminiUsageScrapedAt">尚未获取数据 / Not scraped</span>
+            <button onclick="scrapeGeminiUsage()" style="padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);cursor:pointer;font-size:12px;" id="geminiScrapeBtn">⟳ 刷新数据 / Refresh</button>
           </div>
         </div>
         <div style="display:flex;flex-direction:column;gap:20px;" id="geminiUsageBars"></div>
@@ -1810,31 +3793,31 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
         <div class="card">
           <div class="metric accent">
             <div class="metric-value" id="opusUsageLimits">0%</div>
-            <div class="metric-label">Opus 5h Window</div>
+            <div class="metric-label">Opus 5小时窗口 / Window</div>
           </div>
         </div>
         <div class="card">
           <div class="metric">
             <div class="metric-value" id="totalCalls">0</div>
-            <div class="metric-label">API Calls (5h)</div>
+            <div class="metric-label">API 请求数 (5h) / Calls</div>
           </div>
         </div>
         <div class="card">
           <div class="metric">
             <div class="metric-value" id="windowCost">$0.00</div>
-            <div class="metric-label">Window Cost</div>
+            <div class="metric-label">窗口预计费用 / Window Cost</div>
           </div>
         </div>
         <div class="card">
           <div class="metric">
             <div class="metric-value" id="burnRateDisplay">--</div>
-            <div class="metric-label">Burn Rate (tok/min)</div>
+            <div class="metric-label">消耗速率 / Burn Rate (tok/min)</div>
           </div>
         </div>
       </div>
 
       <div class="card mb-24">
-        <h3 class="card-title">Output Token Usage</h3>
+        <h3 class="card-title">输出 Token 限制 / Output Token Usage</h3>
         <div style="display:flex;flex-direction:column;gap:28px;margin-top:8px;">
           <div>
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">
@@ -1861,84 +3844,84 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
 
       <div class="grid grid-3 mb-24">
         <div class="card" id="timeToLimitCard">
-          <h3 class="card-title">Est. Time to Limit</h3>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;" id="timeToLimitValue">Safe</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:8px;" id="timeToLimitSub">Low usage</div>
+          <h3 class="card-title">预估触发限制时间 / Est. Time to Limit</h3>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;" id="timeToLimitValue">安全 / Safe</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:8px;" id="timeToLimitSub">消耗较低 / Low usage</div>
         </div>
         <div class="card">
-          <h3 class="card-title">Window Resets In</h3>
+          <h3 class="card-title">窗口重置倒计时 / Window Resets In</h3>
           <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;" id="windowResetValue">--</div>
           <div style="font-size:12px;color:var(--text-muted);margin-top:8px;" id="windowResetSub"></div>
         </div>
         <div class="card">
-          <h3 class="card-title">Cost Per Minute</h3>
+          <h3 class="card-title">每分钟费用 / Cost Per Minute</h3>
           <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--accent);" id="costPerMinValue">$0.00</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:8px;" id="costPerMinSub">Last 30 minutes</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:8px;" id="costPerMinSub">最近 30 分钟 / Last 30m</div>
         </div>
       </div>
 
       <div class="grid grid-2 mb-24">
         <div class="card">
-          <h3 class="card-title">Model Usage Breakdown</h3>
+          <h3 class="card-title">模型消耗占比 / Usage Breakdown</h3>
           <div id="modelUsageDonut" style="display:flex;align-items:center;justify-content:center;min-height:300px;"></div>
         </div>
         <div class="card">
-          <h3 class="card-title">Window Cost Breakdown</h3>
+          <h3 class="card-title">窗口费用详情 / Window Cost Breakdown</h3>
           <div id="windowBreakdown"></div>
         </div>
       </div>
 
       <div class="card mb-24">
-        <h3 class="card-title">Recent API Calls</h3>
+        <h3 class="card-title">最近 API 调用记录 / Recent API Calls</h3>
         <div id="recentCalls" style="max-height:360px;overflow-y:auto;"></div>
       </div>
     </div>
 
     <div class="page" id="costs">
       <div class="page-header">
-        <h1 class="page-title">Costs</h1>
-        <p class="page-subtitle">Spending breakdown and trends</p>
+        <h1 class="page-title">费用统计 / Costs</h1>
+        <p class="page-subtitle">查看消耗明细与支出趋势</p>
       </div>
 
       <div class="grid grid-4 mb-24">
         <div class="card">
           <div class="metric accent">
             <div class="metric-value" id="costToday">$0.00</div>
-            <div class="metric-label">Today</div>
+            <div class="metric-label">今日消耗 / Today</div>
           </div>
         </div>
         <div class="card">
           <div class="metric accent">
             <div class="metric-value" id="costWeek">$0.00</div>
-            <div class="metric-label">This Week</div>
+            <div class="metric-label">本周消耗 / This Week</div>
           </div>
         </div>
         <div class="card">
           <div class="metric accent">
             <div class="metric-value" id="costTotal">$0.00</div>
-            <div class="metric-label">All Time</div>
+            <div class="metric-label">累计总额 / All Time</div>
           </div>
         </div>
         <div class="card">
           <div class="metric">
             <div class="metric-value" id="costAvg">$0.00</div>
-            <div class="metric-label">Avg/Day</div>
+            <div class="metric-label">日均支出 / Avg/Day</div>
           </div>
         </div>
       </div>
 
       <div class="card mb-24">
-        <h3 class="card-title">Daily Spend Trend (Last 14 Days)</h3>
+        <h3 class="card-title">每日支出趋势 (最近 14 天) / Daily Spend Trend</h3>
         <div id="costTrendChart" style="min-height:240px;"></div>
       </div>
 
       <div class="grid grid-2">
         <div class="card">
-          <h3 class="card-title">Cost by Model</h3>
+          <h3 class="card-title">模型费用占比 / Cost by Model</h3>
           <div id="costByModel"></div>
         </div>
         <div class="card">
-          <h3 class="card-title">Top Sessions</h3>
+          <h3 class="card-title">会话费用排行 / Top Sessions</h3>
           <div id="topSessions"></div>
         </div>
       </div>
@@ -1946,48 +3929,48 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
 
     <div class="page" id="feed">
       <div class="page-header">
-        <h1 class="page-title">Live Feed</h1>
-        <p class="page-subtitle">Real-time agent activity stream — all sessions</p>
+        <h1 class="page-title">实时订阅 / Live Feed</h1>
+        <p class="page-subtitle">所有智能体实时活动流信息</p>
       </div>
 
       <div class="feed-controls" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
         <div style="font-size: 13px; color: var(--text-secondary);">
-          <span class="status-indicator"></span> Live
+          <span class="status-indicator"></span> 实时连接 / Live
         </div>
         <select id="feedSessionFilter" onchange="applyFeedFilter()" style="background:var(--bg-secondary);color:var(--text-primary);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;">
-          <option value="all">All Sessions</option>
+          <option value="all">所有会话 / All Sessions</option>
         </select>
         <select id="feedRoleFilter" onchange="applyFeedFilter()" style="background:var(--bg-secondary);color:var(--text-primary);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;">
-          <option value="all">All Roles</option>
-          <option value="user">User</option>
-          <option value="assistant">Assistant</option>
+          <option value="all">所有角色 / All Roles</option>
+          <option value="user">人类 / User</option>
+          <option value="assistant">助手 / Assistant</option>
         </select>
         <div style="position:relative;flex:1;min-width:200px;max-width:300px;">
-          <input type="text" id="feedSearchInput" placeholder="🔍 Search feed..." style="width:100%;padding:4px 28px 4px 8px;background:var(--bg-secondary);color:var(--text-primary);border:1px solid var(--border);border-radius:6px;font-size:12px;">
+          <input type="text" id="feedSearchInput" placeholder="🔍 搜索订阅内容... / Search feed..." style="width:100%;padding:4px 28px 4px 8px;background:var(--bg-secondary);color:var(--text-primary);border:1px solid var(--border);border-radius:6px;font-size:12px;">
           <button onclick="clearFeedSearch()" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px;padding:2px 6px;">✕</button>
         </div>
-        <button class="pause-btn" id="pauseBtn">▶ Start</button>
-        <button onclick="document.getElementById('feedStream').innerHTML=''" style="background:var(--bg-secondary);color:var(--text-secondary);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;">Clear</button>
+        <button class="pause-btn" id="pauseBtn">▶ 开始 / Start</button>
+        <button onclick="document.getElementById('feedStream').innerHTML=''" style="background:var(--bg-secondary);color:var(--text-secondary);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;">清空 / Clear</button>
       </div>
 
       <div class="card">
-        <div class="feed-stream" id="feedStream"><div style="text-align:center;padding:40px;color:var(--text-muted);font-size:14px;">Click <b>▶ Start</b> to begin streaming</div></div>
+        <div class="feed-stream" id="feedStream"><div style="text-align:center;padding:40px;color:var(--text-muted);font-size:14px;">点击 <b>▶ 开始 / Start</b> 开始实时订阅</div></div>
       </div>
     </div>
 
     <div class="page" id="memory">
       <div class="page-header">
-        <h1 class="page-title">Memory</h1>
-        <p class="page-subtitle">Agent memory files and daily notes</p>
+        <h1 class="page-title">归档记忆 / Memory</h1>
+        <p class="page-subtitle">查看所有智能体的记忆文件与日常总结</p>
       </div>
 
       <div class="grid grid-2 mb-24">
         <div class="card">
-          <h3 class="card-title">Memory Files</h3>
+          <h3 class="card-title">记忆文件列表 / Memory Files</h3>
           <div id="memoryFilesList" style="max-height:600px;overflow-y:auto;"></div>
         </div>
         <div class="card">
-          <h3 class="card-title" id="memoryFileTitle">Select a file</h3>
+          <h3 class="card-title" id="memoryFileTitle">请选择文件 / Select a file</h3>
           <div id="memoryFileContent" style="max-height:600px;overflow-y:auto;white-space:pre-wrap;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;color:var(--text-primary);"></div>
         </div>
       </div>
@@ -1995,24 +3978,24 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
 
     <div class="page" id="files">
       <div class="page-header">
-        <h1 class="page-title">Files</h1>
-        <p class="page-subtitle">Key workspace and config files</p>
+        <h1 class="page-title">工作区文件 / Files</h1>
+        <p class="page-subtitle">管理工作区核心文件与配置文件</p>
       </div>
 
       <div class="grid grid-2 mb-24">
         <div class="card">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-            <h3 class="card-title" style="margin-bottom:0;flex:1;">Key Files</h3>
-            <button onclick="window.fetchKeyFiles()" style="padding:4px 10px;background:var(--bg-tertiary);color:var(--text-secondary);border:1px solid var(--border);border-radius:6px;font-size:11px;cursor:pointer;">↻ Refresh</button>
+            <h3 class="card-title" style="margin-bottom:0;flex:1;">核心文件 / Key Files</h3>
+            <button onclick="window.fetchKeyFiles()" style="padding:4px 10px;background:var(--bg-tertiary);color:var(--text-secondary);border:1px solid var(--border);border-radius:6px;font-size:11px;cursor:pointer;">↻ 刷新 / Refresh</button>
           </div>
           <div id="keyFilesList" style="max-height:572px;overflow-y:auto;"></div>
         </div>
         <div class="card">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
-            <h3 class="card-title" id="keyFileTitle" style="margin-bottom:0;flex:1;">Select a file</h3>
-            <button id="keyFileEditBtn" onclick="window.editKeyFile()" style="display:none;padding:6px 14px;background:var(--accent);color:white;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;">Edit</button>
-            <button id="keyFileSaveBtn" onclick="window.saveKeyFile()" style="display:none;padding:6px 14px;background:var(--green);color:white;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;">Save</button>
-            <button id="keyFileCancelBtn" onclick="window.cancelEditKeyFile()" style="display:none;padding:6px 14px;background:var(--bg-tertiary);color:var(--text-secondary);border:1px solid var(--border);border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;">Cancel</button>
+            <h3 class="card-title" id="keyFileTitle" style="margin-bottom:0;flex:1;">请选择文件 / Select a file</h3>
+            <button id="keyFileEditBtn" onclick="window.editKeyFile()" style="display:none;padding:6px 14px;background:var(--accent);color:white;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;">编辑 / Edit</button>
+            <button id="keyFileSaveBtn" onclick="window.saveKeyFile()" style="display:none;padding:6px 14px;background:var(--green);color:white;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;">保存 / Save</button>
+            <button id="keyFileCancelBtn" onclick="window.cancelEditKeyFile()" style="display:none;padding:6px 14px;background:var(--bg-tertiary);color:var(--text-secondary);border:1px solid var(--border);border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;">取消 / Cancel</button>
           </div>
           <div id="keyFileContent" style="max-height:560px;overflow-y:auto;white-space:pre-wrap;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;color:var(--text-primary);"></div>
           <textarea id="keyFileEditor" style="display:none;width:100%;height:560px;background:var(--bg-primary);color:var(--text-primary);border:1px solid var(--border);border-radius:8px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;resize:vertical;"></textarea>
@@ -2022,8 +4005,8 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
 
     <div class="page" id="logs">
       <div class="page-header">
-        <h1 class="page-title">Logs</h1>
-        <p class="page-subtitle">System and service logs viewer</p>
+        <h1 class="page-title">系统日志 / Logs</h1>
+        <p class="page-subtitle">查看系统运行日志与服务状态</p>
       </div>
 
       <div class="card mb-24" style="padding:16px 24px;">
@@ -2034,11 +4017,11 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
             <option value="tailscaled">Tailscaled</option>
           </select>
           <input type="number" id="logLines" value="100" min="10" max="1000" step="10" style="width:100px;padding:8px 12px;background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border);border-radius:8px;font-size:14px;">
-          <span style="font-size:13px;color:var(--text-muted);">lines</span>
-          <button onclick="fetchLogs()" style="padding:8px 16px;background:linear-gradient(135deg,var(--accent),var(--purple));color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;">🔄 Refresh</button>
+          <span style="font-size:13px;color:var(--text-muted);">行 / lines</span>
+          <button onclick="fetchLogs()" style="padding:8px 16px;background:linear-gradient(135deg,var(--accent),var(--purple));color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;">🔄 刷新日志 / Refresh</button>
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-left:auto;">
             <input type="checkbox" id="logAutoRefresh" onchange="toggleLogAutoRefresh(this.checked)" style="width:18px;height:18px;cursor:pointer;">
-            <span style="font-size:14px;font-weight:500;">Auto-refresh (5s)</span>
+            <span style="font-size:14px;font-weight:500;">自动刷新 / Auto-refresh (5s)</span>
           </label>
         </div>
       </div>
@@ -2052,46 +4035,46 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
 
     <div class="page" id="security">
       <div class="page-header">
-        <h1 class="page-title">Security</h1>
-        <p class="page-subtitle">Authentication and security settings</p>
+        <h1 class="page-title">账户安全 / Security</h1>
+        <p class="page-subtitle">管理您的登录密码与身份验证安全设置</p>
       </div>
 
       <div class="card mb-24">
-        <div class="card-title">🔑 Change Password</div>
+        <div class="card-title">🔑 修改密码 / Change Password</div>
         
         <form onsubmit="return handleChangePassword(event)" style="max-width:500px;">
           <div style="margin-bottom:16px;">
-            <input type="password" id="currentPassword" placeholder="Current Password" style="width:100%;padding:14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:14px;" autocomplete="current-password" required>
+            <input type="password" id="currentPassword" placeholder="当前密码 / Current Password" style="width:100%;padding:14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:14px;" autocomplete="current-password" required>
           </div>
           <div style="margin-bottom:16px;">
-            <input type="password" id="newPassword" placeholder="New Password" style="width:100%;padding:14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:14px;" autocomplete="new-password" required minlength="8">
+            <input type="password" id="newPassword" placeholder="新密码 / New Password" style="width:100%;padding:14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:14px;" autocomplete="new-password" required minlength="8">
           </div>
           <div style="margin-bottom:20px;">
-            <input type="password" id="newPasswordConfirm" placeholder="Confirm New Password" style="width:100%;padding:14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:14px;" autocomplete="new-password" required>
+            <input type="password" id="newPasswordConfirm" placeholder="确认新密码 / Confirm New Password" style="width:100%;padding:14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:14px;" autocomplete="new-password" required>
           </div>
           <div id="changePasswordError" style="display:none;color:var(--red);font-size:13px;margin-bottom:16px;padding:12px;background:rgba(239,68,68,0.1);border-radius:6px;border:1px solid rgba(239,68,68,0.3);"></div>
           <button type="submit" id="changePasswordBtn" style="padding:12px 24px;background:linear-gradient(135deg,var(--accent),var(--purple));color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;">
-            Change Password
+            确认修改密码 / Change Password
           </button>
         </form>
         
         <div style="margin-top:16px;padding:12px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);border-radius:8px;">
           <div style="font-size:12px;color:var(--text-secondary);">
-            <strong>Forgot your password?</strong> Use the recovery token from your server console or environment variables to reset it via the login screen.
+            <strong>忘记密码？ / Forgot password?</strong> 请使用服务器控制台或环境变量中的恢复 Token 进行重置。
           </div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">🔐 Two-Factor Authentication (TOTP)</div>
+        <div class="card-title">🔐 双重身份验证 / 2FA (TOTP)</div>
         
         <div id="mfaDisabledView" style="display:none;">
           <p style="color:var(--text-secondary);margin-bottom:24px;line-height:1.6;">
-            Add an extra layer of security by enabling TOTP-based two-factor authentication. 
-            You'll need an authenticator app like Google Authenticator or Authy.
+            通过启用基于 TOTP 的双重验证为您的账号添加额外安全保障。
+            您需要使用 Google Authenticator 或 Authy 等身份验证 App。
           </p>
           <button onclick="setupMFA()" id="enableMfaBtn" style="padding:12px 24px;background:linear-gradient(135deg,var(--green),#059669);color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;">
-            ✅ Enable MFA
+            ✅ 立即启用 / Enable MFA
           </button>
         </div>
 
@@ -2100,19 +4083,19 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
             <div style="display:flex;align-items:center;gap:12px;">
               <span style="font-size:24px;">✅</span>
               <div>
-                <div style="font-weight:600;color:var(--green);margin-bottom:4px;">MFA is enabled</div>
-                <div style="font-size:13px;color:var(--text-secondary);">Your account is protected with two-factor authentication</div>
+                <div style="font-weight:600;color:var(--green);margin-bottom:4px;">双重验证已启用 / MFA Enabled</div>
+                <div style="font-size:13px;color:var(--text-secondary);">您的账号已受双重身份验证保护</div>
               </div>
             </div>
           </div>
           <button onclick="disableMFA()" id="disableMfaBtn" style="padding:12px 24px;background:linear-gradient(135deg,var(--red),#dc2626);color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;">
-            ⚠️ Disable MFA
+            ⚠️ 停用双重验证 / Disable MFA
           </button>
         </div>
 
         <div id="mfaSetupView" style="display:none;">
           <p style="color:var(--text-secondary);margin-bottom:16px;line-height:1.6;">
-            Scan this QR code with your authenticator app:
+            请使用您的身份验证器 App 扫描此二维码： / Scan this QR code with your authenticator app:
           </p>
           <div id="qrCodeContainer" style="display:flex;justify-content:center;margin:24px 0;padding:24px;background:white;border-radius:12px;"></div>
           <div style="margin-bottom:24px;">
@@ -2125,10 +4108,10 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
             <div id="mfaVerifyError" style="display:none;color:var(--red);font-size:12px;margin-top:8px;"></div>
           </div>
           <button onclick="confirmMFASetup()" id="confirmMfaBtn" style="padding:12px 24px;background:linear-gradient(135deg,var(--accent),var(--purple));color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;">
-            ✅ Verify & Enable
+            ✅ 验证并启用 / Verify & Enable
           </button>
           <button onclick="cancelMFASetup()" style="padding:12px 24px;background:var(--bg-tertiary);color:var(--text-secondary);border:1px solid var(--border);border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;margin-left:12px;">
-            Cancel
+            取消 / Cancel
           </button>
         </div>
       </div>
@@ -2136,8 +4119,8 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
 
     <div class="page" id="sys-security">
       <div class="page-header">
-        <h1 class="page-title">System Security</h1>
-        <p class="page-subtitle">Firewall, ports, fail2ban and SSH monitoring</p>
+        <h1 class="page-title">系统安全 / System Security</h1>
+        <p class="page-subtitle">防火墙、端口状态、Fail2ban 与 SSH 监控</p>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
         <div class="card">
@@ -2167,15 +4150,15 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
 
     <div class="page" id="config-editor">
       <div class="page-header">
-        <h1 class="page-title">Config Editor</h1>
-        <p class="page-subtitle">Edit OpenClaw configuration</p>
+        <h1 class="page-title">配置编辑 / Config Editor</h1>
+        <p class="page-subtitle">在线编辑并管理 OpenClaw 配置文件</p>
       </div>
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
           <div class="card-title" style="margin:0;">📝 openclaw.json</div>
           <div style="display:flex;gap:8px;">
-            <button onclick="loadConfig()" style="padding:8px 16px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);cursor:pointer;font-size:13px;">↻ Reload</button>
-            <button onclick="saveConfig()" id="configSaveBtn" style="padding:8px 16px;background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:13px;">💾 Save & Restart</button>
+            <button onclick="loadConfig()" style="padding:8px 16px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);cursor:pointer;font-size:13px;">↻ 重新加载 / Reload</button>
+            <button onclick="saveConfig()" id="configSaveBtn" style="padding:8px 16px;background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:13px;">💾 保存并重启 / Save & Restart</button>
           </div>
         </div>
         <div id="configError" style="display:none;color:var(--red);font-size:12px;margin-bottom:12px;padding:10px;background:rgba(239,68,68,0.1);border-radius:6px;border:1px solid rgba(239,68,68,0.3);"></div>
@@ -2187,8 +4170,8 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
 
     <div class="page" id="docker">
       <div class="page-header">
-        <h1 class="page-title">Docker</h1>
-        <p class="page-subtitle">Containers, images and system info</p>
+        <h1 class="page-title">容器管理 / Docker</h1>
+        <p class="page-subtitle">管理容器、镜像以及系统运行信息</p>
       </div>
       <div class="card" style="margin-bottom:16px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
@@ -2215,12 +4198,13 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
       </div>
     </div>
 
+  
   </main>
 </div>
 
 <div class="toast-container" id="toastContainer"></div>
 
-<div class="notification-bell" id="notificationBell" onclick="toggleNotifPanel()" title="Notifications">🔔<span class="notification-badge" id="notifBadge">0</span></div>
+<!-- notification bell is now inside the topbar sidebar element above -->
 <div class="notif-panel" id="notifPanel">
   <div class="notif-panel-header"><span>Notifications</span><button onclick="toggleNotifPanel()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;">✕</button></div>
   <div class="notif-panel-body" id="notifPanelBody"><div style="padding:20px;text-align:center;color:var(--text-muted);">Loading...</div></div>
@@ -2228,16 +4212,16 @@ body.light-theme ::selection { background: rgba(99,102,241,0.2); }
 
 <div class="shortcuts-overlay" id="shortcutsOverlay" onclick="if(event.target===this)toggleShortcuts()">
   <div class="shortcuts-panel">
-    <h2 style="font-size:24px;font-weight:700;margin-bottom:24px;">Keyboard Shortcuts</h2>
-    <div class="shortcut-item"><span>Switch to Overview</span><span class="shortcut-key">1</span></div>
-    <div class="shortcut-item"><span>Switch to Sessions</span><span class="shortcut-key">2</span></div>
-    <div class="shortcut-item"><span>Switch to Costs</span><span class="shortcut-key">3</span></div>
-    <div class="shortcut-item"><span>Switch to Rate Limits</span><span class="shortcut-key">4</span></div>
-    <div class="shortcut-item"><span>Switch to Live Feed</span><span class="shortcut-key">5</span></div>
-    <div class="shortcut-item"><span>Pause/Resume Feed</span><span class="shortcut-key">Space</span></div>
-    <div class="shortcut-item"><span>Focus Search</span><span class="shortcut-key">/</span></div>
-    <div class="shortcut-item"><span>Close Modals</span><span class="shortcut-key">Esc</span></div>
-    <div class="shortcut-item" style="border:none;"><span>Show This Help</span><span class="shortcut-key">?</span></div>
+    <h2 style="font-size:24px;font-weight:700;margin-bottom:24px;">快捷键指南 / Keyboard Shortcuts</h2>
+    <div class="shortcut-item"><span>切换至概览 / Switch to Overview</span><span class="shortcut-key">1</span></div>
+    <div class="shortcut-item"><span>切换至会话 / Switch to Sessions</span><span class="shortcut-key">2</span></div>
+    <div class="shortcut-item"><span>切换至费用 / Switch to Costs</span><span class="shortcut-key">3</span></div>
+    <div class="shortcut-item"><span>切换至速率限制 / Switch to Rate Limits</span><span class="shortcut-key">4</span></div>
+    <div class="shortcut-item"><span>切换至实时订阅 / Switch to Live Feed</span><span class="shortcut-key">5</span></div>
+    <div class="shortcut-item"><span>暂停/恢复订阅 / Pause/Resume Feed</span><span class="shortcut-key">Space</span></div>
+    <div class="shortcut-item"><span>聚焦搜索 / Focus Search</span><span class="shortcut-key">/</span></div>
+    <div class="shortcut-item"><span>关闭弹窗 / Close Modals</span><span class="shortcut-key">Esc</span></div>
+    <div class="shortcut-item" style="border:none;"><span>显示此帮助 / Show This Help</span><span class="shortcut-key">?</span></div>
   </div>
 </div>
 
@@ -2338,8 +4322,8 @@ function clearStoredToken() {
 }
 
 function showRegistrationForm() {
-  document.getElementById('authTitle').textContent = 'Create Account';
-  document.getElementById('authSubtitle').textContent = 'Set up your dashboard credentials';
+  document.getElementById('authTitle').textContent = '创建账户 / Create Account';
+  document.getElementById('authSubtitle').textContent = '设置您的面板管理凭据 / Set up your credentials';
   document.getElementById('registerForm').style.display = 'block';
   document.getElementById('loginForm').style.display = 'none';
   document.getElementById('recoveryForm').style.display = 'none';
@@ -2350,8 +4334,8 @@ function showRegistrationForm() {
 }
 
 function showLoginForm() {
-  document.getElementById('authTitle').textContent = 'Dashboard Login';
-  document.getElementById('authSubtitle').textContent = 'Enter your credentials';
+  document.getElementById('authTitle').textContent = '仪表盘登录 / Dashboard Login';
+  document.getElementById('authSubtitle').textContent = '请输入您的登录凭据 / Enter your credentials';
   document.getElementById('registerForm').style.display = 'none';
   document.getElementById('loginForm').style.display = 'block';
   document.getElementById('recoveryForm').style.display = 'none';
@@ -2365,8 +4349,8 @@ function showLoginForm() {
 }
 
 function showRecoveryForm() {
-  document.getElementById('authTitle').textContent = 'Reset Password';
-  document.getElementById('authSubtitle').textContent = 'Enter recovery token and new password';
+  document.getElementById('authTitle').textContent = '重置密码 / Reset Password';
+  document.getElementById('authSubtitle').textContent = '输入恢复令牌与新密码 / Enter recovery token and new password';
   document.getElementById('registerForm').style.display = 'none';
   document.getElementById('loginForm').style.display = 'none';
   document.getElementById('recoveryForm').style.display = 'block';
@@ -2401,15 +4385,15 @@ if (typeof document !== 'undefined') {
         
         if (strength < 40) {
           strengthBar.style.background = 'var(--red)';
-          strengthText.textContent = 'Weak password';
+          strengthText.textContent = '密码强度：弱 / Weak password';
           strengthText.style.color = 'var(--red)';
         } else if (strength < 70) {
           strengthBar.style.background = 'var(--yellow)';
-          strengthText.textContent = 'Medium strength';
+          strengthText.textContent = '密码强度：中 / Medium';
           strengthText.style.color = 'var(--yellow)';
         } else {
           strengthBar.style.background = 'var(--green)';
-          strengthText.textContent = 'Strong password';
+          strengthText.textContent = '密码强度：强 / Strong';
           strengthText.style.color = 'var(--green)';
         }
       });
@@ -3218,6 +5202,156 @@ let sortDir = 'desc';
 let selectedSessions = new Set();
 let notificationsEnabled = false;
 
+
+
+
+
+async function fetchCrons() {
+  if (document.getElementById('cron').classList.contains('active') === false) return;
+  try {
+    const res = await fetch('/api/crons', { headers: { 'Authorization': 'Bearer ' + getStoredToken() } });
+    if (!res.ok) throw new Error('API request failed');
+    const responseData = await res.json();
+    
+    // Server returns an array directly: [...]
+    const crons = Array.isArray(responseData) ? responseData : (responseData.jobs || []);
+    const container = document.getElementById('cronTbody');
+    if (crons.length === 0) {
+      container.innerHTML = '<div class="card" style="grid-column:1/-1;"><div class="empty-state">当前 cron/jobs.json 中不存在任何正在被调度的任务。</div></div>';
+      return;
+    }
+    container.innerHTML = crons.map(job => {
+      const ts = job.state?.lastRunAtMs ? new Date(job.state.lastRunAtMs).toLocaleString() : 'Never';
+      const nTs = job.state?.nextRunAtMs ? new Date(job.state.nextRunAtMs).toLocaleString() : 'Processing';
+      return `
+        <div class="card" style="display:flex; flex-direction:column; gap:8px;">
+           <div style="display:flex; justify-content:space-between; align-items:center;">
+              <h3 style="font-size:18px; margin:0; font-weight:600;">${job.name}</h3>
+              <span class="badge ${job.enabled ? 'ok' : 'todo'}" style="padding:4px 8px;">${job.enabled ? '调度激活' : '已归档'}</span>
+           </div>
+           <div style="font-size:13px; font-family:'JetBrains Mono',monospace; background:rgba(0,0,0,0.03); padding:8px 12px; border-radius:8px; border:1px solid var(--border-soft); margin-top:8px; width:100%;">
+              <div style="margin-bottom:6px; color:var(--text-primary); font-weight:600; display:flex; align-items:center; gap:6px;">
+                 <span style="font-size:12px;">⏰</span> 表达式 / Schedule: <span style="background:var(--bg-tertiary); padding:2px 6px; border-radius:4px; font-size:11px;">${job.schedule?.expr || job.schedule || (typeof job.expr === 'string' ? job.expr : 'No Expr')}</span>
+              </div>
+              <div style="margin-bottom:8px;">
+                 <div style="opacity:0.6; font-size:11px; margin-bottom:4px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">任务内容 / Task Content</div>
+                 <div style="background:rgba(255,255,255,0.5); padding:8px; border-radius:6px; font-size:12px; border:1px solid rgba(0,0,0,0.02); color:var(--text-primary); line-height:1.5; white-space:pre-wrap;">${job.payload?.message || job.message || '-'}</div>
+              </div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; font-size:11px;">
+                 <div><span style="opacity:0.6;">输出终端:</span> <span style="font-weight:600;">${job.delivery?.channel || 'none'}  →  ${job.delivery?.to || 'local'}</span></div>
+                 <div><span style="opacity:0.6;">绑定模型:</span> <span style="font-weight:600;">${job.payload?.model || '跟随Agent'}</span></div>
+              </div>
+           </div>
+           
+           <div style="margin-top:auto; padding-top:14px; border-top:1px solid var(--border-soft); display:flex; justify-content:space-between; align-items:center;">
+              <div style="font-size:12px; color:var(--muted); line-height:1.5;">
+                <div>上次触发: ${ts} <span style="font-size:10px;">(${job.state?.lastStatus || 'N/A'})</span></div>
+                <div>预计下次: <span style="color:var(--focus); font-weight:500;">${nTs}</span></div>
+              </div>
+
+           </div>
+        </div>
+      `;
+    }).join('');
+  } catch(e) {
+    document.getElementById('cronTbody').innerHTML = `<div class="card" style="grid-column:1/-1; color:red;">Cron解析失败: ${e.message}</div>`;
+  }
+}
+
+async function fetchRouting() {
+  if (document.getElementById('routing').classList.contains('active') === false) return;
+  try {
+    const res = await fetch('/api/bindings', { headers: { 'Authorization': 'Bearer ' + getStoredToken() } });
+    const bindings = await res.json();
+    const tbody = document.getElementById('bindingsTbody');
+    if (bindings.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4">No routing rules mapped in openclaw.json</td></tr>';
+      return;
+    }
+    tbody.innerHTML = bindings.map(b => `
+      <tr>
+        <td><strong>${b.agentId}</strong></td>
+        <td><span class="badge" style="background:var(--blue);color:#fff;">${b.match?.channel || 'unknown'}</span></td>
+        <td>${b.match?.peer?.kind || '-'}</td>
+        <td style="font-family:monospace;font-size:12px;">${b.match?.peer?.id || '*'}</td>
+      </tr>
+    `).join('');
+  } catch(e) {
+    document.getElementById('bindingsTbody').innerHTML = `<tr><td colspan="4" style="color:red;">Error: ${e.message}</td></tr>`;
+  }
+}
+
+async function fetchPlugins() {
+  if (document.getElementById('plugins').classList.contains('active') === false) return;
+  try {
+    const res = await fetch('/api/plugins', { headers: { 'Authorization': 'Bearer ' + getStoredToken() } });
+    const plugins = await res.json();
+    const container = document.getElementById('pluginsListContainer');
+    const keys = Object.keys(plugins);
+    if(keys.length === 0) {
+      container.innerHTML = '<div class="card">No plugins installed.</div>';
+      return;
+    }
+    container.innerHTML = keys.map(k => {
+      const p = plugins[k];
+      const isEnabled = p.enabled !== false;
+      const toneClass = isEnabled ? 'ok' : 'todo';
+      const toneName = isEnabled ? 'Enabled' : 'Disabled';
+      return `
+        <div class="card" style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+             <h2 style="font-size:18px; margin:0;">${k}</h2>
+             <span class="badge ${toneClass}">${toneName}</span>
+          </div>
+          <div style="font-size:13px; color:var(--text-secondary);">核心层能力挂载 (${k})。系统根据该插件的字段配置进行授权回调或外部联动。</div>
+          <div style="margin-top:auto; display:flex; gap:10px;">
+             <button class="btn" style="flex:1; font-size:12px; opacity:0.8;" onclick="switchPage('logs')">View Logs</button>
+             <button class="btn" style="flex:1; font-size:12px; opacity:0.8;" onclick="switchPage('config-editor')">Edit Config</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch(e) {
+    document.getElementById('pluginsListContainer').innerHTML = `<div class="card"><div style="color:var(--red);">Error: ${e.message}</div></div>`;
+  }
+}
+
+async function fetchAgents() {
+  if (document.getElementById('agents').classList.contains('active') === false) return;
+  try {
+    const res = await fetch('/api/agents', { headers: { 'Authorization': 'Bearer ' + getStoredToken() } });
+    if (!res.ok) throw new Error('Failed to fetch agents');
+    const agents = await res.json();
+    
+    const container = document.getElementById('agentsListContainer');
+    if (agents.length === 0) {
+      container.innerHTML = '<div class="card"><div class="empty-state">No agents configured.</div></div>';
+      return;
+    }
+    
+    container.innerHTML = agents.map(agent => `
+      <div class="card" style="display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h2 style="font-size:18px; margin:0;">${agent.name || agent.id}</h2>
+          <span class="badge active">Configured</span>
+        </div>
+        <div style="font-size:13px; color:var(--text-secondary);"><span style="font-weight:600">ID:</span> ${agent.id}</div>
+        <div style="font-size:13px; color:var(--text-secondary);"><span style="font-weight:600">Model:</span> ${agent.model || 'Default'}</div>
+        <div style="font-size:13px; color:var(--text-secondary); word-break:break-all;"><span style="font-weight:600">Workspace:</span> <br/>${agent.workspace || '~/.openclaw'}</div>
+        <div style="margin-top:auto; padding-top:12px; display:flex; justify-content:flex-end;">
+          <button class="btn" style="padding:4px 10px; font-size:12px;" onclick="switchPage('sessions'); setTimeout(()=>{ const el = document.getElementById('sessionSearch'); el.value='${agent.id}'; el.dispatchEvent(new Event('input')) }, 100);">View Activity</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    document.getElementById('agentsListContainer').innerHTML = `<div class="card"><div style="color:var(--red);">Error: ${e.message}</div></div>`;
+  }
+}
+
+function switchPage(page) {
+  const target = document.querySelector(`[data-page="${page}"]`);
+  if (target) target.click();
+}
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', () => {
     const page = item.dataset.page;
@@ -3234,6 +5368,14 @@ document.querySelectorAll('.nav-item').forEach(item => {
       liveEventSource = null;
     }
     
+    
+    
+    if (page === 'routing') fetchRouting();
+    if (page === 'plugins') fetchPlugins();
+    if (page === 'cron') fetchCrons();
+    if (page === 'agents') {
+      fetchAgents();
+    }
     if (page === 'memory') {
       fetchMemoryFiles();
     }
@@ -3417,6 +5559,11 @@ function updateOverview() {
     })
     .slice(0, 8);
   
+  // Helper: escape HTML to prevent raw HTML injection from session data
+  function escHtml(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  
   const activityHtml = recent.map(s => {
     const age = Date.now() - s.updatedAt;
     const ago = age < 60000 ? 'just now' :
@@ -3436,7 +5583,14 @@ function updateOverview() {
     const tokens = s.totalTokens || 0;
     const tokStr = tokens >= 1000 ? (tokens / 1000).toFixed(0) + 'k' : tokens;
     const costStr = s.cost > 0 ? '$' + s.cost.toFixed(2) : '';
-    const snippet = s.lastMessage ? s.lastMessage : '';
+    const rawSnippet = s.lastMessage ? s.lastMessage : '';
+    // Strip code fences, collapse newlines, truncate, then escape HTML
+    const cleanSnippet = rawSnippet
+      .replace(/^```[\w]*\n?/,'').replace(/```$/,'')
+      .replace(/\n+/g,' ').trim()
+      .slice(0, 120);
+    const snippet = cleanSnippet ? escHtml(cleanSnippet) : '';
+    const safeLabel = escHtml(s.label || '');
     
     const dur = s.createdAt ? Date.now() - s.createdAt : 0;
     const durStr = dur > 86400000 ? Math.floor(dur / 86400000) + 'd' :
@@ -3448,12 +5602,12 @@ function updateOverview() {
         <div class="activity-dot ${isActive ? 'running' : ''}"></div>
         <div class="activity-content">
           <div class="activity-header">
-            <div style="display:flex;align-items:center;gap:6px"><span class="activity-name">${s.label}</span><span class="badge ${badgeText}">${badgeText}</span></div>
-            <span style="font-size:11px;color:var(--text-muted);flex-shrink:0">${ago}</span>
+            <div style="display:flex;align-items:center;gap:6px;min-width:0;flex:1;overflow:hidden;"><span class="activity-name">${safeLabel}</span><span class="badge ${badgeText}">${badgeText}</span></div>
+            <span style="font-size:11px;color:var(--text-muted);flex-shrink:0;margin-left:8px;">${ago}</span>
           </div>
           ${snippet ? `<div class="activity-snippet">${snippet}</div>` : ''}
           <div class="activity-meta">
-            <span>${s.model.split('/').pop()}</span>
+            <span>${escHtml(s.model.split('/').pop())}</span>
             <span>${tokStr} tok</span>
             ${costStr ? `<span>${costStr}</span>` : ''}
             ${durStr ? `<span>⏱ ${durStr}</span>` : ''}
@@ -3464,7 +5618,7 @@ function updateOverview() {
   }).join('');
   
   document.getElementById('recentActivity').innerHTML = activityHtml || 
-    '<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-text">No recent activity</div></div>';
+    '<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-text">暂无活动记录 / No activity</div></div>';
   
   const perDay = costs.perDay || {};
   const days = Object.keys(perDay).sort().slice(-7);
@@ -5450,14 +7604,14 @@ setTimeout(() => {
 
 function toggleTheme() {
   const btn = document.getElementById('themeToggle');
-  document.body.classList.toggle('light-theme');
+  // document.body.classList.toggle('light-theme');
   const isLight = document.body.classList.contains('light-theme');
   localStorage.setItem('theme', isLight ? 'light' : 'dark');
   btn.textContent = isLight ? '☀️' : '🌙';
 }
 (function() {
   if (localStorage.getItem('theme') === 'light') {
-    document.body.classList.add('light-theme');
+    // document.body.classList.add('light-theme');
     document.getElementById('themeToggle').textContent = '☀️';
   }
 })();
@@ -5694,5 +7848,71 @@ async function dockerAction(action, id) {
   } catch(e) { showToast('Error: ' + e.message, 'warning'); }
 }
 </script>
+
+
+<script>
+  // Robust Dropdown Toggle
+  window.toggleNavDropdown = function(triggerEl, event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    const dropdown = triggerEl.parentElement;
+    const content = dropdown.querySelector('.nav-dropdown-content');
+    const wasOpen = dropdown.classList.contains('open');
+    
+    // Close others
+    document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+    
+    if (!wasOpen) {
+      const rect = triggerEl.getBoundingClientRect();
+      content.style.left = rect.left + 'px';
+      content.style.top = (rect.bottom + 8) + 'px';
+      dropdown.classList.add('open');
+    }
+  };
+
+  // Close dropdowns on outside click
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+  });
+
+  // Event Delegation for Navigation Items
+  document.addEventListener('click', (e) => {
+    const navItem = e.target.closest('.nav-item.nav-link');
+    if (navItem && navItem.dataset.page) {
+      const pageId = navItem.dataset.page;
+      
+      // Update Active State
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      navItem.classList.add('active');
+      
+      // Page Switching Logic
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(p => p.classList.remove('active'));
+      
+      const targetPage = document.getElementById(pageId);
+      if (targetPage) {
+        targetPage.classList.add('active');
+        
+        // Trigger specific loaders if they exist
+        if (typeof fetchAgents === 'function' && pageId === 'agents') fetchAgents();
+        if (typeof fetchRouting === 'function' && pageId === 'routing') fetchRouting();
+        if (typeof fetchPlugins === 'function' && pageId === 'plugins') fetchPlugins();
+        if (typeof fetchCrons === 'function' && pageId === 'cron') fetchCrons();
+        if (typeof loadConfig === 'function' && pageId === 'config-editor') loadConfig();
+      }
+      
+      // Close dropdown
+      const d = navItem.closest('.nav-dropdown');
+      if (d) d.classList.remove('open');
+    } else if (e.target.closest('.nav-dropdown-content')) {
+      // Prevent closing when clicking inside dropdown background
+      e.stopPropagation();
+    }
+  });
+</script>
 </body>
+
+
 </html>

@@ -2,6 +2,8 @@
 
 # OpenClaw Agent Dashboard
 
+[中文说明（README.zh-CN.md）](README.zh-CN.md)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-v18+-green.svg)](https://nodejs.org/)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Compatible-purple.svg)](https://openclaw.dev)
@@ -61,70 +63,69 @@ A beautiful, secure, real-time monitoring dashboard for OpenClaw agents. Track s
 - 🛡️ **Security Hardened** - HSTS, CSP, rate limiting, timing-safe comparisons, audit logging
 - 📦 **Minimal Dependencies** - Pure Node.js, no database or npm packages required. Optional: `jq` (Docker page), `tmux` + `python3` (Claude CLI usage scraper), `docker` (Docker management)
 
-## 🚀 Quick Start
+## 🚀 Quick Start (One-Click)
+
+The easiest way to get started is by using the bundled installer:
 
 ```bash
 # Clone the repository
 git clone https://github.com/tugcantopaloglu/openclaw-dashboard.git
 cd openclaw-dashboard
 
-# Set your OpenClaw workspace path (optional, auto-detects if not set)
-export WORKSPACE_DIR=/path/to/your/openclaw/workspace
-
-# Start the dashboard
-node server.js
+# Run the installer
+./install.sh
 ```
 
-Visit `http://localhost:7000` in your browser. On first visit, you'll see a **registration screen** where you create your username and password. After registration, log in with your credentials.
+Follow the prompts to set your workspace path and port. Once finished, run:
+```bash
+./run-dashboard.sh
+```
+
+Visit `http://localhost:7000` (or your chosen port) in your browser.
+
+### OpenClaw Auto Setup (non-interactive)
+
+For agent-based setup (no prompts):
+
+```bash
+NONINTERACTIVE=1 WORKSPACE_DIR=$HOME/clawd OPENCLAW_DIR=$HOME/.openclaw DASHBOARD_PORT=7000 ./install.sh
+./run-dashboard.sh
+```
 
 ## 📦 Installation
 
 ### Prerequisites
 
-- **Node.js** v18 or higher (check with `node --version`)
-- **OpenClaw** installed and running
-- **Systemd** (optional, for service installation on Linux)
+- **Node.js** v18 or higher
+- **OpenClaw** installed
 
-#### Optional dependencies
+### Manual Configuration
 
-| Tool | Required for | Install |
-|------|-------------|---------|
-| `jq` | Docker management page | `sudo apt install jq` |
-| `tmux` | Claude CLI usage scraper | `sudo apt install tmux` |
-| `python3` | Claude CLI usage parser | Usually pre-installed |
-| `docker` | Docker management page | [docs.docker.com](https://docs.docker.com/engine/install/) |
+If you prefer starting the server directly, follow these steps:
 
-### Manual Install
-
-1. **Clone the repository**
+1. **Configure environment** (optional)
    ```bash
-   git clone https://github.com/tugcantopaloglu/openclaw-dashboard.git
-   cd openclaw-dashboard
-   ```
-
-2. **Configure environment** (optional)
-   ```bash
-   export DASHBOARD_PORT=7000
    export WORKSPACE_DIR=/path/to/your/workspace
    export OPENCLAW_DIR=$HOME/.openclaw
    export OPENCLAW_AGENT=main
    ```
 
-3. **Start the server**
+2. **Start the server**
    ```bash
    node server.js
    ```
 
    The server will print:
    ```
-   🚀 Dashboard running on http://localhost:7000
-   🔑 Recovery token: abc123def456...
+   🔐 Recovery Token
+   <your token value>
+   Dashboard: http://0.0.0.0:7000
    ```
 
    **Save the recovery token** — you'll need it if you forget your password.
 
-4. **Access the dashboard**
-   Open `http://localhost:7000` and register your account.
+3. **Access the dashboard**
+   Open `http://localhost:7000` (or your chosen port) and register your account.
 
 ### Systemd Service (install.sh)
 
@@ -136,7 +137,6 @@ sudo ./install.sh
 
 This will:
 - Create `/etc/systemd/system/agent-dashboard.service`
-- Create override config at `/etc/systemd/system/agent-dashboard.service.d/override.conf`
 - Enable and start the service
 - Set your workspace path and generate a recovery token
 
@@ -534,7 +534,7 @@ The dashboard automatically detects:
 - **Git repos** from `$WORKSPACE_DIR/projects/*/`
 - **Health data** saved to `$WORKSPACE_DIR/data/health-history.json`
 
-### Required Files
+### Required/Optional Files
 
 The dashboard works best when these files exist:
 - `$WORKSPACE_DIR/MEMORY.md` - Agent long-term memory
@@ -542,8 +542,8 @@ The dashboard works best when these files exist:
 - `$WORKSPACE_DIR/memory/YYYY-MM-DD.md` - Daily memory notes
 - `$WORKSPACE_DIR/scripts/scrape-claude-usage.sh` - Claude usage scraper
 - `$WORKSPACE_DIR/scripts/parse-claude-usage.py` - Claude usage parser
-- `$WORKSPACE_DIR/scripts/scrape-gemini-usage.sh` - Gemini usage scraper
-- `$WORKSPACE_DIR/scripts/parse-gemini-usage.py` - Gemini usage parser
+- Optional: `$WORKSPACE_DIR/scripts/scrape-gemini-usage.sh` - Gemini usage scraper
+- Optional: `$WORKSPACE_DIR/scripts/parse-gemini-usage.py` - Gemini usage parser
 
 ## ⌨️ Keyboard Shortcuts
 

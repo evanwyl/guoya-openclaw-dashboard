@@ -8,8 +8,8 @@ const crypto = require('crypto');
 const PORT = parseInt(process.env.DASHBOARD_PORT || '7000');
 const OPENCLAW_DIR = process.env.OPENCLAW_DIR || path.join(os.homedir(), '.openclaw');
 const WORKSPACE_DIR = process.env.WORKSPACE_DIR || process.env.OPENCLAW_WORKSPACE || process.cwd();
-const AGENT_ID = process.env.OPENCLAW_AGENT || 'main';
-const sessDir = path.join(OPENCLAW_DIR, 'agents', AGENT_ID, 'sessions');
+const DEFAULT_AGENT_ID = process.env.OPENCLAW_AGENT || 'all';
+const sessDir = path.join(OPENCLAW_DIR, 'agents', DEFAULT_AGENT_ID === 'all' ? 'main' : DEFAULT_AGENT_ID, 'sessions');
 const cronFile = path.join(OPENCLAW_DIR, 'cron', 'jobs.json');
 const dataDir = path.join(WORKSPACE_DIR, 'data');
 const memoryDir = path.join(WORKSPACE_DIR, 'memory');
@@ -455,9 +455,64 @@ function resolveName(key) {
   return key.split(':').pop().substring(0, 12);
 }
 
-function getLastMessage(sessionId) {
+function listAgentIds() {
   try {
-    const filePath = path.join(sessDir, sessionId + '.jsonl');
+    const agentsDir = path.join(OPENCLAW_DIR, 'agents');
+    if (!fs.existsSync(agentsDir)) return [];
+    return fs.readdirSync(agentsDir)
+      .filter(name => /^[a-zA-Z0-9._-]+$/.test(name))
+      .filter(name => {
+        try {
+          return fs.statSync(path.join(agentsDir, name)).isDirectory();
+        } catch {
+          return false;
+        }
+      })
+      .sort();
+  } catch {
+    return [];
+  }
+}
+
+function getRequestedAgentId(req) {
+  try {
+    const url = new URL(req.url, 'http://localhost');
+    const requested = (url.searchParams.get('agent') || '').trim();
+    if (requested === 'all') return 'all';
+    if (/^[a-zA-Z0-9._-]+$/.test(requested)) return requested;
+  } catch {}
+  return DEFAULT_AGENT_ID;
+}
+
+function getAgentSessionDirs(agentId = DEFAULT_AGENT_ID) {
+  const agentIds = listAgentIds();
+  if (agentId === 'all') {
+    return agentIds.map(id => ({
+      agentId: id,
+      sessionDir: path.join(OPENCLAW_DIR, 'agents', id, 'sessions')
+    })).filter(entry => fs.existsSync(entry.sessionDir));
+  }
+  const safeId = /^[a-zA-Z0-9._-]+$/.test(agentId) ? agentId : DEFAULT_AGENT_ID;
+  const sessionDir = path.join(OPENCLAW_DIR, 'agents', safeId, 'sessions');
+  if (fs.existsSync(sessionDir)) return [{ agentId: safeId, sessionDir }];
+  return [];
+}
+
+function getSessionFiles(agentId = DEFAULT_AGENT_ID, filterFn = isSessionFile) {
+  const files = [];
+  for (const { agentId: id, sessionDir } of getAgentSessionDirs(agentId)) {
+    try {
+      for (const file of fs.readdirSync(sessionDir).filter(filterFn)) {
+        files.push({ agentId: id, sessionDir, file });
+      }
+    } catch {}
+  }
+  return files;
+}
+
+function getLastMessage(sessionId, sessionDir) {
+  try {
+    const filePath = path.join(sessionDir, sessionId + '.jsonl');
     if (!fs.existsSync(filePath)) return '';
     const data = fs.readFileSync(filePath, 'utf8');
     const lines = data.split('\n').filter(l => l.trim());
@@ -490,17 +545,17 @@ function extractSessionId(f) { return f.replace(/\.jsonl(?:\.reset\.\d+)?$/, '')
 let sessionCostCache = {};
 let sessionCostCacheTime = 0;
 
-function getSessionCost(sessionId) {
+function getSessionCost(sessionId, agentId = DEFAULT_AGENT_ID) {
   const now = Date.now();
   if (now - sessionCostCacheTime > 60000) {
     sessionCostCache = {};
     sessionCostCacheTime = now;
     try {
-      const files = fs.readdirSync(sessDir).filter(f => isSessionFile(f));
-      for (const file of files) {
+      const files = getSessionFiles(agentId);
+      for (const { agentId: currentAgentId, sessionDir, file } of files) {
         const sid = extractSessionId(file);
         let total = 0;
-        const lines = fs.readFileSync(path.join(sessDir, file), 'utf8').split('\n');
+        const lines = fs.readFileSync(path.join(sessionDir, file), 'utf8').split('\n');
         for (const line of lines) {
           if (!line.trim()) continue;
           try {
@@ -510,48 +565,58 @@ function getSessionCost(sessionId) {
             if (c > 0) total += c;
           } catch {}
         }
-        if (total > 0) sessionCostCache[sid] = Math.round(total * 100) / 100;
+        if (total > 0) sessionCostCache[`${currentAgentId}:${sid}`] = Math.round(total * 100) / 100;
       }
     } catch {}
   }
-  return sessionCostCache[sessionId] || 0;
+  const keys = Object.keys(sessionCostCache).filter(k => k.endsWith(':' + sessionId));
+  if (!keys.length) return 0;
+  return Math.round(keys.reduce((sum, key) => sum + (sessionCostCache[key] || 0), 0) * 100) / 100;
 }
 
-function getSessionsJson() {
+function getSessionsJson(agentId = DEFAULT_AGENT_ID) {
   try {
-    const sFile = path.join(sessDir, 'sessions.json');
-    const data = JSON.parse(fs.readFileSync(sFile, 'utf8'));
-    return Object.entries(data).map(([key, s]) => ({
-      key,
-      label: s.label || resolveName(key),
-      model: s.modelOverride || s.model || '-',
-      totalTokens: s.totalTokens || 0,
-      contextTokens: s.contextTokens || 0,
-      kind: s.kind || (key.includes('group') ? 'group' : 'direct'),
-      updatedAt: s.updatedAt || 0,
-      createdAt: s.createdAt || s.updatedAt || 0,
-      aborted: s.abortedLastRun || false,
-      thinkingLevel: s.thinkingLevel || null,
-      channel: s.channel || '-',
-      sessionId: s.sessionId || '-',
-      lastMessage: getLastMessage(s.sessionId || key),
-      cost: getSessionCost(s.sessionId || key)
-    }));
+    const all = [];
+    for (const { agentId: currentAgentId, sessionDir } of getAgentSessionDirs(agentId)) {
+      const sFile = path.join(sessionDir, 'sessions.json');
+      if (!fs.existsSync(sFile)) continue;
+      const data = JSON.parse(fs.readFileSync(sFile, 'utf8'));
+      for (const [key, s] of Object.entries(data)) {
+        all.push({
+          key,
+          agentId: currentAgentId,
+          label: s.label || resolveName(key),
+          model: s.modelOverride || s.model || '-',
+          totalTokens: s.totalTokens || 0,
+          contextTokens: s.contextTokens || 0,
+          kind: s.kind || (key.includes('group') ? 'group' : 'direct'),
+          updatedAt: s.updatedAt || 0,
+          createdAt: s.createdAt || s.updatedAt || 0,
+          aborted: s.abortedLastRun || false,
+          thinkingLevel: s.thinkingLevel || null,
+          channel: s.channel || '-',
+          sessionId: s.sessionId || '-',
+          lastMessage: getLastMessage(s.sessionId || key, sessionDir),
+          cost: getSessionCost(s.sessionId || key, currentAgentId)
+        });
+      }
+    }
+    return all;
   } catch (e) { return []; }
 }
 
-function getCostData() {
+function getCostData(agentId = DEFAULT_AGENT_ID) {
   try {
-    const files = fs.readdirSync(sessDir).filter(f => isSessionFile(f));
+    const files = getSessionFiles(agentId);
     const perModel = {};
     const perDay = {};
     const perSession = {};
     let total = 0;
 
-    for (const file of files) {
+    for (const { agentId: currentAgentId, sessionDir, file } of files) {
       const sid = extractSessionId(file);
       let scost = 0;
-      const lines = fs.readFileSync(path.join(sessDir, file), 'utf8').split('\n');
+      const lines = fs.readFileSync(path.join(sessionDir, file), 'utf8').split('\n');
       for (const line of lines) {
         if (!line.trim()) continue;
         try {
@@ -573,7 +638,7 @@ function getCostData() {
           total += c;
         } catch {}
       }
-      if (scost > 0) perSession[sid] = scost;
+      if (scost > 0) perSession[`${currentAgentId}:${sid}`] = { cost: scost, agentId: currentAgentId };
     }
 
     const now = new Date();
@@ -593,19 +658,24 @@ function getCostData() {
       perSession: (() => {
         let sidLabels = {};
         try {
-          const sData = JSON.parse(fs.readFileSync(path.join(sessDir, 'sessions.json'), 'utf8'));
-          for (const [key, val] of Object.entries(sData)) {
-            if (val.sessionId) sidLabels[val.sessionId] = val.label || key.split(':').slice(2).join(':');
+          for (const { agentId: currentAgentId, sessionDir } of getAgentSessionDirs(agentId)) {
+            const sData = JSON.parse(fs.readFileSync(path.join(sessionDir, 'sessions.json'), 'utf8'));
+            for (const [key, val] of Object.entries(sData)) {
+              if (val.sessionId) sidLabels[`${currentAgentId}:${val.sessionId}`] = val.label || key.split(':').slice(2).join(':');
+            }
           }
         } catch {}
         return Object.fromEntries(
-          Object.entries(perSession).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([sid, cost]) => {
+          Object.entries(perSession).sort((a, b) => b[1].cost - a[1].cost).slice(0, 10).map(([sid, entry]) => {
+            const shortSid = sid.split(':').slice(1).join(':');
+            const currentAgentId = entry.agentId;
             let label = sidLabels[sid] || null;
             if (!label) {
               try {
-                const jf = path.join(sessDir, sid + '.jsonl');
+                const currentSessionDir = path.join(OPENCLAW_DIR, 'agents', currentAgentId, 'sessions');
+                const jf = path.join(currentSessionDir, shortSid + '.jsonl');
                 if (!fs.existsSync(jf)) {
-                  const del = fs.readdirSync(sessDir).find(f => f.startsWith(sid) && f.includes('.deleted'));
+                  const del = fs.readdirSync(currentSessionDir).find(f => f.startsWith(shortSid) && f.includes('.deleted'));
                   if (del) { }
                 }
                 if (fs.existsSync(jf)) {
@@ -644,7 +714,7 @@ function getCostData() {
                 }
               } catch {}
             }
-            return [sid, { cost, label: label || ('session-' + sid.substring(0, 8)) }];
+            return [sid, { cost: entry.cost, label: label || (`${currentAgentId}:` + shortSid.substring(0, 8)) }];
           })
         );
       })()
@@ -655,22 +725,24 @@ function getCostData() {
 let costCache = null;
 let costCacheTime = 0;
 
-function getUsageWindows() {
+function getUsageWindows(agentId = DEFAULT_AGENT_ID) {
   try {
     const now = Date.now();
     const fiveHoursMs = 5 * 3600000;
     const oneWeekMs = 7 * 86400000;
-    const files = fs.readdirSync(sessDir).filter(f => {
+    const files = getSessionFiles(agentId, f => {
       if (!f.endsWith('.jsonl')) return false;
-      try { return fs.statSync(path.join(sessDir, f)).mtimeMs > now - oneWeekMs; } catch { return false; }
+      return true;
+    }).filter(({ sessionDir, file }) => {
+      try { return fs.statSync(path.join(sessionDir, file)).mtimeMs > now - oneWeekMs; } catch { return false; }
     });
 
     const perModel5h = {};
     const perModelWeek = {};
     const recentMessages = [];
 
-    for (const file of files) {
-      const lines = fs.readFileSync(path.join(sessDir, file), 'utf8').split('\n');
+    for (const { sessionDir, file } of files) {
+      const lines = fs.readFileSync(path.join(sessionDir, file), 'utf8').split('\n');
       for (const line of lines) {
         if (!line.trim()) continue;
         try {
@@ -1218,6 +1290,9 @@ function getServicesStatus() {
       const code = execSync(`curl -s -o /dev/null -w "%{http_code}" --connect-timeout 2 --max-time 3 "${gatewayUrl}" 2>/dev/null`, { encoding: 'utf8', timeout: 5000 }).trim();
       agentDashboardActive = code.length >= 1 && (code[0] === '2' || code[0] === '3');
     } catch { }
+    if (!agentDashboardActive) {
+      agentDashboardActive = hasProcess('node.*server\\.js') || hasProcess('agent-dashboard');
+    }
 
     let tailscaledActive = false;
     const tailscalePaths = ['/Applications/Tailscale.app/Contents/MacOS/Tailscale', 'tailscale'];
@@ -1245,11 +1320,16 @@ function getServicesStatus() {
     const openclawActive = Array.from(runningLabels).some(label =>
       label === 'openclaw' || label.includes('openclaw')
     );
+    const openclawProcessActive =
+      hasProcess('(^|[[:space:]])openclaw([[:space:]]|$)') ||
+      hasProcess('openclaw-gateway') ||
+      hasProcess('openclaw-webhooks') ||
+      hasProcess('node.*openclaw');
 
     return services.map(name => {
       if (name === 'agent-dashboard') return { name, active: agentDashboardActive };
       if (name === 'tailscaled') return { name, active: tailscaledActive };
-      return { name, active: openclawActive };
+      return { name, active: openclawActive || openclawProcessActive };
     });
   }
 
@@ -1870,29 +1950,34 @@ const server = http.createServer((req, res) => {
     if (!requireAuth(req, res)) return;
     setSameSiteCORS(req, res);
 
-    if (req.url === '/api/sessions') {
+    if (req.url === '/api/sessions' || req.url.startsWith('/api/sessions?')) {
+      const agentId = getRequestedAgentId(req);
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(getSessionsJson()));
+      res.end(JSON.stringify(getSessionsJson(agentId)));
       return;
     }
-    if (req.url === '/api/usage') {
+    if (req.url === '/api/usage' || req.url.startsWith('/api/usage?')) {
+      const agentId = getRequestedAgentId(req);
       const now = Date.now();
-      if (!usageCache || now - usageCacheTime > 10000) {
-        usageCache = getUsageWindows();
+      const cacheKey = 'usage:' + agentId;
+      if (!usageCache || now - usageCacheTime > 10000 || usageCache.key !== cacheKey) {
+        usageCache = { key: cacheKey, data: getUsageWindows(agentId) };
         usageCacheTime = now;
       }
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(usageCache));
+      res.end(JSON.stringify(usageCache.data));
       return;
     }
-    if (req.url === '/api/costs') {
+    if (req.url === '/api/costs' || req.url.startsWith('/api/costs?')) {
+      const agentId = getRequestedAgentId(req);
       const now = Date.now();
-      if (!costCache || now - costCacheTime > 60000) {
-        costCache = getCostData();
+      const cacheKey = 'cost:' + agentId;
+      if (!costCache || now - costCacheTime > 60000 || costCache.key !== cacheKey) {
+        costCache = { key: cacheKey, data: getCostData(agentId) };
         costCacheTime = now;
       }
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(costCache));
+      res.end(JSON.stringify(costCache.data));
       return;
     }
     if (req.url === '/api/system') {
@@ -1904,24 +1989,29 @@ const server = http.createServer((req, res) => {
     }
     if (req.url.startsWith('/api/session-messages?')) {
       const params = new URL(req.url, 'http://localhost').searchParams;
+      const agentId = getRequestedAgentId(req);
       const rawId = params.get('id') || '';
       const sessionId = rawId.replace(/[^a-zA-Z0-9\-_:.]/g, '');
       const messages = [];
       try {
-        const files = fs.readdirSync(sessDir).filter(f => isSessionFile(f));
-        let targetFile = files.find(f => f.includes(sessionId));
-        if (!targetFile) {
-          const sFile = path.join(sessDir, 'sessions.json');
-          const data = JSON.parse(fs.readFileSync(sFile, 'utf8'));
-          for (const [k, v] of Object.entries(data)) {
-            if (k === sessionId && v.sessionId) {
-              targetFile = files.find(f => f.includes(v.sessionId));
-              break;
+        const files = getSessionFiles(agentId);
+        let target = files.find(entry => entry.file.includes(sessionId));
+        if (!target) {
+          for (const { sessionDir } of getAgentSessionDirs(agentId)) {
+            const sFile = path.join(sessionDir, 'sessions.json');
+            if (!fs.existsSync(sFile)) continue;
+            const data = JSON.parse(fs.readFileSync(sFile, 'utf8'));
+            for (const [k, v] of Object.entries(data)) {
+              if (k === sessionId && v.sessionId) {
+                target = files.find(entry => entry.file.includes(v.sessionId));
+                break;
+              }
             }
+            if (target) break;
           }
         }
-        if (targetFile) {
-          const lines = fs.readFileSync(path.join(sessDir, targetFile), 'utf8').split('\n').filter(l => l.trim());
+        if (target) {
+          const lines = fs.readFileSync(path.join(target.sessionDir, target.file), 'utf8').split('\n').filter(l => l.trim());
           for (let i = Math.max(0, lines.length - 30); i < lines.length; i++) {
             try {
               const d = JSON.parse(lines[i]);
@@ -1965,6 +2055,33 @@ const server = http.createServer((req, res) => {
       res.end(JSON.stringify(getMemoryFiles()));
       return;
     }
+    if (req.url === '/api/agents') {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        defaultAgent: DEFAULT_AGENT_ID,
+        agents: listAgentIds()
+      }));
+      return;
+    }
+    if (req.url === '/api/dependencies') {
+      const hasCmd = (cmd) => {
+        try {
+          const { execSync } = require('child_process');
+          execSync(`${process.platform === 'win32' ? 'where' : 'command -v'} ${cmd}`, { stdio: 'ignore', timeout: 2000, shell: true });
+          return true;
+        } catch {
+          return false;
+        }
+      };
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        tmux: hasCmd('tmux'),
+        jq: hasCmd('jq'),
+        docker: hasCmd('docker'),
+        tailscale: hasCmd('tailscale')
+      }));
+      return;
+    }
     if (req.url === '/api/tokens-today') {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(getTodayTokens()));
@@ -1972,7 +2089,7 @@ const server = http.createServer((req, res) => {
     }
     if (req.url === '/api/config') {
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ name: 'Guoya OpenClaw Dashboard', version: '1.0.0' }));
+      res.end(JSON.stringify({ name: 'Guoya OpenClaw Dashboard', version: '1.0.0', defaultAgent: DEFAULT_AGENT_ID, agents: listAgentIds() }));
       return;
     }
     if (req.url === '/api/reauth' && req.method === 'POST') {

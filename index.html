@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Guoya OpenClaw Dashboard</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%236366f1;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%238b5cf6;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='45' fill='url(%23grad)'/%3E%3Ccircle cx='35' cy='40' r='8' fill='%23fff'/%3E%3Ccircle cx='65' cy='40' r='8' fill='%23fff'/%3E%3Cpath d='M 30 65 Q 50 75 70 65' stroke='%23fff' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -3515,6 +3515,12 @@
       </div>
     </nav>
     <div style="display:flex; align-items:center; gap:8px; margin-left:auto; padding-left:16px; flex-shrink:0;">
+      <div id="agentPickerWrap" style="display:flex;align-items:center;gap:8px;padding:4px 8px;border:1px solid var(--border);border-radius:10px;background:var(--bg-secondary);">
+        <span style="font-size:11px;color:var(--text-muted);white-space:nowrap;">Agent</span>
+        <select id="agentPicker" style="border:none;background:transparent;color:var(--text-primary);font-size:12px;font-weight:600;outline:none;min-width:110px;">
+          <option value="all">All Agents</option>
+        </select>
+      </div>
       <div id="mfaStatusIndicator" style="padding:4px 8px;font-size:10px;text-align:center;border-radius:6px;display:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
       <div id="themeToggle" onclick="toggleTheme()" title="切换主题 / Toggle Theme">🌙</div>
       <div class="notification-bell" id="notificationBell" onclick="toggleNotifPanel()" title="系统通知 / Notifications">🔔<span class="notification-badge" id="notifBadge">0</span></div>
@@ -3666,10 +3672,11 @@
     </div>
 
 
-  <div class="page active" id="overview">
+    <div class="page active" id="overview">
       <div class="page-header">
         <h1 class="page-title">果芽云控制台 / Guoya Dashboard</h1>
         <p class="page-subtitle">查看智能体运行状态、会话趋势、成本消耗与关键排障入口</p>
+        <div id="dependencyNotice" style="display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.28);font-size:13px;color:#8a5a00;"></div>
       </div>
 
       <div class="grid mb-24" style="grid-template-columns: repeat(3, 1fr);">
@@ -4526,6 +4533,14 @@ const TOKEN_KEY = 'dashboardToken';
 const TOKEN_EXPIRY_KEY = 'dashboardTokenExpiry';
 const TOKEN_LIFETIME = 24 * 60 * 60 * 1000;
 const REMEMBER_ME_LIFETIME = 3 * 60 * 60 * 1000;
+let currentAgent = localStorage.getItem('dashboardAgent') || 'all';
+let availableAgents = [];
+
+function withAgent(url) {
+  if (!currentAgent || currentAgent === 'all') return url;
+  const joiner = url.includes('?') ? '&' : '?';
+  return `${url}${joiner}agent=${encodeURIComponent(currentAgent)}`;
+}
 
 function getStoredToken() {
   let token = sessionStorage.getItem(TOKEN_KEY);
@@ -4917,6 +4932,8 @@ async function handleLogout() {
 function showApp() {
   document.getElementById('loginPage').style.display = 'none';
   document.getElementById('mainApp').style.display = 'flex';
+  loadAgentPicker();
+  loadDependencyNotice();
   fetchData();
   fetchNewData();
   fetchHealthHistory();
@@ -4933,6 +4950,43 @@ function showApp() {
   setInterval(fetchHealthHistory, 60000);
   setInterval(fetchMemoryFiles, 30000);
   setInterval(fetchKeyFiles, 30000);
+}
+
+async function loadAgentPicker() {
+  try {
+    const res = await authFetch(API_BASE + '/api/agents');
+    const data = await res.json();
+    availableAgents = Array.isArray(data.agents) ? data.agents : [];
+    if (currentAgent !== 'all' && !availableAgents.includes(currentAgent)) currentAgent = 'all';
+    const picker = document.getElementById('agentPicker');
+    if (!picker) return;
+    picker.innerHTML = '<option value="all">All Agents</option>' + availableAgents.map(agent => `<option value="${agent}">${agent}</option>`).join('');
+    picker.value = currentAgent;
+    picker.onchange = () => {
+      currentAgent = picker.value || 'all';
+      localStorage.setItem('dashboardAgent', currentAgent);
+      fetchData();
+      if (document.getElementById('feed').classList.contains('active')) connectLiveFeed();
+    };
+  } catch {}
+}
+
+async function loadDependencyNotice() {
+  try {
+    const res = await authFetch(API_BASE + '/api/dependencies');
+    const deps = await res.json();
+    const missing = [];
+    if (!deps.tmux) missing.push('tmux');
+    if (!deps.jq) missing.push('jq');
+    const notice = document.getElementById('dependencyNotice');
+    if (!notice) return;
+    if (missing.length === 0) {
+      notice.style.display = 'none';
+      return;
+    }
+    notice.style.display = 'block';
+    notice.textContent = `当前机器缺少 ${missing.join(' / ')}，相关模块会部分不可用。`;
+  } catch {}
 }
 
 function showLogin() {
@@ -5583,7 +5637,8 @@ async function fetchAgents() {
   try {
     const res = await fetch('/api/agents', { headers: { 'Authorization': 'Bearer ' + getStoredToken() } });
     if (!res.ok) throw new Error('Failed to fetch agents');
-    const agents = await res.json();
+    const payload = await res.json();
+    const agents = (payload.agents || []).map(id => ({ id, name: id }));
     
     const container = document.getElementById('agentsListContainer');
     if (agents.length === 0) {
@@ -5659,8 +5714,8 @@ async function fetchData() {
   try {
     // Fast path: load sessions, costs, system first
     const [sessRes, costsRes, sysRes] = await Promise.all([
-      authFetch(API_BASE + '/api/sessions'),
-      authFetch(API_BASE + '/api/costs'),
+      authFetch(withAgent(API_BASE + '/api/sessions')),
+      authFetch(withAgent(API_BASE + '/api/costs')),
       authFetch(API_BASE + '/api/system')
     ]);
     
@@ -5671,7 +5726,7 @@ async function fetchData() {
     updateDashboard();
     
     // Then load usage async (slower endpoint)
-    authFetch(API_BASE + '/api/usage').then(r => r.json()).then(u => {
+    authFetch(withAgent(API_BASE + '/api/usage')).then(r => r.json()).then(u => {
       usage = u;
       try { updateDashboard(); } catch {}
     }).catch(() => {});
@@ -5918,7 +5973,7 @@ function refreshExpandedMessages(key) {
   if (!s) return;
   const el = document.getElementById('expanded-msgs-' + CSS.escape(key));
   if (!el) { expandedSessionKey = null; return; }
-  authFetch(API_BASE + '/api/session-messages?id=' + encodeURIComponent(s.sessionId || s.key))
+  authFetch(withAgent(API_BASE + '/api/session-messages?id=' + encodeURIComponent(s.sessionId || s.key)))
     .then(r => r.json())
     .then(msgs => {
       if (!document.getElementById('expanded-msgs-' + CSS.escape(key))) return;
@@ -6808,7 +6863,7 @@ function connectLiveFeed() {
   }
 
   const token = getStoredToken();
-  liveEventSource = new EventSource(API_BASE + '/api/live?token=' + encodeURIComponent(token));
+  liveEventSource = new EventSource(withAgent(API_BASE + '/api/live?token=' + encodeURIComponent(token)));
   
   liveEventSource.onmessage = (event) => {
     if (feedPaused) return;
@@ -6971,9 +7026,9 @@ async function fetchNewData() {
     document.getElementById('servicesStatus').innerHTML = services.map((s, i) => {
       const isLast = i === services.length - 1;
       const border = isLast ? 'none' : '1px solid var(--border)';
-      const status = s.active === null ? 'N/A' : (s.active ? 'Running' : 'Stopped');
-      const dotColor = s.active === null ? 'var(--text-muted)' : (s.active ? 'var(--green)' : 'var(--red)');
-      const textColor = s.active === null ? 'var(--text-muted)' : (s.active ? 'var(--green)' : 'var(--red)');
+      const status = s.active === null ? 'Unknown' : (s.active ? 'Running' : 'Not detected');
+      const dotColor = s.active === null ? 'var(--text-muted)' : (s.active ? 'var(--green)' : 'var(--yellow)');
+      const textColor = s.active === null ? 'var(--text-muted)' : (s.active ? 'var(--green)' : 'var(--yellow)');
       return `<div style="display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:${border};">
         <span style="width:10px;height:10px;border-radius:50%;background:${dotColor};flex-shrink:0;"></span>
         <span style="font-weight:600;font-size:14px;">${s.name}</span>
@@ -7474,7 +7529,7 @@ function openSessionDetail(key) {
     <div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">Channel</div><div style="font-size:13px;">${s.channel || '--'}</div></div>`;
   document.getElementById('modalMessages').innerHTML = '<div style="color:var(--text-muted);font-size:13px;">Loading...</div>';
   document.getElementById('sessionModal').style.display = 'flex';
-  authFetch(API_BASE + '/api/session-messages?id=' + encodeURIComponent(s.sessionId || s.key))
+  authFetch(withAgent(API_BASE + '/api/session-messages?id=' + encodeURIComponent(s.sessionId || s.key)))
     .then(r => r.json())
     .then(msgs => {
       document.getElementById('modalMessages').innerHTML = msgs.map(m => {

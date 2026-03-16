@@ -1095,7 +1095,29 @@ function getSystemStats() {
     let diskPercent = 0, diskUsed = '', diskTotal = '';
     try {
       const { execSync } = require('child_process');
-      if (process.platform === 'darwin') {
+      if (process.platform === 'win32') {
+        const ps = [
+          '$drive = $env:SystemDrive',
+          'if (-not $drive) { $drive = "C:" }',
+          '$disk = Get-CimInstance Win32_LogicalDisk | Where-Object { $_.DeviceID -eq $drive } | Select-Object -First 1 Size,FreeSpace',
+          'if (-not $disk) { exit 1 }',
+          '$size = [double]$disk.Size',
+          '$free = [double]$disk.FreeSpace',
+          '$used = $size - $free',
+          '$percent = if ($size -gt 0) { [math]::Round(($used / $size) * 100) } else { 0 }',
+          '$usedGB = [math]::Round($used / 1GB)',
+          '$sizeGB = [math]::Round($size / 1GB)',
+          'Write-Output ($percent.ToString() + "," + $usedGB.ToString() + "G," + $sizeGB.ToString() + "G")'
+        ].join('; ');
+        const out = execSync(`powershell -NoProfile -Command "${ps}"`, {
+          encoding: 'utf8',
+          timeout: 4000
+        }).trim();
+        const parts = out.split(',');
+        diskPercent = parseInt(parts[0], 10) || 0;
+        diskUsed = parts[1] || '';
+        diskTotal = parts[2] || '';
+      } else if (process.platform === 'darwin') {
         const df = execSync("df -g / | tail -1", { encoding: 'utf8' }).trim();
         const parts = df.split(/\s+/).filter(Boolean);
         if (parts.length >= 5) {
